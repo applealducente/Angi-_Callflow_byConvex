@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Angi Call Flow Guide</title>
+<title>ANGI Call Flow</title>
 <style>
   :root{
     --bg:#0f1115; --panel:#171a21; --panel2:#1e222b; --panel3:#232833;
@@ -11,97 +11,135 @@
     --text:#e8eaed; --text-secondary:#9aa2b1; --text-muted:#6b7280;
     --accent:#4f8ef7; --accent-bg:#16233d; --accent-border:#2f4d82; --accent-hover:#6ba0ff;
     --green:#3fae5c; --green-bg:#122f19; --green-border:#1f5a2f;
+    --warn:#e2a04a; --warn-bg:#2a1f0a; --warn-border:#6b4a10;
     --radius:10px;
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.55}
-  header{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;border-bottom:0.5px solid var(--border);position:sticky;top:0;background:var(--bg);z-index:20}
-  .brand{font-size:15px;font-weight:600;letter-spacing:0.5px}
-  .brand span{color:var(--accent)}
+
+  /* header */
+  header{display:flex;align-items:center;justify-content:space-between;padding:12px 24px;border-bottom:0.5px solid var(--border);position:sticky;top:0;background:var(--bg);z-index:20}
+  .brand-group{display:flex;align-items:center;gap:16px}
+  .convex-logo{display:flex;align-items:center;gap:8px;color:var(--text);text-decoration:none}
+  .convex-logo svg{width:22px;height:22px}
+  .convex-name{font-size:13px;font-weight:600;letter-spacing:.3px;color:var(--text-secondary)}
+  .divider-vert{width:1px;height:20px;background:var(--border)}
+  .page-title{font-size:15px;font-weight:600;letter-spacing:.3px}
+  .page-title span{color:var(--accent)}
   nav a{color:var(--text-secondary);text-decoration:none;font-size:13px;margin-left:18px}
   nav a:hover{color:var(--text)}
-  main{max-width:820px;margin:0 auto;padding:24px 24px 120px}
 
-  .progress{display:flex;align-items:center;gap:10px;margin-bottom:22px}
+  main{max-width:800px;margin:0 auto;padding:24px 24px 120px}
+
+  /* progress */
+  .progress{display:flex;align-items:center;gap:10px;margin-bottom:20px}
   .progress-track{flex:1;height:4px;background:var(--panel);border-radius:2px;overflow:hidden}
   .progress-fill{height:100%;background:var(--accent);transition:width .3s ease}
   .progress-label{font-size:12px;color:var(--text-muted);white-space:nowrap;font-weight:500;letter-spacing:.5px;text-transform:uppercase}
 
-  h1{font-size:24px;font-weight:600;margin:0 0 4px}
-  .phase-name{color:var(--accent);font-size:14px;font-weight:500;margin-bottom:6px;letter-spacing:.5px;text-transform:uppercase}
-  .objective{color:var(--text-secondary);font-size:14px;margin-bottom:22px}
+  h1{font-size:22px;font-weight:600;margin:0 0 4px}
+  .phase-name{color:var(--accent);font-size:12px;font-weight:600;margin-bottom:6px;letter-spacing:.8px;text-transform:uppercase}
+  .objective{color:var(--text-secondary);font-size:14px;margin-bottom:18px}
 
-  .card{border:0.5px solid var(--border);border-radius:14px;padding:22px 24px;background:var(--panel);margin-bottom:16px;animation:fadein .25s ease}
+  /* legal banner */
+  .legal-banner{background:var(--warn-bg);border:0.5px solid var(--warn-border);border-radius:8px;padding:10px 14px;margin-bottom:16px;display:flex;align-items:center;gap:10px;font-size:13px;color:var(--warn)}
+  .legal-banner .badge{background:var(--warn);color:#000;font-size:10px;font-weight:700;letter-spacing:.5px;padding:2px 8px;border-radius:10px;flex-shrink:0}
+
+  /* cards */
+  .card{border:0.5px solid var(--border);border-radius:14px;padding:20px 22px;background:var(--panel);margin-bottom:14px;animation:fadein .25s ease}
   @keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
   .card .label{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted);margin-bottom:10px;font-weight:600}
 
-  .script-block{background:var(--accent-bg);border:0.5px solid var(--accent-border);border-radius:10px;padding:16px 18px;font-size:15.5px;color:var(--text);white-space:pre-line;line-height:1.65}
-  .script-block .verbatim-tag{display:inline-block;font-size:10px;text-transform:uppercase;letter-spacing:.6px;color:var(--accent);background:rgba(79,142,247,.1);padding:2px 8px;border-radius:12px;margin-bottom:10px;font-weight:600;font-style:normal}
-  .script-alt{background:var(--panel2);border:0.5px solid var(--border);border-radius:10px;padding:14px 16px;margin-top:10px;cursor:pointer;transition:.15s}
-  .script-alt:hover{border-color:var(--border-strong)}
-  .script-alt .label-alt{font-size:10.5px;color:var(--accent);text-transform:uppercase;letter-spacing:.5px;font-weight:600;margin-bottom:6px}
-  .script-alt-body{font-size:14.5px;color:var(--text);line-height:1.6;display:none;white-space:pre-line}
-  .script-alt.open .script-alt-body{display:block;margin-top:8px}
-  .script-alt .toggle-note{font-size:12px;color:var(--text-muted)}
+  .script-block{background:var(--accent-bg);border:0.5px solid var(--accent-border);border-radius:10px;padding:14px 16px;font-size:15px;color:var(--text);white-space:pre-line;line-height:1.65}
+  .script-block.legal{background:var(--warn-bg);border-color:var(--warn-border)}
+  .verbatim-tag{display:inline-block;font-size:10px;text-transform:uppercase;letter-spacing:.6px;color:var(--accent);background:rgba(79,142,247,.1);padding:2px 8px;border-radius:12px;margin-bottom:10px;font-weight:600}
+  .verbatim-tag.legal{color:var(--warn);background:rgba(226,160,74,.12)}
 
-  .customer-line{background:var(--panel2);border-left:3px solid var(--text-secondary);border-radius:6px;padding:12px 14px;font-size:15px;color:var(--text);font-style:italic;margin-bottom:12px}
-  .customer-line::before{content:"They said: ";font-style:normal;color:var(--text-muted);font-size:11px;text-transform:uppercase;letter-spacing:.5px;font-weight:600;display:block;margin-bottom:4px}
-  .reply-line{background:var(--green-bg);border:0.5px solid var(--green-border);border-radius:10px;padding:14px 16px;font-size:15.5px;color:var(--text);margin-bottom:12px}
-  .reply-line::before{content:"You reply: ";font-style:normal;color:var(--green);font-size:11px;text-transform:uppercase;letter-spacing:.5px;font-weight:600;display:block;margin-bottom:4px}
-  .next-note{font-size:13.5px;color:var(--text-secondary);padding:10px 14px;background:var(--panel2);border-radius:8px;border:0.5px dashed var(--border);margin-bottom:10px}
-  .next-note b{color:var(--text)}
-  .rule-line{background:var(--panel3);border:0.5px solid var(--border);border-left:3px solid var(--accent);border-radius:6px;padding:10px 14px;font-size:13px;color:var(--text);margin-bottom:12px}
-  .rule-line b{color:var(--accent)}
+  .customer-line{background:var(--panel2);border-left:3px solid var(--text-secondary);border-radius:6px;padding:11px 14px;font-size:14.5px;color:var(--text);font-style:italic;margin-bottom:10px}
+  .customer-line::before{content:"They said: ";font-style:normal;color:var(--text-muted);font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;font-weight:600;display:block;margin-bottom:4px}
+  .reply-line{background:var(--green-bg);border:0.5px solid var(--green-border);border-radius:10px;padding:13px 16px;font-size:15px;color:var(--text);margin-bottom:10px;white-space:pre-line;line-height:1.6}
+  .reply-line::before{content:"You reply (hard-sell posture): ";font-style:normal;color:var(--green);font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;font-weight:600;display:block;margin-bottom:6px}
 
-  .btn-row{display:flex;flex-direction:column;gap:10px;margin-top:12px}
-  .big-btn{display:block;width:100%;padding:15px 20px;border-radius:12px;border:0;background:var(--accent);color:#fff;font-size:15px;font-weight:600;cursor:pointer;transition:.15s;letter-spacing:.3px}
+  /* coach tips accordion */
+  .coach-tips{margin-top:12px}
+  .coach-toggle{background:transparent;border:0.5px dashed var(--border);color:var(--text-muted);border-radius:8px;padding:8px 12px;font-size:12px;cursor:pointer;width:100%;text-align:left;display:flex;justify-content:space-between;align-items:center}
+  .coach-toggle:hover{color:var(--text);border-color:var(--border-strong)}
+  .coach-body{display:none;margin-top:10px;padding:12px 14px;background:var(--panel2);border-radius:8px;border:0.5px solid var(--border);font-size:13px;color:var(--text-secondary);line-height:1.6}
+  .coach-body.open{display:block}
+  .coach-body b{color:var(--text)}
+  .coach-body .tip{margin-bottom:8px}
+  .coach-body .tip:last-child{margin-bottom:0}
+
+  /* negotiation ladder */
+  .ladder{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+  .ladder-step{padding:8px 14px;background:var(--panel2);border:0.5px solid var(--border);border-radius:20px;font-size:12.5px;color:var(--text-secondary);cursor:pointer;transition:.15s}
+  .ladder-step:hover{border-color:var(--accent);color:var(--text)}
+  .ladder-step.active{background:var(--accent-bg);color:var(--accent);border-color:var(--accent-border)}
+
+  /* buttons */
+  .btn-row{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+  .big-btn{display:block;width:100%;padding:14px 20px;border-radius:12px;border:0;background:var(--accent);color:#fff;font-size:15px;font-weight:600;cursor:pointer;transition:.15s;letter-spacing:.3px}
   .big-btn:hover{background:var(--accent-hover);transform:translateY(-1px)}
   .big-btn.secondary{background:var(--panel2);color:var(--text);border:0.5px solid var(--border)}
   .big-btn.secondary:hover{border-color:var(--border-strong);background:var(--panel3);transform:none}
-  .big-btn.ghost{background:transparent;color:var(--text-secondary);border:0.5px dashed var(--border)}
+  .big-btn.ghost{background:transparent;color:var(--text-secondary);border:0.5px dashed var(--border);font-size:13px;padding:10px}
   .big-btn.ghost:hover{color:var(--text);border-color:var(--border-strong);transform:none}
   .big-btn.success{background:var(--green);color:#fff}
   .big-btn.success:hover{background:#4bc06a}
 
-  .choices{display:flex;flex-direction:column;gap:10px}
-  .choice{cursor:pointer;background:var(--panel2);border:0.5px solid var(--border);border-radius:10px;padding:14px 16px;text-align:left;font-size:14.5px;color:var(--text);transition:.15s}
-  .choice:hover{border-color:var(--accent-border);background:var(--accent-bg)}
-  .choice .cust-quote{font-style:italic}
-  .choice .cust-quote::before{content:"\201C"}
-  .choice .cust-quote::after{content:"\201D"}
-  .choice .tag{display:block;font-size:10.5px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-top:4px;font-weight:500}
-  .choice.offscript{background:var(--panel3);border-style:dashed;text-align:center;font-style:normal}
-  .choice.offscript:hover{border-color:var(--accent)}
+  /* priority objections */
+  .prio-obj{background:var(--panel);border:0.5px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:10px;cursor:pointer;transition:.15s;display:flex;align-items:flex-start;gap:12px}
+  .prio-obj:hover{border-color:var(--accent);background:var(--panel2)}
+  .prio-obj .num{background:var(--accent-bg);color:var(--accent);border:0.5px solid var(--accent-border);width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0}
+  .prio-obj .obj-body{flex:1}
+  .prio-obj .obj-cust{font-size:14.5px;color:var(--text);font-style:italic;margin-bottom:4px}
+  .prio-obj .obj-cust::before{content:"\201C"}
+  .prio-obj .obj-cust::after{content:"\201D"}
+  .prio-obj .obj-hint{font-size:12px;color:var(--text-muted)}
 
-  .back-btn{background:none;border:none;color:var(--text-muted);font-size:13px;cursor:pointer;padding:6px 10px;margin-top:14px}
+  .more-toggle{background:transparent;border:0.5px dashed var(--border);color:var(--text-secondary);border-radius:10px;padding:10px 14px;font-size:13px;cursor:pointer;width:100%;text-align:center;margin-top:10px}
+  .more-toggle:hover{color:var(--text);border-color:var(--border-strong)}
+
+  .other-obj{background:var(--panel2);border:0.5px solid var(--border);border-radius:8px;padding:10px 14px;margin-bottom:6px;cursor:pointer;font-size:13.5px;color:var(--text);font-style:italic;display:none}
+  .other-obj:hover{border-color:var(--accent-border);background:var(--accent-bg)}
+  .other-obj::before{content:"\201C"}
+  .other-obj::after{content:"\201D"}
+  .other-obj.show{display:block}
+
+  .back-btn{background:none;border:none;color:var(--text-muted);font-size:13px;cursor:pointer;padding:6px 0;margin-top:14px}
   .back-btn:hover{color:var(--text)}
 
+  /* FAB */
   .fab{position:fixed;bottom:24px;right:24px;z-index:50}
-  .fab-main{width:56px;height:56px;border-radius:50%;background:var(--accent);color:#fff;border:none;font-size:26px;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;transition:.2s;line-height:1}
-  .fab-main:hover{background:var(--accent-hover);transform:scale(1.05)}
+  .fab-main{width:54px;height:54px;border-radius:50%;background:var(--accent);color:#fff;border:none;font-size:24px;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;transition:.2s;line-height:1}
+  .fab-main:hover{background:var(--accent-hover)}
   .fab-main.open{transform:rotate(45deg)}
-  .fab-menu{position:absolute;bottom:70px;right:0;display:none;flex-direction:column;gap:10px;align-items:flex-end}
+  .fab-menu{position:absolute;bottom:66px;right:0;display:none;flex-direction:column;gap:8px;align-items:flex-end}
   .fab-menu.open{display:flex}
-  .fab-item{display:flex;align-items:center;gap:10px;background:var(--panel);border:0.5px solid var(--border);border-radius:24px;padding:10px 16px;cursor:pointer;font-size:13px;color:var(--text);white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,.3);transition:.15s}
+  .fab-item{display:flex;align-items:center;gap:10px;background:var(--panel);border:0.5px solid var(--border);border-radius:22px;padding:8px 14px;cursor:pointer;font-size:12.5px;color:var(--text);white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,.3)}
   .fab-item:hover{border-color:var(--accent-border);background:var(--panel2)}
   .fab-item.help{background:var(--accent-bg);color:var(--accent);border-color:var(--accent-border);font-weight:600}
 
-  .end-screen{text-align:center;padding:50px 20px}
-  .end-screen .celebrate{font-size:64px;margin-bottom:8px;animation:pop .6s cubic-bezier(.34,1.56,.64,1)}
+  /* end screen */
+  .end-screen{text-align:center;padding:40px 20px}
+  .end-screen .celebrate{font-size:60px;margin-bottom:6px;animation:pop .6s cubic-bezier(.34,1.56,.64,1)}
   @keyframes pop{0%{transform:scale(0)}100%{transform:scale(1)}}
-  .end-screen h2{font-size:28px;margin:8px 0}
-  .end-screen .end-sub{color:var(--text-secondary);font-size:15px;margin-bottom:8px}
-  .end-screen .end-outcome{background:var(--green-bg);border:0.5px solid var(--green-border);color:var(--green);padding:12px 18px;border-radius:10px;font-size:14px;font-weight:500;display:inline-block;margin:14px auto 26px}
-  .end-screen .end-outcome.warn{background:var(--panel2);border-color:var(--border-strong);color:var(--text-secondary)}
-  .end-screen .big-btn{max-width:280px;margin:8px auto}
+  .end-screen h2{font-size:26px;margin:8px 0 4px}
+  .end-screen .end-sub{color:var(--text-secondary);font-size:14px;margin-bottom:20px}
+  .qa-list{background:var(--panel);border:0.5px solid var(--border);border-radius:12px;padding:18px 20px;text-align:left;max-width:420px;margin:0 auto 24px}
+  .qa-list h3{margin:0 0 12px;font-size:13px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.6px;font-weight:600}
+  .qa-item{display:flex;align-items:center;gap:10px;padding:6px 0;font-size:13.5px;color:var(--text-secondary)}
+  .qa-item .check{color:var(--green);font-weight:700}
+  .end-screen .big-btn{max-width:260px;margin:8px auto}
 
+  /* modals */
   .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);align-items:center;justify-content:center;z-index:100;padding:20px}
   .modal-overlay.open{display:flex}
-  .modal{background:var(--panel);border:0.5px solid var(--border-strong);border-radius:14px;padding:22px 26px;max-width:540px;width:100%;max-height:88vh;overflow:auto}
-  .modal h3{margin:0 0 4px;font-size:17px}
-  .modal .desc{color:var(--text-secondary);font-size:13px;margin-bottom:16px}
+  .modal{background:var(--panel);border:0.5px solid var(--border-strong);border-radius:14px;padding:22px 24px;max-width:520px;width:100%;max-height:88vh;overflow:auto}
+  .modal h3{margin:0 0 4px;font-size:16px}
+  .modal .desc{color:var(--text-secondary);font-size:13px;margin-bottom:14px}
   .modal-close{float:right;cursor:pointer;color:var(--text-muted);font-size:22px;line-height:1;background:none;border:none}
-  .field{margin-bottom:14px}
+  .field{margin-bottom:12px}
   .field label{display:block;font-size:12.5px;color:var(--text-secondary);margin-bottom:6px}
   .field input,.field select,.field textarea{width:100%;background:var(--panel2);border:0.5px solid var(--border);color:var(--text);padding:10px 12px;border-radius:8px;font-size:14px}
   .field textarea{min-height:110px;resize:vertical;font-family:inherit}
@@ -111,11 +149,11 @@
   .result .line{display:flex;justify-content:space-between;font-size:13px;color:var(--text-secondary);margin-top:4px}
 
   .search-box{width:100%;background:var(--panel2);border:0.5px solid var(--border);color:var(--text);padding:10px 12px;border-radius:8px;font-size:14px;margin-bottom:12px}
-  .off-item{padding:12px 14px;border:0.5px solid var(--border);border-radius:10px;margin-bottom:8px;background:var(--panel2)}
-  .off-item .cust{font-size:13.5px;color:var(--text);font-style:italic;margin-bottom:6px}
-  .off-item .reply{font-size:13px;color:var(--text-secondary)}
-  .off-item .reply b{color:var(--accent)}
+  .off-item{padding:11px 14px;border:0.5px solid var(--border);border-radius:10px;margin-bottom:8px;background:var(--panel2)}
+  .off-item .cust{font-size:13px;color:var(--text);font-style:italic;margin-bottom:4px}
+  .off-item .reply{font-size:12.5px;color:var(--text-secondary)}
 
+  /* gate */
   .gate-overlay{position:fixed;inset:0;background:var(--bg);z-index:200;display:flex;align-items:center;justify-content:center}
   .gate-card{width:360px;text-align:center;padding:20px}
   .gate-card h2{margin-bottom:4px}
@@ -128,7 +166,8 @@
 
 <div class="gate-overlay" id="gate">
   <div class="gate-card">
-    <h2>Angi Call Flow Guide</h2>
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" style="margin-bottom:12px"><path d="M12 2L22 12L12 22L2 12L12 2Z" stroke="#4f8ef7" stroke-width="1.5" fill="none"/><path d="M7 12L12 17L17 12L12 7L7 12Z" fill="#4f8ef7"/></svg>
+    <h2>ANGI Call Flow</h2>
     <p>Sign in to start a call.</p>
     <div class="field"><label>Name</label><input id="g-name" placeholder="Jane Rivera"></div>
     <div class="field"><label>Email</label><input id="g-email" placeholder="jane@company.com"></div>
@@ -146,7 +185,14 @@
 
 <div id="app">
 <header>
-  <div class="brand">ANGI<span>ASCENSION</span></div>
+  <div class="brand-group">
+    <a href="#" class="convex-logo">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M12 2L22 12L12 22L2 12L12 2Z" stroke="#4f8ef7" stroke-width="1.5" fill="none"/><path d="M7 12L12 17L17 12L12 7L7 12Z" fill="#4f8ef7"/></svg>
+      <span class="convex-name">convex</span>
+    </a>
+    <div class="divider-vert"></div>
+    <div class="page-title">ANGI <span>Call Flow</span></div>
+  </div>
   <nav>
     <a href="dashboard.html">Usage</a>
     <a href="admin.html">Admin</a>
@@ -158,7 +204,6 @@
     <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
     <div class="progress-label" id="progress-label">Phase 1 of 9</div>
   </div>
-
   <div id="stage"></div>
 </main>
 </div>
@@ -166,243 +211,265 @@
 <div class="fab" id="fab">
   <div class="fab-menu" id="fab-menu">
     <div class="fab-item help" onclick="openModal('m-offscript')">? Off-script help</div>
-    <div class="fab-item" onclick="openModal('m-membership')">ForeverClean calc</div>
+    <div class="fab-item" onclick="openModal('m-membership')">Membership calc</div>
     <div class="fab-item" onclick="openModal('m-etf')">ETF calc</div>
-    <div class="fab-item" onclick="openModal('m-onetime')">One-time / trial calc</div>
     <div class="fab-item" onclick="openModal('m-negotiation')">Negotiation calc</div>
     <div class="fab-item" onclick="openModal('m-notes')">Notes</div>
   </div>
   <button class="fab-main" id="fab-main" onclick="toggleFab()">+</button>
 </div>
 
-<div class="modal-overlay" id="m-offscript">
-  <div class="modal">
-    <button class="modal-close" onclick="closeModal('m-offscript')">&times;</button>
-    <h3>Off-script help</h3>
-    <div class="desc">Search what the customer said. Every entry gives a reply direction and where to return.</div>
-    <input class="search-box" id="off-search" placeholder="e.g. steal, refund, cancel, allergy, manager..." oninput="filterOffscript()">
-    <div id="off-list"></div>
-  </div>
-</div>
-
-<div class="modal-overlay" id="m-membership"><div class="modal"><button class="modal-close" onclick="closeModal('m-membership')">&times;</button><h3>ForeverClean membership calc</h3><div class="desc">First cleaning + recurring membership pricing.</div><div class="field"><label>First cleaning hours</label><input type="number" id="mem-hours" value="3" min="1"></div><div class="field"><label>Membership fee ($/month, from month 2)</label><input type="number" id="mem-fee" value="59"></div><div class="field"><label>Frequency (cleanings per month)</label><input type="number" id="mem-freq" value="2" min="1"></div><button class="calc-btn" onclick="calcMembership()">Calculate</button><div class="result" id="mem-result" style="display:none"></div></div></div>
-
-<div class="modal-overlay" id="m-etf"><div class="modal"><button class="modal-close" onclick="closeModal('m-etf')">&times;</button><h3>Early termination fee</h3><div class="desc">$35 &times; first-cleaning hours. Name it small and early.</div><div class="field"><label>First cleaning hours</label><input type="number" id="etf-hours" value="3" min="1"></div><button class="calc-btn" onclick="calcETF()">Calculate ETF</button><div class="result" id="etf-result" style="display:none"></div></div></div>
-
-<div class="modal-overlay" id="m-onetime"><div class="modal"><button class="modal-close" onclick="closeModal('m-onetime')">&times;</button><h3>One-time / trial calc</h3><div class="desc">No-commitment onetime vs member rate.</div><div class="field"><label>Hours needed</label><input type="number" id="one-hours" value="3" min="1"></div><button class="calc-btn" onclick="calcOnetime()">Calculate</button><div class="result" id="one-result" style="display:none"></div></div></div>
-
-<div class="modal-overlay" id="m-negotiation"><div class="modal"><button class="modal-close" onclick="closeModal('m-negotiation')">&times;</button><h3>Negotiation calc</h3><div class="desc">For pushback on membership fee or term.</div><div class="field"><label>Negotiated fee ($/month)</label><input type="number" id="neg-fee" value="49"></div><div class="field"><label>Commitment term (months)</label><input type="number" id="neg-term" value="6" min="1"></div><button class="calc-btn" onclick="calcNegotiation()">Calculate</button><div class="result" id="neg-result" style="display:none"></div></div></div>
-
-<div class="modal-overlay" id="m-notes"><div class="modal"><button class="modal-close" onclick="closeModal('m-notes')">&times;</button><h3>Notes</h3><div class="desc">Saved to this device only.</div><div class="field"><textarea id="notes-area" placeholder="Notes for this call..."></textarea></div><button class="calc-btn" onclick="saveNotes()">Save</button><div class="result" id="notes-saved" style="display:none">Saved.</div></div></div>
+<div class="modal-overlay" id="m-offscript"><div class="modal"><button class="modal-close" onclick="closeModal('m-offscript')">&times;</button><h3>Off-script help</h3><div class="desc">Search what the customer said.</div><input class="search-box" id="off-search" placeholder="e.g. steal, refund, cancel, allergy, manager..." oninput="filterOffscript()"><div id="off-list"></div></div></div>
+<div class="modal-overlay" id="m-membership"><div class="modal"><button class="modal-close" onclick="closeModal('m-membership')">&times;</button><h3>Membership calc</h3><div class="desc">First cleaning + recurring pricing.</div><div class="field"><label>First cleaning hours</label><input type="number" id="mem-hours" value="3" min="1"></div><div class="field"><label>Membership tier ($/month)</label><select id="mem-fee"><option value="59">$59 (4 paid months)</option><option value="49">$49 (6 paid months)</option><option value="54">$54 (negotiated from $59)</option><option value="44">$44 (negotiated from $49)</option><option value="39">$39 (final $49 offer)</option></select></div><button class="calc-btn" onclick="calcMembership()">Calculate</button><div class="result" id="mem-result" style="display:none"></div></div></div>
+<div class="modal-overlay" id="m-etf"><div class="modal"><button class="modal-close" onclick="closeModal('m-etf')">&times;</button><h3>ETF calc</h3><div class="desc">$35 &times; first-cleaning hours.</div><div class="field"><label>First cleaning hours</label><input type="number" id="etf-hours" value="3" min="1"></div><button class="calc-btn" onclick="calcETF()">Calculate</button><div class="result" id="etf-result" style="display:none"></div></div></div>
+<div class="modal-overlay" id="m-negotiation"><div class="modal"><button class="modal-close" onclick="closeModal('m-negotiation')">&times;</button><h3>Negotiation ladder</h3><div class="desc">Only lower MF if trigger is a clear commitment/price objection.</div><div style="background:var(--panel2);border-radius:8px;padding:14px;margin-bottom:10px;font-size:13.5px"><b style="color:var(--accent)">From $59:</b><br>1st offer: $59 (4 paid mo)<br>2nd offer: $54 (still 4 paid mo)<br>3rd offer: $49 (upgrade to 6 paid mo)</div><div style="background:var(--panel2);border-radius:8px;padding:14px;font-size:13.5px"><b style="color:var(--accent)">From $49:</b><br>1st offer: $49 (6 paid mo)<br>2nd offer: $44 (still 6 paid mo)<br>3rd offer: $39 (final \u2014 tag for QA review)</div></div></div>
+<div class="modal-overlay" id="m-notes"><div class="modal"><button class="modal-close" onclick="closeModal('m-notes')">&times;</button><h3>Notes</h3><div class="desc">Saved to this device.</div><div class="field"><textarea id="notes-area" placeholder="Notes..."></textarea></div><button class="calc-btn" onclick="saveNotes()">Save</button><div class="result" id="notes-saved" style="display:none">Saved.</div></div></div>
 
 <script>
-// ============ PHASES ============
+// ============ PHASES (aligned to QA + Master Script + hard-sell) ============
 const phases=[
 {
   t:"Opening",
-  obj:"Reconnect the customer with their Angi request and establish trust.",
+  obj:"Reconnect the Angi request. Disclose the recorded line. Take control fast \u2014 Angi leads are defensive and often don't remember signing up.",
+  legal:false,
   script:`Hi, is this [Customer Name]?
 
 Hi [Customer Name], this is [Agent Name] with Homeaglow on a recorded line.
 
-I'm reaching out because you recently requested a house cleaning through Angi.
+I'm reaching out because you recently requested a house cleaning through Angi. I've already got your request in front of me \u2014 I won't make you repeat what you entered.
 
-I already have your request in front of me, so don't worry\u2014I won't make you repeat everything you entered online.
-
-I just want to learn a little more about what you're looking for so I can recommend the best option for your home.
-
-Is now still a good time for a quick conversation?`,
-  ifBusy:`No problem at all. Since you requested information, I wanted to make sure we connected. When would be a better time for me to call you back?`,
-  alts:[]
+I just need a couple minutes to lock in the right option for your home. Sounds good?`,
+  qa:['recorded'],
+  tips:[
+    "<b>Assumptive close on the opener.</b> \"Sounds good?\" not \"is this a good time?\" \u2014 don't invite a no.",
+    "<b>If they say \"who is this?\":</b> Don't apologize. State your name, mention Angi request confidently, move to discovery.",
+    "<b>If they say \"I only wanted a quote\":</b> \"You're getting one \u2014 an accurate one. Two questions and I'll have it.\" Do NOT let them hang up thinking this is a sales call."
+  ]
 },
 {
   t:"Discovery",
-  obj:"Understand the customer's motivation instead of repeating CRM information.",
-  script:`I can already see the details you submitted through Angi, including the size of your home and the type of cleaning you're looking for.
+  obj:"Get their motivation \u2014 you'll weaponize it in the pitch. Ask ONE question, listen, respond.",
+  legal:false,
+  script:`Perfect. I can see the details you submitted, so I won't have you repeat the basics.
 
-The one thing the request doesn't tell me is\u2026 what made you decide now was the right time to start looking for a cleaner?`,
+The one thing your request doesn't tell me is \u2014 what made now the right time to start looking for a cleaner?`,
   probes:[
-    "What's been the biggest challenge keeping up with everything lately?",
-    "If this cleaning went exactly the way you're hoping, what would make you say it was absolutely worth it?",
-    "Have you hired a professional cleaner before?",
-    "Are you comparing companies or looking for someone you feel comfortable hiring?"
+    "What's been the biggest thing keeping up with the house lately?",
+    "If this cleaning went exactly how you're hoping, what would that look like?",
+    "Have you hired a professional cleaner before, or is this new for you?",
+    "Are you comparing companies, or just looking for someone reliable?"
   ],
-  rule:"Discovery is where the sale gets built. Ask ONE probe, listen fully, then respond to what they say. Do not machine-gun all four.",
-  alts:[]
+  qa:['discovery'],
+  tips:[
+    "<b>Ask ONE probe. Listen. Do not machine-gun them all.</b>",
+    "<b>Write down their motivation word-for-word</b> \u2014 you'll quote it back in the pitch.",
+    "<b>If they answer curtly:</b> Follow up with \"tell me more about that\" \u2014 the sale is in the detail."
+  ]
 },
 {
   t:"Elevator Pitch",
-  obj:"Position Homeaglow as the solution based on what discovery revealed. THIS IS WHERE MOST SALES ARE LOST \u2014 tie it back to what the customer said.",
-  script:`Thanks for sharing that with me.
+  obj:"This is where most sales are lost. Tie every sentence back to what THEY said in discovery. Hard-sell posture: assumptive, confident, no hedging.",
+  legal:false,
+  script:`Based on what you told me \u2014 [reference their motivation] \u2014 you're exactly who Homeaglow is built for.
 
-Based on everything you've told me, I think we'd be a great fit.
+Here's the honest version: we work with local cleaning pros who are background-checked, insured, and rated by real customers near you. Independents can't offer that.
 
-Homeaglow works with background-checked local cleaning professionals, making it easy to find someone reliable without having to search on your own.
-
-Our goal is to match you with the right cleaner while giving you flexible scheduling and transparent pricing.`,
-  rule:"Do NOT read the pitch verbatim if you can help it. Weave in what they told you in Discovery. \u201cYou mentioned [X] \u2014 that's exactly what we solve.\u201d",
-  alts:[
-    {label:"Alt 1 \u2014 If they mentioned time pressure",body:`You mentioned things have been getting away from you lately \u2014 that's exactly why people book us. Instead of you searching, screening, and hoping a cleaner shows up, we already have local pros who are background-checked and rated by real customers in your area. You pick a time, we send someone reliable, done.
-
-Two things independents can't do: if your cleaner cancels last minute, we send a backup. And every cleaner is insured. That's what the membership pays for \u2014 it's a service, not just a booking site.`},
-    {label:"Alt 2 \u2014 If they've been burned before",body:`It sounds like you've had less-than-great experiences with cleaners before \u2014 that's honestly why Homeaglow exists. Every cleaner is background-checked, insured, and rated by other customers near you. You see the reviews before they show up.
-
-And if a cleaning isn't right, we send someone back to redo it or refund it. That's the difference between a platform and hiring a stranger off Craigslist.`},
-    {label:"Alt 3 \u2014 If comparing to independents",body:`If you already have someone you like, honestly \u2014 keep them. What people use us for is what independents can't do: a backup cleaner when yours cancels, insurance if something breaks, and one dashboard that handles rescheduling, tips, and re-bookings.
-
-It's less about \u201creplacing your cleaner\u201d and more about \u201chaving a backup plan that actually works.\u201d`}
+You'll get flexible scheduling, transparent pricing, and \u2014 the piece most people miss \u2014 a backup cleaner if yours ever cancels. That's what the membership pays for. Not just a booking site, an actual service.`,
+  tips:[
+    "<b>DO NOT read this verbatim.</b> Weave in their motivation. \"You mentioned [X] \u2014 that's exactly what we solve.\"",
+    "<b>Never compete on price.</b> Independents beat us on price. We win on backup, insurance, no ghosting.",
+    "<b>Hard-sell posture:</b> Speak like they've already decided. \"When your cleaner shows up next Tuesday\u2026\" not \"if you decide to book\u2026\""
   ]
 },
 {
   t:"Confirm Details",
-  obj:"Verify the information already submitted.",
-  script:`Let me quickly make sure I have everything correct.
+  obj:"Verify what's in the system. Move fast \u2014 this isn't the sales part.",
+  legal:false,
+  script:`Quick confirm on what I have:
 
 \u2022 [Bedrooms]
 \u2022 [Bathrooms]
 \u2022 [Frequency]
 \u2022 [City]
 
-Is all of that still correct?
+All still correct?
 
-Are there any areas you'd really like your cleaner to focus on?
-
-Any special instructions I should note for your cleaner?`,
-  alts:[]
+Anywhere in particular you want your cleaner to focus? Any specific instructions I should note?`,
+  tips:[
+    "<b>Don't linger here.</b> This is a QA checkpoint, not a sales moment.",
+    "<b>If they add priority areas, USE them in the Recommendation phase</b> \u2014 \"3 hours because you mentioned the kitchen and bathrooms need extra attention.\""
+  ]
 },
 {
   t:"Recommendation",
-  obj:"Recommend an appropriate service duration.",
+  obj:"Recommend hours. NEVER quote $18/hr. Say \"roughly $23/hour.\"",
+  legal:false,
   script:`Based on everything you shared, I'd recommend starting with about [X] hours.
 
-That gives your cleaner enough time to focus on the detailed areas you mentioned instead of rushing through the home.`,
-  alts:[]
+That gives your cleaner enough time to actually focus on [reference their priority area] instead of rushing through the whole house.
+
+You're looking at roughly $23 an hour for a background-checked professional \u2014 well below what independents charge.`,
+  qa:['rate_quoted_correctly'],
+  tips:[
+    "<b>CRITICAL:</b> Say \"<b>roughly</b> $23/hour.\" Never $18/hr. Never a firm number without \"roughly.\"",
+    "<b>Tie hours to their priority.</b> \"3 hours because you mentioned the kitchen\" > \"3 hours is what we recommend.\"",
+    "<b>Anchor high on hours.</b> If they push back on hours, you have room to negotiate down. If you anchor low, you have nowhere to go."
+  ]
 },
 {
   t:"Price Presentation",
-  obj:"Present pricing clearly. Anchor ONE monthly total \u2014 don't lead with breakdowns. This is the second highest-loss phase.",
+  obj:"Anchor ONE monthly total. Frame today's charge as onboarding, not a surprise. Second-highest loss phase.",
+  legal:false,
   script:`For everything you described, you're looking at approximately $[Monthly Total] per month.
 
-That includes your ForeverClean membership and discounted cleaning rates.
+That includes your ForeverClean membership and the discounted cleaning rate.
 
-Today, you're only paying $[Today's Charge] to get started.
+Today, you're only paying $[Today's Charge] to get started \u2014 that locks in the slot with your cleaner.
 
-How does that sound?`,
-  rule:"Anchor the MONTHLY total first. \u201cToday's charge\u201d frames the first-cleaning fee as onboarding cost, not a surprise. Never lead with $59 in isolation.",
-  alts:[
-    {label:"Alt \u2014 Customer already anchored to their own number in Discovery",body:`Earlier you mentioned you were hoping to keep it around $[their number] a month. Based on what you described, I can get you to about $[close-to-their-number] a month, which includes everything \u2014 discounted rate, insurance, backup cleaner.
-
-To get started today it's just $[Today's Charge]. That's the only up-front piece. Sound doable?`},
-    {label:"Alt \u2014 Skeptical / value-conscious customer",body:`Let me put this in perspective. Independent cleaners in your area charge $40\u2013$60 per hour with no backup, no insurance, and no protection if the cleaning isn't right.
-
-With us, you're at $23 per hour with all of that included. Your monthly total works out to around $[Monthly Total]. Today it's just $[Today's Charge] to lock in the slot.
-
-Does that feel fair for what you're getting?`}
+Sound good?`,
+  tips:[
+    "<b>Anchor the MONTHLY total first.</b> Never lead with $59 in isolation.",
+    "<b>\"Only paying $[X] today\"</b> \u2014 the word \"only\" matters. It frames the first payment as onboarding cost, not the real price.",
+    "<b>\"Sound good?\" is an assumptive close.</b> Wait. Do not fill silence."
   ]
 },
 {
-  t:"Membership Conversation",
-  obj:"Address membership concerns with confidence. Customers often don't expect a membership \u2014 don't act like they should have.",
-  script:`I completely understand\u2014that's one of the most common questions I hear.
+  t:"Mandatory Terms",
+  obj:"LEGAL disclosure phase. Every line must be said. If they object, use the negotiation ladder \u2014 don't skip disclosures to close.",
+  legal:true,
+  script:`Before we finalize \u2014 I want to make sure everything's crystal clear so there are no surprises later.
 
-The membership keeps your discounted cleaning rate active. Without it, each visit is charged at the regular market rate.
+Your membership fee is $[59 / 49] per month. That's what keeps your rate at $23/hour.
 
-[Insert the exact approved mandatory membership verbatim from the current FCF guide here.]`,
-  rule:"Do NOT say \u201cdiscounted rate\u201d more than ONCE. Repeating it makes customers more resistant. If they push back, use Alt 1 or handle via objection loop.",
-  alts:[
-    {label:"Alt 1 \u2014 Lead with the escape hatch (recommended for resistant customers)",body:`Totally fair \u2014 a lot of people don't expect a membership. Here's the honest version: the membership is what keeps your hourly rate low. If it's ever not right for you, you cancel for a one-time fee of $[ETF] \u2014 that's less than most gyms charge to cancel. No phone tree, no hoops.
+You'll be committed for [4 / 6] paid months. If it's ever not right for you, cancellation is a one-time fee of $[ETF] \u2014 that's $35 per hour of your first cleaning.
 
-The six months isn't a lock-in \u2014 it's what unlocks the lower rate. That's the whole trade.`},
-    {label:"Alt 2 \u2014 If they've been burned by subscriptions before",body:`I hear you \u2014 nobody wants to sign up for another thing they can't get out of. Here's what's different: no charges without your approval, one-click cancel from your dashboard, and I'll text you the cancel link right after this call so you have it in your pocket.
+And your first membership fee isn't charged today \u2014 it's billed *after* your first cleaning. So today, you're only paying for the cleaning itself.
 
-If you never use it, great. But you have it.`}
-  ]
-},
-{
-  t:"Common Responses",
-  obj:"Objection handling library \u2014 open the Customer objects panel below to work through whatever comes up.",
-  script:`This phase is a placeholder \u2014 in a real call, you're handling objections as they arise at any phase using the \u201cCustomer objects\u201d button on each phase.
-
-If you're here, either the customer paused with a lingering concern, or you want to preview the most common ones before Booking.`,
-  alts:[
-    {label:"PRICE \u2014 \u201cIt's too much\u201d",body:`I understand. Compared to what you were hoping to spend?
-
-(Wait for their number. Then work backward from THEIR number \u2014 don't defend yours.)`},
-    {label:"THINK ABOUT IT \u2014 \u201cLet me think\u201d",body:`I completely understand. Just so I know how best to help, what part would you like to think over? The service itself, the timing, or the price?
-
-(Whichever they name is the real objection. Handle that specifically.)`},
-    {label:"SPOUSE \u2014 \u201cI need to check with my partner\u201d",body:`Absolutely. Is your spouse mostly concerned about the cost, timing, or making the decision together?
-
-(Answer tells you what info to send. Set specific callback.)`}
+Are those terms clear?`,
+  qa:['mf','commitment','etf','schedule'],
+  ladder:true,
+  tips:[
+    "<b>You MUST say all four:</b> Membership Fee, Commitment Term, ETF, Schedule of Charges. Missing one = failed QA.",
+    "<b>If they object to the FEE:</b> Use the ladder. $59 \u2192 $54 \u2192 $49. $49 \u2192 $44 \u2192 $39. Never skip a rung.",
+    "<b>If they object to the COMMITMENT:</b> Reduce from 6mo to 4mo ONLY if the trigger is clearly commitment (not price).",
+    "<b>The \u201cbilled after first cleaning\u201d is the trust move</b> \u2014 lead with it if they're skittish."
   ]
 },
 {
   t:"Booking",
-  obj:"Transition naturally into scheduling. Confirm every detail.",
-  script:`Perfect! Let's find a day that works best for you.
+  obj:"Assumptive booking. Confirm date, time, hours, cleaner rate (\"roughly\"), premium tasks. Trial terms if applicable.",
+  legal:true,
+  script:`Perfect. Let's find a day that works.
 
-Would Tuesday morning or Wednesday afternoon work better?
+Would [Tuesday morning] or [Wednesday afternoon] work better?
 
-Confirm:
-\u2022 Address
-\u2022 Email
-\u2022 Phone
-\u2022 Entry Instructions
-\u2022 Priority Areas
-\u2022 Payment
+Great, locking that in. Confirming:
+\u2022 Date & time: [X]
+\u2022 Estimated hours: [X]
+\u2022 Cleaner's rate: roughly $23/hour
+\u2022 Address: [X]
+\u2022 Email: [X]
+\u2022 Phone: [X]
+\u2022 Entry instructions: [X]
 
-[Insert the exact approved booking/payment verbatim from the current FCF guide here.]`,
-  rule:"Read every detail back. Wrong email or address is what causes \u201csales that cancel.\u201d Be slow.",
-  alts:[]
+If there's anything premium your cleaner needs to add \u2014 like inside the fridge, oven, or windows \u2014 that adds time and cost, we can note it now.
+
+Just so you know: this is a trial cleaning. If it's not the right fit for you, you have 30 days to cancel to avoid auto-enrollment.
+
+I'll take payment for today's charge to lock the slot.`,
+  qa:['trial_terms','booking_details'],
+  tips:[
+    "<b>Assumptive close on the date:</b> \"Tuesday or Wednesday?\" not \"when works for you?\"",
+    "<b>Say \"roughly $23/hour\"</b> \u2014 QA fails if you quote $18 or a firm $23.",
+    "<b>Trial terms MUST be stated:</b> 30 days to cancel. This is compliance."
+  ]
+},
+{
+  t:"Final Recap",
+  obj:"LEGAL close. Repeat every term. Get a clear yes. If they hesitate here, they'll cancel later \u2014 handle it now.",
+  legal:true,
+  script:`Alright, one last thing before we finish. Let me recap everything so we're on the same page:
+
+\u2022 Your first cleaning is [date/time] for approximately [X] hours at roughly $23/hour
+\u2022 Your membership is $[MF] per month, billed *after* your first cleaning
+\u2022 You're committed for [4 / 6] paid months
+\u2022 Cancellation fee if you ever need to leave early: $[ETF]
+\u2022 30 days to cancel the trial if it's not the right fit
+
+Is that a clear yes?`,
+  qa:['final_recap','clear_yes'],
+  tips:[
+    "<b>Say \u201cIs that a clear yes?\u201d exactly.</b> That phrase is what QA scores.",
+    "<b>If they hesitate:</b> Do NOT keep pushing terms. Ask \"What part isn't clear?\" and handle that specific concern.",
+    "<b>If they say yes:</b> Move to the wrap. Do not add more info \u2014 you'll open new objections."
+  ]
 }
 ];
 
-// ============ OBJECTIONS LIBRARY (available at any phase) ============
-const objections=[
-{cust:"I just wanted a quote in writing.",tag:"Common at Opening / Discovery",reply:"You are \u2014 that's exactly what I'm putting together. I just need two minutes to ask about your home so the quote is accurate, not generic. Sound fair?"},
-{cust:"I already have a cleaner I'm comparing.",tag:"Common at Discovery / Elevator",reply:"That's fair \u2014 lots of customers do. Honest question: if your cleaner canceled tomorrow, what's your plan B? That's the piece we handle that independents can't. Not saying yours isn't good \u2014 just what you're paying for on our side."},
-{cust:"You're an aggregator / Angi is just a directory.",tag:"Common at Opening / Discovery",reply:"Angi is the platform \u2014 the person coming to your home is a local pro who's been vetted, background-checked, and rated by other customers near you. We're the reason you get a vetted local cleaner."},
-{cust:"That's too much / more than I expected.",tag:"Common at Price",reply:"I hear you. What were you thinking of spending? Let me see what I can do."},
-{cust:"Your local cleaner charges way less than that.",tag:"Common at Price",reply:"That can be true \u2014 what independents don't include is the backup if they cancel, or insurance. It's the same reason a rideshare costs more than a friend driving you."},
-{cust:"I didn't sign up for a subscription.",tag:"Common at Membership",reply:"Totally fair \u2014 that's exactly why I'm walking you through it now instead of hiding it. Nothing about today locks you in for six months. If the first cleaning isn't right, you cancel for $[ETF] and we're done. I'd rather you know now than be surprised later."},
-{cust:"I don't want a commitment.",tag:"Common at Membership",reply:"Totally fair \u2014 a lot of people feel the same before their first cleaning. Think of the six months less as a commitment and more as \u2014 that's what unlocks the lower rate. If it's not for you, cancel any time for $[ETF]. That's the whole risk."},
-{cust:"Six months feels like being trapped.",tag:"Common at Membership",reply:"I get it \u2014 nobody wants to feel locked in. But \u201ctrapped\u201d implies you can't leave, and you can \u2014 any time, for $[ETF]. That's less than most gyms charge to cancel."},
-{cust:"I've been burned by subscriptions before.",tag:"Common at Membership / Payment",reply:"That's completely fair \u2014 I'd feel the same. What I can promise: no charges without your approval, one-click cancel, no phone-tree gauntlet. I'll text you the cancel link right after this call so you have it in your pocket."},
-{cust:"Will you charge my card automatically?",tag:"Common at Payment",reply:"Only after cleanings you book and approve. Nothing is charged in the background \u2014 no random pulls, no surprise fees. If anything ever looks wrong, one call and it's refunded same-day."},
-{cust:"I'd rather pay on the day / cash to the cleaner.",tag:"Common at Payment",reply:"I get it. On our platform payment runs through the app \u2014 the cleaner never handles cash. Want me to text you a secure link to your dashboard so you can enter it yourself?"},
-{cust:"Let me think about it / call me back.",tag:"Common at any phase",reply:"I completely understand. Just so I know how best to help \u2014 what part would you like to think over? Service, timing, or price? (Whichever they name is the real objection.)"},
-{cust:"I need to talk to my spouse.",tag:"Common at Price / Membership",reply:"Absolutely. Is your spouse mostly concerned about cost, timing, or making the decision together? (Answer tells you what info to send.)"},
-{cust:"I already found someone.",tag:"Common at Opening",reply:"No problem, happy you got sorted. If it ever falls through, first cleaning starts at $19. Want me to text you the details just in case?"},
-{cust:"I'm not interested / take me off your list.",tag:"Common at Opening",reply:"Absolutely, I'll take you off. Have a good one."}
+// ============ PRIORITY OBJECTIONS (from Angi Call Analysis) ============
+const priorityObjections=[
+{id:1,name:"Membership resistant",cust:"I don't want a commitment / I feel held hostage / I don't want a subscription.",hint:"Highest-value objection. Winning half of these moves CSR by ~13 pts.",reply:`Totally fair \u2014 a lot of people feel the same before their first cleaning.
+
+Here's the honest version: the commitment isn't a lock-in. It's what unlocks your discounted rate. If it's ever not right for you, you cancel for $[ETF] \u2014 less than most gyms charge.
+
+The 4 months isn't a trap. It's the trade for the lower rate.`,rules:["Do NOT say \u201cdiscounted rate\u201d more than ONCE.","Do NOT ask \u201cis that a yes?\u201d twice.","Lead with the escape hatch (ETF) BEFORE mentioning the term."],good:"Jameson with Angela: reframed as $178 vs $252 one-time. Customer booked \u2014 commitment felt like optionality.",fail:"Mary with Mary L.D.: customer said 'I feel held hostage.' Agent asked 'is that a yes?' five more times. Sale will cancel."},
+{id:2,name:"Sticker shock",cust:"That's too expensive / your numbers are jumping / more than I thought.",hint:"Never defend your number. Work backward from THEIR number.",reply:`I hear you. What were you thinking of spending?
+
+[Wait for their number]
+
+Okay \u2014 let me see what I can do to get you closer to that.`,rules:["Anchor ONE total. Do not lead with breakdowns.","Do not defend your number.","When they name a budget, pivot immediately \u2014 don\u2019t explain why yours is right."],good:"Demie with Keith: Keith said '$80\u201390.' Demie pivoted to '$95 a month?' Keith agreed.",fail:"Justin with Madhu: led with '$450 national average.' Customer hung up. Anchored higher than actual charge."},
+{id:3,name:"Aggregator objection",cust:"You're an aggregator / Angi is just a directory / I want someone local.",hint:"Never confirm the frame. Lead with the CLEANER, not the platform.",reply:`Angi is the platform \u2014 but the person coming to your home is a local pro, background-checked, insured, and rated by other customers near you.
+
+You're not getting a call center. You're getting a vetted local cleaner. That's what we're for.`,rules:["Never say \u201cactually we\u2019re...\u201d or confirm \u201caggregator.\u201d","Lead with the cleaner.","Do not deny the platform framing \u2014 own it, then pivot to the cleaner."],good:"Angelus with Deborah: led with 'your professional cleaner will bring that for you.' Customer booked.",fail:"Mary with Ella: agent said 'correct, we're actually...' Customer hung up."},
+{id:4,name:"Price shopper",cust:"I just wanted a price / I'm still exploring / just getting quotes.",hint:"Do not push for same-day close. Get a specific callback.",reply:`Sure \u2014 for a home like yours, first cleaning runs about $[range]. When were you thinking of having it done \u2014 this week, next week?
+
+[If real date] Great, let me pencil you in and I'll follow up.
+[If vague] Let me text you the quote so you have it on hand \u2014 and I'll circle back [specific day].`,rules:["Do NOT keep pitching after two soft no's.","Set a specific callback time \u2014 not \u201csoon.\u201d","Text them the quote so the conversation doesn\u2019t die."],good:"Justin with Greg: gave quote, asked for 5PM callback next day. Customer agreed.",fail:"Agent with Bruce: kept pitching after two no's. Customer hung up."},
+{id:5,name:"Needs time",cust:"Let me think about it / call me back / I need to talk to my spouse.",hint:"Match their timeline. Don't push. Set a specific callback.",reply:`Completely understand. Just so I know how best to help \u2014 what part would you like to think over? The service, timing, or price?
+
+[Whichever they name is the real objection \u2014 handle it now]
+
+When works for a quick follow-up \u2014 Thursday at 5?`,rules:["Never ask \u201cwhat's holding you back?\u201d after they've said goodbye.","Set a SPECIFIC callback time.","Text a summary so the conversation doesn\u2019t go cold."],good:"Justin with Greg: matched customer's timeline ('call back at five?').",fail:"Justin with Janiece: customer had said goodbye. Agent asked 'what's holding you back?'"}
 ];
 
-// ============ OFF-SCRIPT LIBRARY ============
+// ============ OTHER OBJECTIONS ============
+const otherObjections=[
+{cust:"I thought I was just getting a quote in writing.",reply:"You are \u2014 that's exactly what I'm putting together. Two minutes and I'll have an accurate one for you, not a generic estimate."},
+{cust:"I didn't sign up for a subscription.",reply:"That's exactly why I'm walking through it now instead of hiding it. Nothing about today locks you in \u2014 if the first cleaning isn't right, you cancel for $[ETF] and we're done."},
+{cust:"I've been burned by subscriptions before.",reply:"Completely fair \u2014 I'd feel the same. No charges without your approval, one-click cancel, I'll text you the cancel link right after this call."},
+{cust:"I already have a cleaner I use.",reply:"Honestly? Keep them. What people use us for is what independents can't do \u2014 a backup if yours cancels, insurance, one dashboard. It's a backup plan, not a replacement."},
+{cust:"Will you charge my card automatically?",reply:"Only after cleanings you book and approve. Nothing in the background \u2014 no random pulls. If anything looks wrong, one call and it's refunded same day."},
+{cust:"I'd rather pay cash to the cleaner.",reply:"On our platform payment always runs through the app \u2014 cleaner never handles cash. Want me to text you a secure link so you can enter payment yourself?"},
+{cust:"That ETF is too much.",reply:"That fee only applies if the cleaning isn't right for you. And the membership pays for itself in less than two cleanings."},
+{cust:"Can you lower the membership fee?",reply:"Let me see what I can do \u2014 [use the negotiation ladder]. But that's the lowest I can go, and only because you committed to the [term]."},
+{cust:"I need to check with my spouse.",reply:"Absolutely. Is your spouse mostly concerned about cost, timing, or making the decision together? [Answer tells you what info to send]"},
+{cust:"I don't like being on a recorded line.",reply:"I understand. It's for quality \u2014 protects you and me both. Want me to text you the details so you have everything in writing after?"}
+];
+
+// ============ OFF-SCRIPT ============
 const offscript=[
-{cust:"How do I know the cleaner won't steal from me?",reply:"Every cleaner is background-checked, insured, and rated by real customers in your area. If anything ever happened, we cover it.",back:"Return to current phase."},
-{cust:"What if the cleaning is bad? Do you have a guarantee?",reply:"Yes \u2014 if you're not happy, let us know within 24 hours and we send someone back to redo it, or refund it.",back:"Return."},
-{cust:"Can I request the same cleaner every time?",reply:"For members, yes \u2014 you can favorite a cleaner and we'll book them by default when available.",back:"Build value. Return."},
-{cust:"How long does the cleaning take?",reply:"Depends on the home. Most cleanings run about [X hours]. If they finish faster, you're not charged less \u2014 price is for the slot.",back:"Return."},
-{cust:"What if I need to reschedule?",reply:"Easy \u2014 you can reschedule from your dashboard up to 24 hours before. Under 24 hours there's a small fee.",back:"Return."},
-{cust:"Is this a scam? I saw a bad review online.",reply:"Anyone can post anything online. What I can tell you is we've been running for years, every cleaner is vetted. Want me to text real reviews from your area?",back:"Don't get defensive. Offer proof, return."},
-{cust:"I read you charge people randomly.",reply:"You only get charged for cleanings you book and approve. The $59 membership after month one is disclosed upfront \u2014 nothing else.",back:"Name the disclosure. Return."},
-{cust:"Do you have Spanish-speaking cleaners?",reply:"Yes, in most areas. We can note the language preference on the booking.",back:"Note preference. Return."},
-{cust:"I'm allergic to certain products.",reply:"We note that on the booking. Cleaner uses whatever supplies you provide instead of the standard kit.",back:"Capture in notes. Return."},
-{cust:"Can you send a male / female cleaner?",reply:"You can filter for that when you book \u2014 I'll set it as default now.",back:"Note. Return."},
-{cust:"What's your BBB rating?",reply:"I don't have the number in front of me, but I can send it with the confirmation. Want that included?",back:"Don't guess. Offer to send. Return."},
-{cust:"I want to talk to a manager.",reply:"Absolutely \u2014 let me get your details and have a team lead call you back within the hour. What's a good time?",back:"Escalate. Don't force a sale over an escalation."},
-{cust:"Can I add extras like fridge, oven, windows?",reply:"Yes \u2014 those are add-ons. Fridge is [$X], oven [$X], windows [$X]. Want any on this one?",back:"Update booking. Return to Booking phase."},
-{cust:"I need this done TODAY.",reply:"Let me check same-day availability\u2026 If yes: 'I have [slot].' If no: 'Earliest is [next] \u2014 want to lock it in?'",back:"Don't promise same-day without checking."},
-{cust:"Are you Angi? I thought Angi was a directory.",reply:"Angi is the platform. What I'm offering is the cleaning service that operates through it. Your cleaner is a local pro Angi has vetted.",back:"Don't deny the platform framing. Return."},
-{cust:"I have COVID / I'm sick.",reply:"Please reschedule \u2014 no fee for health reasons. Let me push your booking a week out. Does [new date] work?",back:"Reschedule immediately. No fee."},
-{cust:"How many years have you been in business?",reply:"Angi has been running since 1995 \u2014 nearly 30 years.",back:"Concise. Return."},
-{cust:"Do I have to be home during the cleaning?",reply:"Nope \u2014 many customers leave a key or code. Whatever's easiest.",back:"Note preference. Return."},
-{cust:"Can I cancel the membership right after the first cleaning?",reply:"Yes \u2014 for $[ETF]. That's the only fee. No hoops.",back:"Name the fee small. Return."},
-{cust:"How much am I actually paying in the first year?",reply:"[First cleaning $] up front, then $59/month starting month 2 for the discounted $23/hr rate. Total depends on frequency.",back:"Don't hide the numbers. Return."}
+{cust:"How do I know the cleaner won't steal?",reply:"Every cleaner is background-checked, insured, rated. If anything happened, we cover it."},
+{cust:"Guarantee if cleaning is bad?",reply:"Yes \u2014 within 24 hours, we send someone back or refund it."},
+{cust:"Can I request the same cleaner?",reply:"For members, yes \u2014 favorite them, we book by default when available."},
+{cust:"What if I reschedule?",reply:"Dashboard reschedule up to 24 hours before. Under 24, small fee."},
+{cust:"Is this a scam? bad reviews online.",reply:"Anyone can post anything. We've been running for years, every cleaner vetted. Want me to text real reviews from your area?"},
+{cust:"Spanish-speaking cleaners?",reply:"Yes, most areas. We note it on the booking."},
+{cust:"I'm allergic to products.",reply:"Cleaner uses whatever you provide. We note it."},
+{cust:"Male / female cleaner?",reply:"Filter for it when booking. I'll set default now."},
+{cust:"BBB rating?",reply:"I'll send it with the confirmation. Want it included?"},
+{cust:"Talk to a manager.",reply:"Absolutely \u2014 team lead calls you back within the hour. Good time?"},
+{cust:"Add fridge, oven, windows?",reply:"Add-ons. Fridge $[X], oven $[X], windows $[X]. Want any today?"},
+{cust:"Need it TODAY.",reply:"Let me check same-day availability. If yes: 'I have [slot].' If no: 'Earliest is [next] \u2014 lock it in?'"},
+{cust:"Angi is just a directory.",reply:"Angi is the platform. Your cleaner is a local pro Angi vetted."},
+{cust:"I have COVID.",reply:"Reschedule \u2014 no fee for health. Let me push a week out. Does [date] work?"},
+{cust:"Do I need to be home?",reply:"Nope \u2014 leave a key or code. Whatever's easiest."},
+{cust:"Cancel right after first cleaning?",reply:"Yes \u2014 for $[ETF]. Only fee. No hoops."}
 ];
 
 // ============ STATE ============
-// stage: 'intro' | 'script' | 'objection-list' | 'objection-reply' | 'end'
-let phaseIdx=0, stage='intro', selectedObj=null, endOutcome=null;
+let phaseIdx=0, stage='intro', selectedObj=null, selectedObjSource='priority', endOutcome=null;
+let qaTracked = new Set();
+let showMoreObj = false;
 
 function enterGuide(){document.getElementById('gate').style.display='none';document.getElementById('app').style.display='block';render()}
 
@@ -412,16 +479,14 @@ document.addEventListener('click',(e)=>{const fab=document.getElementById('fab')
 function openModal(id){document.getElementById(id).classList.add('open');document.getElementById('fab-menu').classList.remove('open');document.getElementById('fab-main').classList.remove('open')}
 function closeModal(id){document.getElementById(id).classList.remove('open')}
 
+function toggleCoach(){document.getElementById('coach-body').classList.toggle('open')}
+function toggleMoreObj(){showMoreObj=!showMoreObj;render()}
+
 function updateProgress(){
-  const stageWeight = stage==='intro'?0:stage==='script'?0.4:stage==='objection-list'?0.6:stage==='objection-reply'?0.8:1;
-  const pct = stage==='end' ? 100 : Math.round(((phaseIdx+stageWeight)/phases.length)*100);
+  const w={intro:0,script:0.4,'objection-list':0.6,'objection-reply':0.8};
+  const pct = stage==='end' ? 100 : Math.round(((phaseIdx+(w[stage]||0))/phases.length)*100);
   document.getElementById('progress-fill').style.width=Math.min(pct,100)+'%';
   document.getElementById('progress-label').textContent = stage==='end' ? 'Call complete' : `Phase ${phaseIdx+1} of ${phases.length}`;
-}
-
-function toggleAlt(idx){
-  const el=document.getElementById('alt-'+idx);
-  el.classList.toggle('open');
 }
 
 function render(){
@@ -431,88 +496,149 @@ function render(){
   const p=phases[phaseIdx];
   let html=`<div class="phase-name">Phase ${phaseIdx+1} of ${phases.length}</div><h1>${p.t}</h1><div class="objective">${p.obj}</div>`;
 
+  if(p.legal){
+    html+=`<div class="legal-banner"><span class="badge">LEGAL</span> Every line in this phase must be said \u2014 QA scores this.</div>`;
+  }
+
   if(stage==='intro'){
-    // Just show phase objective + reveal button
-    html+=`<div class="card"><div class="label">Ready?</div><div style="color:var(--text-secondary);font-size:14px;margin-bottom:6px">When you've said the opening, click below to reveal the verbatim script and possible customer responses for this phase.</div><div class="btn-row"><button class="big-btn" onclick="revealScript()">Reveal script \u2192</button></div></div>`;
+    html+=`<div class="card"><div class="label">Ready?</div><div style="color:var(--text-secondary);font-size:14px;margin-bottom:6px">When you've opened the phase, reveal the verbatim script.</div><div class="btn-row"><button class="big-btn" onclick="revealScript()">Reveal script \u2192</button></div></div>`;
     if(phaseIdx>0)html+=`<button class="back-btn" onclick="phaseIdx--;stage='script';render()">\u2190 Back to previous phase</button>`;
   }
   else if(stage==='script' || stage==='objection-reply'){
-    // Show script (persistent)
-    html+=`<div class="card"><div class="label">What you say</div><div class="script-block"><div class="verbatim-tag">Verbatim \u2014 word-for-word</div>${p.script}</div>`;
-    if(p.ifBusy)html+=`<div style="margin-top:10px;padding:10px 14px;background:var(--panel2);border-radius:8px;border:0.5px dashed var(--border);font-size:13.5px;color:var(--text-secondary)"><b style="color:var(--text)">If they're busy:</b> \u201c${p.ifBusy}\u201d</div>`;
-    if(p.probes){html+=`<div style="margin-top:12px"><div class="label">Discovery probes \u2014 pick ONE</div>`;p.probes.forEach(pr=>{html+=`<div style="padding:8px 12px;background:var(--panel2);border-radius:6px;margin-bottom:6px;font-size:13.5px;color:var(--text)">\u2022 ${pr}</div>`});html+=`</div>`}
-    if(p.rule)html+=`<div class="rule-line" style="margin-top:12px"><b>Rule:</b> ${p.rule}</div>`;
-    if(p.alts && p.alts.length){
-      html+=`<div style="margin-top:14px"><div class="label">Alternate versions \u2014 click to reveal</div>`;
-      p.alts.forEach((a,i)=>{html+=`<div class="script-alt" id="alt-${i}" onclick="toggleAlt(${i})"><div class="label-alt">${a.label}</div><div class="toggle-note">Click to see the wording</div><div class="script-alt-body">${a.body}</div></div>`});
+    html+=`<div class="card"><div class="label">What you say</div><div class="script-block${p.legal?' legal':''}"><div class="verbatim-tag${p.legal?' legal':''}">${p.legal?'Legal verbatim \u2014 word-for-word':'Verbatim \u2014 word-for-word'}</div>${p.script}</div>`;
+
+    if(p.probes){
+      html+=`<div style="margin-top:12px"><div class="label">Discovery probes \u2014 pick ONE only</div>`;
+      p.probes.forEach(pr=>{html+=`<div style="padding:8px 12px;background:var(--panel2);border-radius:6px;margin-bottom:6px;font-size:13px;color:var(--text-secondary)">\u2022 ${pr}</div>`});
       html+=`</div>`;
+    }
+
+    if(p.ladder){
+      html+=`<div style="margin-top:12px"><div class="label">Negotiation ladder (only if triggered)</div><div class="ladder">
+        <span class="ladder-step" onclick="openModal('m-negotiation')">$59 \u2192 $54 \u2192 $49</span>
+        <span class="ladder-step" onclick="openModal('m-negotiation')">$49 \u2192 $44 \u2192 $39</span>
+      </div></div>`;
+    }
+
+    if(p.tips){
+      html+=`<div class="coach-tips">
+        <button class="coach-toggle" onclick="toggleCoach()"><span>\ud83d\udca1 Coach tips (${p.tips.length})</span><span style="color:var(--text-muted)">click to open</span></button>
+        <div class="coach-body" id="coach-body">${p.tips.map(t=>`<div class="tip">${t}</div>`).join('')}</div>
+      </div>`;
     }
     html+=`</div>`;
 
-    // If we just handled an objection, show it above the buttons
     if(stage==='objection-reply' && selectedObj!==null){
-      const o=objections[selectedObj];
-      html+=`<div class="card"><div class="customer-line">${o.cust}</div><div class="reply-line">${o.reply}</div><div class="next-note"><b>After you say this:</b> customer usually either accepts, or raises another concern. Loop the button below as many times as needed.</div></div>`;
+      const src = selectedObjSource==='priority' ? priorityObjections : (selectedObjSource==='other' ? otherObjections : offscript);
+      const o = src[selectedObj];
+      const displayName = o.name ? `${o.name}` : '';
+      html+=`<div class="card">${displayName?`<div class="label">Recovery pattern: ${displayName}</div>`:''}<div class="customer-line">${o.cust}</div><div class="reply-line">${o.reply}</div>`;
+      if(o.rules && o.rules.length){
+        html+=`<div style="margin-top:10px"><div class="label">Rules for this objection</div>`;
+        o.rules.forEach(r=>{html+=`<div style="padding:8px 12px;background:var(--panel2);border-radius:6px;margin-bottom:6px;font-size:12.5px;color:var(--text-secondary);border-left:2px solid var(--accent)">${r}</div>`});
+        html+=`</div>`;
+      }
+      if(o.good||o.fail){
+        html+=`<div style="margin-top:10px;font-size:12.5px;color:var(--text-muted);line-height:1.6">`;
+        if(o.good)html+=`<div style="margin-bottom:6px"><b style="color:var(--green)">Winning move:</b> ${o.good}</div>`;
+        if(o.fail)html+=`<div><b style="color:#e0574f">Failing move:</b> ${o.fail}</div>`;
+        html+=`</div>`;
+      }
+      html+=`<div style="margin-top:12px;padding:10px 14px;background:var(--panel2);border-radius:8px;border:0.5px dashed var(--border);font-size:12.5px;color:var(--text-secondary)"><b style="color:var(--text)">After you say this:</b> customer usually either accepts, or raises another concern. Loop the button below as many times as needed.</div></div>`;
     }
 
-    // Two-button decision: objection OR good to go
     html+=`<div class="btn-row">
-      <button class="big-btn" onclick="goodToGo()">${stage==='objection-reply'?'\u2705 Good to go? Continue to next phase':'\u2705 Good to go? Continue to next phase'}</button>
-      <button class="big-btn secondary" onclick="stage='objection-list';render()">${stage==='objection-reply'?'Another objection? Handle it':'Customer objects \u2014 handle it'}</button>
+      <button class="big-btn" onclick="goodToGo()">\u2705 Good to go \u2014 continue to next phase</button>
+      <button class="big-btn secondary" onclick="stage='objection-list';showMoreObj=false;render()">${stage==='objection-reply'?'Another objection? Handle it':'Customer objects \u2014 handle it'}</button>
       <button class="big-btn ghost" onclick="openModal('m-offscript')">? Something else \u2014 Off-script help</button>
     </div>`;
   }
   else if(stage==='objection-list'){
-    html+=`<div class="card"><div class="label">What did the customer say?</div><div style="color:var(--text-secondary);font-size:13px;margin-bottom:14px">Pick the closest match. You'll get a suggested reply, then you can loop back for another one if more concerns come up.</div><div class="choices">`;
-    objections.forEach((o,i)=>{html+=`<div class="choice" onclick="pickObjection(${i})"><span class="cust-quote">${o.cust}</span><span class="tag">${o.tag}</span></div>`});
-    html+=`<div class="choice offscript" onclick="openModal('m-offscript')">? Something else \u2014 open Off-script help</div>`;
-    html+=`</div></div><button class="back-btn" onclick="stage='script';render()">\u2190 Back to script</button>`;
+    html+=`<div class="card"><div class="label">Top 5 objections (from Angi call analysis)</div><div style="color:var(--text-secondary);font-size:13px;margin-bottom:14px">Pick the closest match. These are the objections that lose the most calls \u2014 the reply gives you the exact move plus what NOT to do.</div>`;
+    priorityObjections.forEach((o,i)=>{
+      html+=`<div class="prio-obj" onclick="pickObjection(${i},'priority')">
+        <div class="num">${o.id}</div>
+        <div class="obj-body"><div class="obj-cust">${o.cust}</div><div class="obj-hint">${o.hint}</div></div>
+      </div>`;
+    });
+
+    if(!showMoreObj){
+      html+=`<button class="more-toggle" onclick="toggleMoreObj()">+ Show ${otherObjections.length} more common objections</button>`;
+    } else {
+      html+=`<div style="margin-top:14px"><div class="label">More common objections</div>`;
+      otherObjections.forEach((o,i)=>{
+        html+=`<div class="other-obj show" onclick="pickObjection(${i},'other')">${o.cust}</div>`;
+      });
+      html+=`</div>`;
+    }
+
+    html+=`<button class="big-btn ghost" style="margin-top:14px" onclick="openModal('m-offscript')">? Truly something else \u2014 Off-script help</button>`;
+    html+=`</div>`;
+    html+=`<button class="back-btn" onclick="stage='script';render()">\u2190 Back to script</button>`;
   }
   stg.innerHTML=html;
 }
 
-function revealScript(){stage='script';render()}
-function pickObjection(i){selectedObj=i;stage='objection-reply';render();window.scrollTo({top:0,behavior:'smooth'})}
+function revealScript(){
+  const p=phases[phaseIdx];
+  if(p.qa)p.qa.forEach(q=>qaTracked.add(q));
+  stage='script';render();
+}
+function pickObjection(i,src){selectedObj=i;selectedObjSource=src;stage='objection-reply';render();window.scrollTo({top:0,behavior:'smooth'})}
 function goodToGo(){
   if(phaseIdx>=phases.length-1){endCall('complete');return}
   phaseIdx++;stage='intro';selectedObj=null;render();window.scrollTo({top:0,behavior:'smooth'});
 }
-
 function endCall(outcome){endOutcome=outcome;stage='end';render();window.scrollTo({top:0,behavior:'smooth'})}
-function restart(){phaseIdx=0;stage='intro';selectedObj=null;endOutcome=null;render();window.scrollTo({top:0,behavior:'smooth'})}
+function restart(){phaseIdx=0;stage='intro';selectedObj=null;endOutcome=null;qaTracked=new Set();render();window.scrollTo({top:0,behavior:'smooth'})}
 
 function renderEnd(){
   const stg=document.getElementById('stage');
-  const outcomes={
-    complete:{emoji:'\ud83c\udf89',title:'Congratulations!',sub:'You closed the sale.',line:'\u2705 Booking confirmed \u2014 update HubSpot and send confirmation email now.',warn:false},
-    partial:{emoji:'\ud83d\udcaa',title:'Great effort!',sub:'Customer needs time. Callback is set.',line:'\ud83d\udcdd Lead saved as warm \u2014 follow up on scheduled callback.',warn:true},
-    declined:{emoji:'\ud83d\udc4d',title:'Well handled.',sub:'Not every call closes, and that\u2019s okay.',line:'Mark disposition in HubSpot and move on \u2014 next call is waiting.',warn:true}
-  };
-  const o=outcomes[endOutcome]||outcomes.complete;
+  const qaChecklist=[
+    {k:'recorded',label:'Informed call is recorded'},
+    {k:'discovery',label:'Asked discovery questions'},
+    {k:'rate_quoted_correctly',label:'Quoted \u201croughly $23/hour\u201d (not $18)'},
+    {k:'mf',label:'Explained Membership Fee'},
+    {k:'commitment',label:'Explained Commitment Term'},
+    {k:'etf',label:'Explained Cancellation (ETF)'},
+    {k:'schedule',label:'Explained Schedule of Charges'},
+    {k:'trial_terms',label:'Stated Trial Terms (30 days)'},
+    {k:'booking_details',label:'Confirmed Upcoming Job details'},
+    {k:'final_recap',label:'Ran Final Recap'},
+    {k:'clear_yes',label:'Got a \u201cclear yes\u201d'}
+  ];
   stg.innerHTML=`
     <div class="end-screen">
-      <div class="celebrate">${o.emoji}</div>
-      <h2>${o.title}</h2>
-      <div class="end-sub">${o.sub}</div>
-      <div class="end-outcome ${o.warn?'warn':''}">${o.line}</div>
+      <div class="celebrate">\ud83c\udf89</div>
+      <h2>Great call!</h2>
+      <div class="end-sub">Nice work getting through all 9 phases.</div>
+      <div class="qa-list">
+        <h3>QA checklist \u2014 what you covered</h3>
+        ${qaChecklist.map(q=>`<div class="qa-item"><span class="check">${qaTracked.has(q.k)?'\u2713':'\u25cb'}</span><span style="${qaTracked.has(q.k)?'color:var(--text)':''}">${q.label}</span></div>`).join('')}
+      </div>
+      <div class="qa-list" style="max-width:420px">
+        <h3>After the call \u2014 don't forget</h3>
+        <div class="qa-item">\ud83d\udd28 CRM: Add Agent_Sales_Conversion flag</div>
+        <div class="qa-item">\ud83d\udd28 CRM: Add fcsales_lead to internal note</div>
+        <div class="qa-item">\u2709\ufe0f Send post-call email (correct cohort template)</div>
+        <div class="qa-item">\ud83d\udcf1 SMS reminder to check email</div>
+      </div>
       <button class="big-btn success" onclick="restart()">Start a new call</button>
       <button class="big-btn secondary" onclick="openModal('m-notes')">Log call notes</button>
     </div>`;
 }
 
-// ============ OFF-SCRIPT ============
+// off-script
 function renderOffscript(filter){
   filter=(filter||'').toLowerCase();
   const items=offscript.filter(o=>!filter||o.cust.toLowerCase().includes(filter)||o.reply.toLowerCase().includes(filter));
-  document.getElementById('off-list').innerHTML=items.length?items.map(o=>`<div class="off-item"><div class="cust">\u201c${o.cust}\u201d</div><div class="reply">${o.reply}</div><div class="reply" style="margin-top:6px"><b>Then:</b> ${o.back}</div></div>`).join(''):'<div style="color:var(--text-muted);text-align:center;padding:20px">No matches. Ask a TL if it\u2019s truly novel.</div>';
+  document.getElementById('off-list').innerHTML=items.length?items.map((o,i)=>`<div class="off-item" onclick="pickObjection(${offscript.indexOf(o)},'offscript');closeModal('m-offscript')"><div class="cust">\u201c${o.cust}\u201d</div><div class="reply">${o.reply}</div></div>`).join(''):'<div style="color:var(--text-muted);text-align:center;padding:20px">No matches.</div>';
 }
 function filterOffscript(){renderOffscript(document.getElementById('off-search').value)}
 
-// ============ CALCULATORS ============
-function calcMembership(){const h=+document.getElementById('mem-hours').value||0,f=+document.getElementById('mem-fee').value||0,fr=+document.getElementById('mem-freq').value||1;const first=19+h*23,rec=(h*23*fr)+f;const el=document.getElementById('mem-result');el.style.display='block';el.innerHTML=`<div class="big">$${first.toFixed(2)} first cleaning</div><div class="line"><span>Recurring monthly</span><span>$${rec.toFixed(2)}</span></div><div class="line"><span>Rate</span><span>$23/hr</span></div>`}
+// calcs
+function calcMembership(){const h=+document.getElementById('mem-hours').value||0,f=+document.getElementById('mem-fee').value||0;const first=19+h*23,rec=f;const el=document.getElementById('mem-result');el.style.display='block';el.innerHTML=`<div class="big">$${first.toFixed(2)} today (first cleaning only)</div><div class="line"><span>Membership (starts after 1st cleaning)</span><span>$${rec}/mo</span></div><div class="line"><span>Rate</span><span>roughly $23/hr</span></div>`}
 function calcETF(){const h=+document.getElementById('etf-hours').value||0,f=h*35;const el=document.getElementById('etf-result');el.style.display='block';el.innerHTML=`<div class="big">$${f.toFixed(2)} worst case</div><div class="line"><span>Formula</span><span>$35 &times; ${h}hr</span></div>`}
-function calcOnetime(){const h=+document.getElementById('one-hours').value||0,o=h*65,m=19+h*23;const el=document.getElementById('one-result');el.style.display='block';el.innerHTML=`<div class="big">$${o.toFixed(2)} onetime</div><div class="line"><span>Member first cleaning</span><span>$${m.toFixed(2)}</span></div><div class="line"><span>Savings</span><span>$${(o-m).toFixed(2)}</span></div>`}
-function calcNegotiation(){const f=+document.getElementById('neg-fee').value||0,t=+document.getElementById('neg-term').value||0,tot=f*t;const el=document.getElementById('neg-result');el.style.display='block';el.innerHTML=`<div class="big">$${tot.toFixed(2)} total</div><div class="line"><span>Monthly</span><span>$${f.toFixed(2)}</span></div><div class="line"><span>Term</span><span>${t} months</span></div>`}
 function saveNotes(){localStorage.setItem('angi-call-notes',document.getElementById('notes-area').value);document.getElementById('notes-saved').style.display='block'}
 window.addEventListener('DOMContentLoaded',()=>{const s=localStorage.getItem('angi-call-notes');if(s)document.getElementById('notes-area').value=s;renderOffscript('')});
 </script>
