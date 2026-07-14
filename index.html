@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Angi Call Flow Guide</title>
+<style>
+  :root{
+    --bg:#0f1115; --panel:#171a21; --panel2:#1e222b; --border:#2a2f3a; --border-strong:#3a4150;
+    --text:#e8eaed; --text-secondary:#9aa2b1; --text-muted:#6b7280;
+    --accent:#4f8ef7; --accent-bg:#16233d; --accent-border:#2f4d82;
+    --amber:#f2a623; --amber-bg:#3a2c0f; --amber-border:#6b4a10;
+    --green:#3fae5c; --green-bg:#122f19; --green-border:#1f5a2f;
+    --red:#e0574f; --red-bg:#3a1616;
+    --purple:#9b7fe0; --purple-bg:#241a3d; --purple-border:#4a3670;
+    --radius:10px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.55}
+  header{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;border-bottom:0.5px solid var(--border);position:sticky;top:0;background:var(--bg);z-index:20}
+  .brand{font-size:15px;font-weight:600;letter-spacing:0.5px}
+  .brand span{color:var(--accent)}
+  nav a{color:var(--text-secondary);text-decoration:none;font-size:13px;margin-left:18px}
+  nav a:hover{color:var(--text)}
+  main{max-width:820px;margin:0 auto;padding:24px 24px 120px}
+
+  /* progress bar */
+  .progress{display:flex;align-items:center;gap:10px;margin-bottom:22px}
+  .progress-track{flex:1;height:4px;background:var(--panel);border-radius:2px;overflow:hidden}
+  .progress-fill{height:100%;background:var(--accent);transition:width .3s ease}
+  .progress-label{font-size:12px;color:var(--text-muted);white-space:nowrap;font-weight:500;letter-spacing:.5px;text-transform:uppercase}
+
+  h1{font-size:24px;font-weight:600;margin:0 0 4px}
+  .step-name{color:var(--accent);font-size:15px;font-weight:500;margin-bottom:22px;letter-spacing:.3px}
+
+  /* stage cards */
+  .card{border:0.5px solid var(--border);border-radius:14px;padding:22px 24px;background:var(--panel);margin-bottom:18px;animation:fadein .25s ease}
+  @keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+  .card .label{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted);margin-bottom:10px;font-weight:600}
+
+  .agent-line{background:var(--accent-bg);border:0.5px solid var(--accent-border);border-radius:10px;padding:14px 16px;font-size:16px;color:var(--text);font-style:italic}
+  .customer-line{background:var(--panel2);border-left:3px solid var(--text-secondary);border-radius:6px;padding:12px 14px;font-size:15px;color:var(--text);font-style:italic;margin-bottom:12px}
+  .customer-line::before{content:"They said: ";font-style:normal;color:var(--text-muted);font-size:11px;text-transform:uppercase;letter-spacing:.5px;font-weight:600;display:block;margin-bottom:4px}
+  .reply-line{background:var(--green-bg);border:0.5px solid var(--green-border);border-radius:10px;padding:14px 16px;font-size:15.5px;color:var(--text);font-style:italic;margin-bottom:12px}
+  .reply-line::before{content:"You reply: ";font-style:normal;color:var(--green);font-size:11px;text-transform:uppercase;letter-spacing:.5px;font-weight:600;display:block;margin-bottom:4px}
+  .next-note{font-size:13.5px;color:var(--text-secondary);padding:10px 14px;background:var(--panel2);border-radius:8px;border:0.5px dashed var(--border)}
+  .next-note b{color:var(--text)}
+
+  /* buttons */
+  .big-btn{display:block;width:100%;padding:16px 20px;border-radius:12px;border:0;background:var(--accent);color:#fff;font-size:15px;font-weight:600;cursor:pointer;transition:.15s;margin-top:8px;letter-spacing:.3px}
+  .big-btn:hover{filter:brightness(1.1);transform:translateY(-1px)}
+  .big-btn.secondary{background:var(--panel2);color:var(--text);border:0.5px solid var(--border)}
+  .big-btn.secondary:hover{border-color:var(--border-strong)}
+  .big-btn.warn{background:var(--amber-bg);color:var(--amber);border:0.5px solid var(--amber-border)}
+  .big-btn.warn:hover{filter:brightness(1.15)}
+  .big-btn.danger{background:var(--red-bg);color:var(--red);border:0.5px solid #6b2020}
+
+  /* response choices */
+  .choices{display:flex;flex-direction:column;gap:10px}
+  .choice{cursor:pointer;background:var(--panel2);border:0.5px solid var(--border);border-radius:10px;padding:14px 16px;text-align:left;font-size:14.5px;color:var(--text);transition:.15s}
+  .choice:hover{border-color:var(--accent-border);background:var(--accent-bg)}
+  .choice::before{content:"\201C"}
+  .choice::after{content:"\201D"}
+  .choice.offscript{background:var(--amber-bg);border-color:var(--amber-border);color:var(--amber);font-style:normal;text-align:center;font-weight:500}
+  .choice.offscript::before,.choice.offscript::after{content:""}
+
+  .back-btn{background:none;border:none;color:var(--text-muted);font-size:13px;cursor:pointer;padding:6px 10px;margin-bottom:14px}
+  .back-btn:hover{color:var(--text)}
+
+  /* Floating Action Button */
+  .fab{position:fixed;bottom:24px;right:24px;z-index:50}
+  .fab-main{width:56px;height:56px;border-radius:50%;background:var(--accent);color:#fff;border:none;font-size:24px;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;transition:.2s}
+  .fab-main:hover{transform:scale(1.05)}
+  .fab-main.open{transform:rotate(45deg)}
+  .fab-menu{position:absolute;bottom:70px;right:0;display:none;flex-direction:column;gap:10px;align-items:flex-end}
+  .fab-menu.open{display:flex}
+  .fab-item{display:flex;align-items:center;gap:10px;background:var(--panel);border:0.5px solid var(--border);border-radius:24px;padding:10px 16px;cursor:pointer;font-size:13px;color:var(--text);white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,.3);transition:.15s}
+  .fab-item:hover{border-color:var(--border-strong);background:var(--panel2)}
+  .fab-item.help{background:var(--amber-bg);color:var(--amber);border-color:var(--amber-border);font-weight:600}
+  .fab-item.help:hover{filter:brightness(1.15)}
+
+  /* end-of-call screen */
+  .end-screen{text-align:center;padding:60px 20px}
+  .end-screen h2{font-size:24px;margin-bottom:8px}
+  .end-screen p{color:var(--text-secondary);margin-bottom:20px}
+  .end-screen .big-btn{max-width:260px;margin:8px auto}
+
+  /* modals */
+  .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);align-items:center;justify-content:center;z-index:100;padding:20px}
+  .modal-overlay.open{display:flex}
+  .modal{background:var(--panel);border:0.5px solid var(--border-strong);border-radius:14px;padding:22px 26px;max-width:540px;width:100%;max-height:88vh;overflow:auto}
+  .modal h3{margin:0 0 4px;font-size:17px}
+  .modal .desc{color:var(--text-secondary);font-size:13px;margin-bottom:16px}
+  .modal-close{float:right;cursor:pointer;color:var(--text-muted);font-size:22px;line-height:1;background:none;border:none}
+  .field{margin-bottom:14px}
+  .field label{display:block;font-size:12.5px;color:var(--text-secondary);margin-bottom:6px}
+  .field input,.field select,.field textarea{width:100%;background:var(--panel2);border:0.5px solid var(--border);color:var(--text);padding:10px 12px;border-radius:8px;font-size:14px}
+  .field textarea{min-height:110px;resize:vertical;font-family:inherit}
+  .calc-btn{width:100%;background:var(--accent);color:#fff;border:none;padding:11px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;margin-top:6px}
+  .result{margin-top:14px;padding:14px 16px;background:var(--panel2);border-radius:10px;border:0.5px solid var(--border)}
+  .result .big{font-size:22px;font-weight:600}
+  .result .line{display:flex;justify-content:space-between;font-size:13px;color:var(--text-secondary);margin-top:4px}
+
+  .search-box{width:100%;background:var(--panel2);border:0.5px solid var(--border);color:var(--text);padding:10px 12px;border-radius:8px;font-size:14px;margin-bottom:12px}
+  .off-item{padding:12px 14px;border:0.5px solid var(--border);border-radius:10px;margin-bottom:8px;background:var(--panel2)}
+  .off-item .cust{font-size:13.5px;color:var(--text);font-style:italic;margin-bottom:6px}
+  .off-item .reply{font-size:13px;color:var(--text-secondary)}
+  .off-item .reply b{color:var(--amber)}
+
+  /* recovery pattern modal */
+  .pattern-body .row{margin-bottom:12px}
+  .pattern-body .win{color:var(--green);font-size:11px;text-transform:uppercase;letter-spacing:.5px;font-weight:600;margin-bottom:4px}
+  .pattern-body .fail{color:var(--red);font-size:11px;text-transform:uppercase;letter-spacing:.5px;font-weight:600;margin-bottom:4px}
+
+  /* gate */
+  .gate-overlay{position:fixed;inset:0;background:var(--bg);z-index:200;display:flex;align-items:center;justify-content:center}
+  .gate-card{width:360px;text-align:center;padding:20px}
+  .gate-card h2{margin-bottom:4px}
+  .gate-card p{color:var(--text-secondary);font-size:13px;margin-bottom:24px}
+  .gate-card .field{text-align:left}
+  #app{display:none}
+</style>
+</head>
+<body>
+
+<div class="gate-overlay" id="gate">
+  <div class="gate-card">
+    <h2>Angi Call Flow Guide</h2>
+    <p>Sign in to start a call.</p>
+    <div class="field"><label>Name</label><input id="g-name" placeholder="Jane Rivera"></div>
+    <div class="field"><label>Email</label><input id="g-email" placeholder="jane@company.com"></div>
+    <div class="field"><label>Team</label>
+      <select id="g-team">
+        <option value="">Select a team</option>
+        <option>Angi Sales</option>
+        <option>Angi Training</option>
+        <option>Team Lead / QA</option>
+      </select>
+    </div>
+    <button class="calc-btn" onclick="enterGuide()">Start</button>
+  </div>
+</div>
+
+<div id="app">
+<header>
+  <div class="brand">ANGI<span>ASCENSION</span></div>
+  <nav>
+    <a href="dashboard.html">Usage</a>
+    <a href="admin.html">Admin</a>
+  </nav>
+</header>
+
+<main>
+  <div class="progress">
+    <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+    <div class="progress-label" id="progress-label">Step 1 of 7</div>
+  </div>
+
+  <div id="stage"></div>
+</main>
+</div>
+
+<!-- Floating action button -->
+<div class="fab" id="fab">
+  <div class="fab-menu" id="fab-menu">
+    <div class="fab-item help" onclick="openModal('m-offscript')">? Off-script help</div>
+    <div class="fab-item" onclick="openModal('m-membership')">ForeverClean calc</div>
+    <div class="fab-item" onclick="openModal('m-etf')">ETF calc</div>
+    <div class="fab-item" onclick="openModal('m-onetime')">One-time / trial calc</div>
+    <div class="fab-item" onclick="openModal('m-negotiation')">Negotiation calc</div>
+    <div class="fab-item" onclick="openModal('m-notes')">Notes</div>
+  </div>
+  <button class="fab-main" id="fab-main" onclick="toggleFab()">+</button>
+</div>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="m-offscript">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('m-offscript')">&times;</button>
+    <h3>Off-script help</h3>
+    <div class="desc">Type what the customer just said, or scan the list. Every entry gives a reply direction and where to return in the flow.</div>
+    <input class="search-box" id="off-search" placeholder="e.g. steal, refund, cancel, allergy, manager..." oninput="filterOffscript()">
+    <div id="off-list"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="m-pattern">
+  <div class="modal pattern-body">
+    <button class="modal-close" onclick="closeModal('m-pattern')">&times;</button>
+    <h3 id="pat-name"></h3>
+    <div class="desc" id="pat-says"></div>
+    <div class="row"><div class="label" style="font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);font-weight:600;margin-bottom:4px">The move</div><div id="pat-move"></div></div>
+    <div class="row"><div class="win">Winning example</div><div id="pat-good" style="color:var(--text-secondary);font-size:13.5px"></div></div>
+    <div class="row"><div class="fail">What failing looks like</div><div id="pat-fail" style="color:var(--text-secondary);font-size:13.5px"></div></div>
+    <div class="row"><div class="label" style="font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);font-weight:600;margin-bottom:4px">Re-entry</div><div id="pat-back"></div></div>
+    <button class="calc-btn" onclick="closeModal('m-pattern')">Got it, back to the call</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="m-membership"><div class="modal"><button class="modal-close" onclick="closeModal('m-membership')">&times;</button><h3>ForeverClean membership calc</h3><div class="desc">First cleaning + recurring membership pricing.</div><div class="field"><label>First cleaning hours</label><input type="number" id="mem-hours" value="3" min="1"></div><div class="field"><label>Membership fee ($/month, from month 2)</label><input type="number" id="mem-fee" value="59"></div><div class="field"><label>Frequency (cleanings per month)</label><input type="number" id="mem-freq" value="2" min="1"></div><button class="calc-btn" onclick="calcMembership()">Calculate</button><div class="result" id="mem-result" style="display:none"></div></div></div>
+
+<div class="modal-overlay" id="m-etf"><div class="modal"><button class="modal-close" onclick="closeModal('m-etf')">&times;</button><h3>Early termination fee</h3><div class="desc">$35 &times; first-cleaning hours. Name it small and early.</div><div class="field"><label>First cleaning hours</label><input type="number" id="etf-hours" value="3" min="1"></div><button class="calc-btn" onclick="calcETF()">Calculate ETF</button><div class="result" id="etf-result" style="display:none"></div></div></div>
+
+<div class="modal-overlay" id="m-onetime"><div class="modal"><button class="modal-close" onclick="closeModal('m-onetime')">&times;</button><h3>One-time / trial calc</h3><div class="desc">No-commitment onetime vs member rate.</div><div class="field"><label>Hours needed</label><input type="number" id="one-hours" value="3" min="1"></div><button class="calc-btn" onclick="calcOnetime()">Calculate</button><div class="result" id="one-result" style="display:none"></div></div></div>
+
+<div class="modal-overlay" id="m-negotiation"><div class="modal"><button class="modal-close" onclick="closeModal('m-negotiation')">&times;</button><h3>Negotiation calc</h3><div class="desc">For pushback on membership fee or term.</div><div class="field"><label>Negotiated fee ($/month)</label><input type="number" id="neg-fee" value="49"></div><div class="field"><label>Commitment term (months)</label><input type="number" id="neg-term" value="6" min="1"></div><button class="calc-btn" onclick="calcNegotiation()">Calculate</button><div class="result" id="neg-result" style="display:none"></div></div></div>
+
+<div class="modal-overlay" id="m-notes"><div class="modal"><button class="modal-close" onclick="closeModal('m-notes')">&times;</button><h3>Notes</h3><div class="desc">Saved to this device only.</div><div class="field"><textarea id="notes-area" placeholder="Notes for this call..."></textarea></div><button class="calc-btn" onclick="saveNotes()">Save</button><div class="result" id="notes-saved" style="display:none">Saved.</div></div></div>
+
+<script>
+// ============ DATA ============
+const steps=[
+{t:"Open",agent:"Hi, is this [Name]? This is [You] calling from Angi about the cleaning request you submitted. Do you have a minute?",responses:[
+  {cust:"Yes, I submitted a request.",reply:"Great, thanks for confirming. Mind if I ask a couple of quick questions about your home so I can get you the right price?",next:"advance"},
+  {cust:"Who is this? / How did you get my number?",reply:"Totally understand. My name's [You] with Angi \u2014 you submitted a request on our site for a cleaning quote. If this isn't a good time, I can text the details and call back.",next:"advance"},
+  {cust:"I already found someone.",reply:"No problem, happy you got sorted. If it ever falls through, I can lock in a first cleaning starting at $19 \u2014 want me to text you the details just in case?",next:"end",endReason:"Backup close \u2014 lead saved as warm."},
+  {cust:"I'm not interested / take me off your list.",reply:"Absolutely, I'll take you off. Have a good one.",next:"end",endReason:"Marked do-not-call. End politely."}
+],branch:3},
+{t:"Qualify",agent:"Just so I can size this right for you \u2014 how many bedrooms and bathrooms, and are you looking for regular or one-time cleaning?",responses:[
+  {cust:"[Gives bedrooms/bathrooms + type]",reply:"Perfect. Based on that, I'd recommend about [X] hours for the first clean. Want me to walk you through what that looks like?",next:"advance"},
+  {cust:"I just want a price.",reply:"Sure. For a home like yours, first cleaning runs about [range]. When are you thinking of having it done \u2014 this week, next week?",next:"pattern",pattern:1},
+  {cust:"I'm not sure yet / still deciding.",reply:"That's okay. What's making you weigh it \u2014 timing, price, or something else? That way I can send the right info.",next:"pattern",pattern:5},
+  {cust:"How much do you cost? (before giving details)",reply:"Fair question. Depends on the home \u2014 for most places it's $80\u2013$150 for the first clean. Two questions and I can be exact: bedrooms and bathrooms?",next:"replay",replayNote:"Return to qualifying. Do not give a firm price yet."}
+],branch:1},
+{t:"Present price",agent:"Based on what you told me, I'd recommend [X] hours. That'd be [$total] for the first cleaning. Moving forward you'd be at $23/hour \u2014 well below what most local services charge.",responses:[
+  {cust:"Sounds good / that works.",reply:"Awesome. What's your ZIP code?",next:"advance"},
+  {cust:"That's too much / more than I expected.",reply:"I hear you. What were you thinking of spending? Let me see what I can do.",next:"pattern",pattern:4},
+  {cust:"How does the pricing work? / Break that down.",reply:"Sure. The first cleaning is [$total] \u2014 that covers [X] hours at intro rate. After that you're at $23/hour, well below the local rate. Make sense?",next:"replay",replayNote:"After breakdown, re-anchor the total and return to booking."},
+  {cust:"Can I get a discount?",reply:"The intro price already builds in the discount for first-timers. What I can do is adjust the hours \u2014 tell me a number that'd work.",next:"replay",replayNote:"Use Negotiation calc if needed. Do not offer to lower the $59 fee upfront."}
+],branch:4},
+{t:"Book",agent:"Perfect \u2014 what's your ZIP, and when were you thinking? I'll pull up availability.",responses:[
+  {cust:"[Gives ZIP + date/time preference]",reply:"Let me check\u2026 yes, I have [confirmed slot]. Sound good?",next:"advance"},
+  {cust:"Will the cleaner bring supplies?",reply:"Yes \u2014 your cleaner brings all standard supplies. If you have anything specific to avoid or use, we note it on the booking.",next:"replay",replayNote:"Answer, then return to date/time."},
+  {cust:"How do I know the cleaner is trustworthy?",reply:"Everyone on the platform is background-checked and rated by customers in your area. You'll see the cleaner's name and reviews before they arrive.",next:"replay",replayNote:"Answer, return to date/time. Do NOT get pulled into a long trust discussion."},
+  {cust:"I have pets / weird parking / no key.",reply:"No problem \u2014 I'll note that so the cleaner knows what to expect. What should I put down?",next:"replay",replayNote:"Capture in HubSpot notes, return to confirmation."}
+]},
+{t:"Payment",agent:"Great, locked in. Last piece \u2014 to secure the slot I'll take the first-cleaning payment now. Nothing goes to the cleaner on the day. Debit or credit?",responses:[
+  {cust:"Okay / [gives card].",reply:"Perfect, one moment while I run this\u2026 got it. Payment confirmed.",next:"advance"},
+  {cust:"Why do you need my card now?",reply:"It secures your appointment and locks in the cleaner. You're not charged again until after the cleaning happens and you approve it.",next:"replay",replayNote:"If comfortable: process payment. If still hesitant: offer dashboard link."},
+  {cust:"I'd rather pay on the day / cash.",reply:"I get it. On our platform payment runs through the app \u2014 cleaner never handles cash. Want me to text you a secure link to your dashboard instead?",next:"end",endReason:"Offered dashboard link. Follow up in 2 hours if used."},
+  {cust:"My card was declined.",reply:"No worries, happens all the time. Want to try a different card, or should I text you the dashboard link?",next:"replay",replayNote:"Offer both calmly. Do not repeat the decline out loud."}
+]},
+{t:"Disclose terms",agent:"One thing I want to make sure is clear: starting month two, membership is $59/month, which locks in the $23/hour rate. If you ever need to cancel early, there's a $35-per-hour fee \u2014 for [X hours] that's [$total]. Are those terms clear?",responses:[
+  {cust:"Yes, that's clear.",reply:"Great \u2014 let me confirm everything one last time.",next:"advance"},
+  {cust:"I don't want a commitment.",reply:"Totally fair. A lot of customers feel the same before their first cleaning. The six months isn't a lock-in \u2014 it's what unlocks the discount. Canceling is [$ETF], way less than most people expect.",next:"pattern",pattern:2},
+  {cust:"What if I want to cancel? / What's the fee?",reply:"For [X] hours it's [$ETF]. Small and one-time \u2014 much less than most services charge upfront.",next:"replay",replayNote:"Name the fee small and early. Return to confirmation."},
+  {cust:"That's too much for cancellation.",reply:"That fee only applies if the cleaning isn't right for you. And the membership pays for itself in less than two cleanings.",next:"pattern",pattern:2}
+],branch:2},
+{t:"Confirm & close",agent:"Let me read back everything \u2014 email [email], phone [phone], address [address], appointment [date/time] for [X] hours, priority areas [notes]. Sound right?",responses:[
+  {cust:"Yes, all correct.",reply:"Perfect. You'll get a confirmation email with your dashboard link in the next few minutes. Anything else before I let you go?",next:"end",endReason:"\u2705 Sale confirmed. Send email, update HubSpot, set follow-up task."},
+  {cust:"Wait, can I change [detail]?",reply:"Of course \u2014 what would you like it to be?",next:"replay",replayNote:"Update the booking. Re-confirm."},
+  {cust:"What happens if the cleaner doesn't show?",reply:"If anything goes wrong on their end, we rebook you at no extra cost or refund the cleaning. It's all in the confirmation email.",next:"replay",replayNote:"Answer, then close warmly."},
+  {cust:"Can you send me details in writing?",reply:"Already on it \u2014 confirmation email will hit your inbox within a minute.",next:"end",endReason:"\u2705 Sale confirmed. Send email now."}
+]}
+];
+
+const branches=[
+{id:1,name:"Price shopper",says:"\u201cI just wanted a price / I'm exploring.\u201d",move:"Do not push for same-day close. Name the price range. Ask when they're thinking of having it done. Real date: set a callback. Vague: send the quote in writing.",good:"Justin with Greg: gave the quote, asked for 5PM callback next day. Customer agreed. Give them what they asked for, set next step.",fail:"Agent with Bruce: kept pitching after two no's. Customer hung up. Treating 'I'm exploring' as an objection to overcome instead of a stage to match.",back:"Re-enters at Step 2 after callback is set."},
+{id:2,name:"Membership resistant",says:"\u201cI don't want a commitment.\u201d / \u201cI feel held hostage.\u201d",move:"Acknowledge first. Reframe six months as the price of the discount, not a lock-in. Name ETF small and early. Never repeat 'discounted rates' after they've rejected the frame.",good:"Jameson with Angela: reframed as $178 vs $252 one-time. Customer booked.",fail:"Mary with Mary L.D.: customer said 'I feel held hostage.' Agent asked 'is that a yes?' five more times. Sale will cancel.",back:"Re-enters at Step 6. Highest-value branch \u2014 winning half of these moves CSR from ~29% to ~42%."},
+{id:3,name:"Aggregator objection",says:"\u201cYou're an aggregator / I want someone local.\u201d",move:"Never confirm the word 'aggregator.' Lead with the cleaner: 'The person coming to your home is a local pro, vetted and background-checked.'",good:"Angelus with Deborah: led with 'your professional cleaner will bring that for you.' Personalized. Customer booked.",fail:"Mary with Ella: agent said 'correct, we're actually...' Customer hung up. Confirmed the frame the customer used to reject you.",back:"Re-enters at Step 1 or Step 2."},
+{id:4,name:"Sticker shock",says:"\u201cThat's too expensive / numbers are jumping.\u201d",move:"Anchor one total monthly number. Break down only if asked. When customer names a budget, work backward from it.",good:"Demie with Keith: Keith said '$80\u201390.' Demie pivoted to '$95 a month?' Keith agreed. Matched their number.",fail:"Justin with Madhu: led with '$450 national average.' Customer hung up. Anchored higher than actual charge.",back:"Re-enters at Step 3."},
+{id:5,name:"Needs time",says:"\u201cLet me think / call me back.\u201d",move:"Agree, don't push. Set a specific callback: 'Thursday at 5?' Confirm the number. Text a summary.",good:"Justin with Greg: matched customer's timeline instead of forcing his own.",fail:"Justin with Janiece: customer had said goodbye. Agent asked 'what's holding you back?' after call was over.",back:"Can surface at any step. Re-enter where you left off after callback."}
+];
+
+const offscript=[
+{cust:"How do I know the cleaner won't steal from me?",reply:"Every cleaner is background-checked and rated by real customers in your area. You'll see their profile before they arrive. If anything ever happened, we cover it.",back:"Return to current step. Do not linger."},
+{cust:"What if the cleaning is bad? Do you have a guarantee?",reply:"Yes \u2014 if you're not happy, let us know within 24 hours and we send someone back to redo it, or refund it.",back:"Return to current step."},
+{cust:"Can I request the same cleaner every time?",reply:"For members, yes \u2014 you can favorite a cleaner and we'll book them by default when they're available.",back:"Build value. Return to current step."},
+{cust:"How long does the cleaning take?",reply:"Depends on the home. Most cleanings run about [X hours]. If they finish faster, you're not charged less \u2014 price is for the slot.",back:"Return to current step."},
+{cust:"What if I need to reschedule?",reply:"Easy \u2014 you can reschedule from your dashboard up to 24 hours before. Under 24 hours there's a small fee.",back:"Return to current step."},
+{cust:"Is this a scam? I saw a bad review online.",reply:"Anyone can post anything online. What I can tell you is we've been running for years and every cleaner is vetted. Want me to text real reviews from your area?",back:"Do not get defensive. Offer proof, return."},
+{cust:"I read you charge people randomly.",reply:"You only get charged for cleanings you book and approve. The $59 membership after month one is disclosed upfront \u2014 nothing else.",back:"Name the disclosure explicitly. Return."},
+{cust:"Do you have Spanish-speaking cleaners?",reply:"Yes, in most areas. We can note the language preference on the booking.",back:"Note preference. Return."},
+{cust:"I'm allergic to certain products.",reply:"We note that on the booking. The cleaner will use whatever supplies you provide instead of the standard kit.",back:"Capture in notes. Return."},
+{cust:"Can you send a male / female cleaner?",reply:"You can filter for that when you book \u2014 I'll set that as default now.",back:"Note in HubSpot. Return."},
+{cust:"What's your BBB rating?",reply:"I don't have the number in front of me, but I can send it with the confirmation. Want that included?",back:"Do not guess. Offer to send. Return."},
+{cust:"I want to talk to a manager.",reply:"Absolutely \u2014 let me get your details and have a team lead call you back within the hour. What's a good time?",back:"Escalate in HubSpot. Do not force a sale over an escalation."},
+{cust:"Can I add extras like fridge, oven, windows?",reply:"Yes \u2014 those are add-ons. Fridge is [$X], oven [$X], windows [$X]. Want any on this one?",back:"Update booking. Return to Step 4."},
+{cust:"I need this done TODAY.",reply:"Let me check same-day availability\u2026 [check]. If yes: 'I have [slot].' If no: 'Earliest is [next] \u2014 want to lock it in?'",back:"Do not promise same-day without checking. Return to Step 4."},
+{cust:"Are you Angi? I thought Angi was a directory.",reply:"Angi is the platform. What I'm offering is the cleaning service that operates through it. Your cleaner is a local pro Angi has vetted.",back:"Don't deny the platform framing. Return."},
+{cust:"I have COVID / I'm sick.",reply:"Please reschedule \u2014 no fee for health reasons. Let me push your booking a week out. Does [new date] work?",back:"Reschedule immediately. No fee."},
+{cust:"How many years have you been in business?",reply:"Angi has been running since 1995 \u2014 nearly 30 years. The cleaning program has been on the platform for [X] years.",back:"Concise answer, then return."},
+{cust:"Do I have to be home during the cleaning?",reply:"Nope \u2014 many customers leave a key or code. Whatever's easiest for you, just note it on the booking.",back:"Note preference. Return."}
+];
+
+// ============ STATE ============
+let stepIdx=0;
+let stage='open'; // open | responses | reply | end
+let selectedResp=null;
+
+function enterGuide(){document.getElementById('gate').style.display='none';document.getElementById('app').style.display='block';render();}
+
+function toggleFab(){
+  const menu=document.getElementById('fab-menu');
+  const main=document.getElementById('fab-main');
+  menu.classList.toggle('open');
+  main.classList.toggle('open');
+}
+document.addEventListener('click',(e)=>{
+  const fab=document.getElementById('fab');
+  if(!fab.contains(e.target)){
+    document.getElementById('fab-menu').classList.remove('open');
+    document.getElementById('fab-main').classList.remove('open');
+  }
+});
+
+function openModal(id){document.getElementById(id).classList.add('open');document.getElementById('fab-menu').classList.remove('open');document.getElementById('fab-main').classList.remove('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open')}
+
+function updateProgress(){
+  const pct = stage==='end' ? 100 : Math.round(((stepIdx) / steps.length) * 100 + (stage==='reply' ? (100/steps.length)*0.66 : stage==='responses' ? (100/steps.length)*0.33 : 0));
+  document.getElementById('progress-fill').style.width = Math.min(pct,100)+'%';
+  document.getElementById('progress-label').textContent = stage==='end' ? 'Call ended' : `Step ${stepIdx+1} of ${steps.length}`;
+}
+
+function render(){
+  updateProgress();
+  const stg=document.getElementById('stage');
+  if(stage==='end'){renderEnd();return}
+  const s=steps[stepIdx];
+  let html=`<h1>${s.t}</h1><div class="step-name">Step ${stepIdx+1} of ${steps.length}</div>`;
+  html+=`<div class="card"><div class="label">What you say</div><div class="agent-line">${s.agent}</div></div>`;
+
+  if(stage==='open'){
+    html+=`<button class="big-btn" onclick="advanceStage()">\u25b6 Open the customer</button>`;
+    if(s.branch){
+      const b=branches.find(x=>x.id===s.branch);
+      html+=`<button class="big-btn secondary" style="margin-top:10px" onclick="showPattern(${s.branch})">Preview recovery pattern: ${b.name}</button>`;
+    }
+  }
+  else if(stage==='responses'){
+    html+=`<div class="card"><div class="label">What did the customer say?</div><div class="choices">`;
+    s.responses.forEach((r,i)=>{html+=`<div class="choice" onclick="pickResponse(${i})">${r.cust}</div>`});
+    html+=`<div class="choice offscript" onclick="openModal('m-offscript')">? Something else \u2014 Off-script help</div>`;
+    html+=`</div></div>`;
+    html+=`<button class="back-btn" onclick="stage='open';render()">\u2190 Back to opening</button>`;
+  }
+  else if(stage==='reply'){
+    const r=s.responses[selectedResp];
+    html+=`<div class="card"><div class="customer-line">${r.cust}</div><div class="reply-line">${r.reply}</div>`;
+    if(r.next==='advance'){
+      html+=`<div class="next-note"><b>Next:</b> Advance to Step ${stepIdx+2} (${steps[stepIdx+1]?steps[stepIdx+1].t:'end'}).</div>`;
+      html+=`<button class="big-btn" onclick="advanceStep()">Continue to next step \u2192</button>`;
+    } else if(r.next==='pattern'){
+      const b=branches.find(x=>x.id===r.pattern);
+      html+=`<div class="next-note"><b>Recovery pattern needed:</b> ${b.name}. Open it, then return here.</div>`;
+      html+=`<button class="big-btn warn" onclick="showPattern(${r.pattern})">Open recovery pattern: ${b.name}</button>`;
+      html+=`<button class="big-btn secondary" style="margin-top:8px" onclick="advanceStep()">Recovered \u2014 continue to next step \u2192</button>`;
+      html+=`<button class="big-btn secondary" style="margin-top:8px" onclick="stage='open';selectedResp=null;render()">Replay this step</button>`;
+    } else if(r.next==='replay'){
+      html+=`<div class="next-note"><b>Next:</b> ${r.replayNote||'Return to the current step and continue.'}</div>`;
+      html+=`<button class="big-btn secondary" onclick="stage='open';selectedResp=null;render()">Replay this step</button>`;
+      html+=`<button class="big-btn" style="margin-top:8px" onclick="advanceStep()">Ready to continue \u2192</button>`;
+    } else if(r.next==='end'){
+      html+=`<div class="next-note"><b>Wrap up:</b> ${r.endReason||'End the call.'}</div>`;
+      html+=`<button class="big-btn danger" onclick="endCall(r.endReason||'Call ended.')">End the call</button>`;
+    }
+    html+=`<button class="back-btn" style="margin-top:12px" onclick="stage='responses';render()">\u2190 Wrong choice? Go back</button>`;
+  }
+  stg.innerHTML=html;
+}
+function renderEnd(){
+  const stg=document.getElementById('stage');
+  stg.innerHTML=`
+    <div class="end-screen">
+      <h2>Call ended</h2>
+      <p>${endReason||''}</p>
+      <button class="big-btn" onclick="restart()">Start a new call</button>
+      <button class="big-btn secondary" onclick="openModal('m-notes')">Log call notes</button>
+    </div>`;
+}
+let endReason='';
+function endCall(reason){endReason=reason;stage='end';render()}
+function restart(){stepIdx=0;stage='open';selectedResp=null;endReason='';render()}
+
+function advanceStage(){
+  if(stage==='open') stage='responses';
+  render();
+}
+function pickResponse(i){selectedResp=i;stage='reply';render()}
+function advanceStep(){
+  if(stepIdx>=steps.length-1){endCall('\u2705 All steps complete.');return}
+  stepIdx++;stage='open';selectedResp=null;render();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function showPattern(id){
+  const b=branches.find(x=>x.id===id);
+  document.getElementById('pat-name').textContent=`Pattern ${b.id}: ${b.name}`;
+  document.getElementById('pat-says').textContent=b.says;
+  document.getElementById('pat-move').textContent=b.move;
+  document.getElementById('pat-good').textContent=b.good;
+  document.getElementById('pat-fail').textContent=b.fail;
+  document.getElementById('pat-back').textContent=b.back;
+  openModal('m-pattern');
+}
+
+// off-script list
+function renderOffscript(filter){
+  filter=(filter||'').toLowerCase();
+  const items=offscript.filter(o=>!filter||o.cust.toLowerCase().includes(filter)||o.reply.toLowerCase().includes(filter));
+  document.getElementById('off-list').innerHTML=items.length?items.map(o=>`
+    <div class="off-item">
+      <div class="cust">\u201c${o.cust}\u201d</div>
+      <div class="reply">${o.reply}</div>
+      <div class="reply" style="margin-top:6px"><b>Then:</b> ${o.back}</div>
+    </div>
+  `).join(''):'<div style="color:var(--text-muted);text-align:center;padding:20px">No matches. Ask a TL if it\u2019s truly novel.</div>';
+}
+function filterOffscript(){renderOffscript(document.getElementById('off-search').value)}
+
+// calculators
+function calcMembership(){const h=+document.getElementById('mem-hours').value||0,f=+document.getElementById('mem-fee').value||0,fr=+document.getElementById('mem-freq').value||1;const first=19+h*23,rec=(h*23*fr)+f;const el=document.getElementById('mem-result');el.style.display='block';el.innerHTML=`<div class="big">$${first.toFixed(2)} first cleaning</div><div class="line"><span>Recurring monthly</span><span>$${rec.toFixed(2)}</span></div><div class="line"><span>Rate used</span><span>$23/hr member</span></div>`}
+function calcETF(){const h=+document.getElementById('etf-hours').value||0,f=h*35;const el=document.getElementById('etf-result');el.style.display='block';el.innerHTML=`<div class="big">$${f.toFixed(2)} worst case</div><div class="line"><span>Formula</span><span>$35 &times; ${h}hr</span></div>`}
+function calcOnetime(){const h=+document.getElementById('one-hours').value||0,o=h*65,m=19+h*23;const el=document.getElementById('one-result');el.style.display='block';el.innerHTML=`<div class="big">$${o.toFixed(2)} onetime</div><div class="line"><span>Member first cleaning</span><span>$${m.toFixed(2)}</span></div><div class="line"><span>Savings</span><span>$${(o-m).toFixed(2)}</span></div>`}
+function calcNegotiation(){const f=+document.getElementById('neg-fee').value||0,t=+document.getElementById('neg-term').value||0,tot=f*t;const el=document.getElementById('neg-result');el.style.display='block';el.innerHTML=`<div class="big">$${tot.toFixed(2)} total</div><div class="line"><span>Monthly</span><span>$${f.toFixed(2)}</span></div><div class="line"><span>Term</span><span>${t} months</span></div>`}
+function saveNotes(){localStorage.setItem('angi-call-notes',document.getElementById('notes-area').value);document.getElementById('notes-saved').style.display='block'}
+window.addEventListener('DOMContentLoaded',()=>{const s=localStorage.getItem('angi-call-notes');if(s)document.getElementById('notes-area').value=s;renderOffscript('')});
+</script>
+</body>
+</html>

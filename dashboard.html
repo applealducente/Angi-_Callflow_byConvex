@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Usage | Convex</title>
+<style>
+  :root{--bg:#1a1226;--panel:#241832;--border:#3a2851;--text:#f4ecdf;--text-secondary:#c9b8d4;--text-muted:#8f7a9c;--accent:#ff7a45;--gold:#ffb347;--coral:#ff5e78;--lilac:#c084fc}
+  body{margin:0;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(ellipse at top right,rgba(255,122,69,0.15),transparent 50%),radial-gradient(ellipse at bottom left,rgba(192,132,252,0.12),transparent 50%),var(--bg);background-attachment:fixed;min-height:100vh}
+  header{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;border-bottom:0.5px solid var(--border);background:rgba(26,18,38,0.85);backdrop-filter:blur(10px)}
+  .brand{font-size:15px;font-weight:700;letter-spacing:2px;background:linear-gradient(90deg,var(--gold),var(--accent),var(--coral));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  nav a{color:var(--text-secondary);text-decoration:none;font-size:13px;margin-left:18px}
+  nav a:hover{color:var(--accent)}
+  main{max-width:1080px;margin:0 auto;padding:28px 24px 80px}
+  h1{font-size:22px;font-weight:600;margin:0 0 4px}
+  p.subtitle{color:var(--text-secondary);font-size:14px;margin:0 0 24px}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+  .card{border:0.5px solid var(--border);border-radius:12px;padding:18px 20px;background:var(--panel);box-shadow:0 8px 24px -12px rgba(255,122,69,0.15)}
+  .card .label{font-size:11px;text-transform:uppercase;letter-spacing:0.6px;color:var(--gold);margin-bottom:6px;font-weight:600}
+  .card .num{font-size:24px;font-weight:600;color:var(--accent)}
+  .note{margin-top:24px;color:var(--text-muted);font-size:13px}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">CONVEX</div>
+  <nav><a href="index.html">Guide</a><a href="admin.html">Admin</a></nav>
+</header>
+<main>
+  <h1>Usage</h1>
+  <p class="subtitle">Per-agent drilling and guide activity. Wire this up to the real event log when ready.</p>
+  <div class="cards">
+    <div class="card"><div class="label">Guide opens this week</div><div class="num">&mdash;</div></div>
+    <div class="card"><div class="label">Branch 2 views</div><div class="num">&mdash;</div></div>
+    <div class="card"><div class="label">Calculator uses</div><div class="num">&mdash;</div></div>
+    <div class="card"><div class="label">Active agents</div><div class="num">&mdash;</div></div>
+  </div>
+  <p class="note">Placeholder page. Connect to your analytics or HubSpot event source to populate these.</p>
+</main>
+</body>
+</html>
