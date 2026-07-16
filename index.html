@@ -562,39 +562,19 @@ Quick confirm: you're at {Bedrooms} bedrooms, {Bathrooms} bathrooms, looking for
        "<b>Do NOT say 'try'.</b> Say 'sign up' or 'become a member.'",
        "<b>We do NOT offer insurance.</b> Route damage questions to FAQs.",
        "<b>Offer order:</b> FCF first, Trial if FCF declined, OTC as absolute last resort."]},
-{t:"Negotiation",obj:"Only if customer pushed back. Ask: cost, commitment, or don't need regular cleanings? Then negotiate based on the answer.",legal:false,isNeg:true,
+{t:"Negotiation",obj:"Step through the negotiation. Ask WHY they turned it down, then respond to the specific trigger.",legal:false,isNeg:true,
  fields:[
-   {k:'negMF',type:'number',label:'Negotiated MF ($/mo)',placeholder:'59',min:0,max:100,useLadder:true},
-   {k:'negTerm',type:'number',label:'Negotiated term (months)',placeholder:'6',min:0,max:12,useTerm:true},
-   {k:'negHours',type:'number',label:'Adjusted hours (if changed)',placeholder:'leave blank if same',min:0,max:8}
+   {k:'negMF',type:'number',label:'Agreed MF ($/mo)',placeholder:'59',min:0,max:100,useLadder:true},
+   {k:'negTerm',type:'number',label:'Agreed term (months)',placeholder:'6',min:0,max:12,useTerm:true},
+   {k:'negHours',type:'number',label:'Adjusted hours',placeholder:'same as recommended',min:0,max:8}
  ],
- script:`Step 1: Acknowledge
-I totally understand.
-
-Step 2.1: Ask qualifying question
-Is the membership not a good fit because of the cost, there is a commitment, or because you just don't feel you need regular cleanings right now?
-
-Step 2.2: Based on their answer:
-
-MF is the trigger: reduce to $54, then to $49 if necessary.
-MCT duration is the trigger: offer to shorten the term.
-Both MF and MCT: offer reducing both.
-Nothing to do with cost or commitment: proceed to Step 3 (Trial/OTC offer).
-
-If customer agrees: proceed to booking.
-If customer declines: proceed to Step 3.
-
-Step 3: Highlight FC value + offer Trial/OTC
-I totally understand that your (move-in/out, event) cleaning is the priority right now, and we're happy to take care of that for you. If the membership isn't the right fit, no worries at all!
-
-You can try our service at a discounted rate of {Trial} for 30 days. You can cancel with no obligation anytime within those 30 days if it's not the right fit. If you don't cancel within 30 days, the membership will automatically continue at $59 per month with a 6-month minimum commitment. If you cancel before completing 6 paid months of membership, a $99 early termination fee applies.
-
-Does this option work better for you?`,
- tips:["<b>Max 2 offers total</b> across all negotiation attempts.",
-       "<b>Frame as 'a lighter option'</b> - NEVER 'I can lower it.'",
-       "<b>ETF stays at $35/hr</b> regardless of negotiated MF or term.",
-       "<b>After Step 3 is declined: book OTC immediately.</b> No circling back.",
-       "<b>Resolve trust before negotiating price.</b>"]},
+ script:`[Use the step buttons below to walk through the negotiation. Fill in the fields above once agreed.]`,
+ tips:["<b>Never open with a discount.</b> Ask WHY first -- the trigger determines your response.",
+       "<b>Only lower ONE thing at a time.</b> MF or Term, not both on the first offer.",
+       "<b>Max 2 concessions total.</b> $59 to $54 to $49. Don't go lower.",
+       "<b>ETF stays fixed at $35/hr</b> regardless of negotiated MF or term.",
+       "<b>After Step 3 is declined: pivot to Trial, then OTC.</b> Never circle back.",
+       "<b>Resolve trust before discounting.</b> A price cut doesn't fix a trust problem."]},
 {t:"Booking",obj:"Confirm the appointment, collect all details, take payment. Both date and alternate date required.",legal:false,
  fields:[
    {k:'date',type:'date',label:'Appointment date'},
@@ -681,7 +661,7 @@ const OFFSCRIPT=[
 ];
 
 // ============ STATE ============
-let pIdx=0,stage='script',selObj=null,selSrc='prio',showMore=false;
+let pIdx=0,stage='script',selObj=null,selSrc='prio',showMore=false,negStep='qualify';
 let qaTracked=new Set();
 
 function enterGuide(){
@@ -773,6 +753,157 @@ function renderFields(fields){
   </div></div>`;
 }
 
+// ============ NEGOTIATION STEP RENDERER ============
+// negStep values: 'qualify' | 'cost' | 'cost2' | 'term' | 'both' | 'trial' | 'otc' | 'trust'
+function renderNegSteps(){
+  const h=hrs(), e=etfAmt(), otc=otcAmt(), trial=trialAmt();
+  const mfV=D.negMF||59, termV=D.negTerm||6;
+
+  // helper: step card
+  const stepCard=(title,color,content)=>`<div class="card" style="border-color:${color};margin-top:10px"><div class="label" style="color:${color}">${title}</div>${content}</div>`;
+  const scriptBox=(txt)=>`<div class="script-block" style="margin-top:8px;font-size:14px">${txt}</div>`;
+  const stepBtn=(label,onclick,style='')=>`<button class="big-btn" style="margin-top:10px;${style}" onclick="${onclick}">${label}</button>`;
+  const subBtn=(label,onclick)=>`<button class="big-btn secondary" style="margin-top:8px" onclick="${onclick}">${label}</button>`;
+
+  if(negStep==='qualify'){
+    return stepCard('Step 1 of 3 -- Find the TRIGGER before offering anything','var(--coral)',`
+      <div style="font-size:13px;color:var(--text-secondary);padding:8px 12px;background:var(--panel2);border-radius:8px;margin-bottom:10px"><b style="color:var(--text)">Do NOT offer a discount yet.</b> You need to know exactly WHY they said no first -- responding to the wrong trigger loses the sale.</div>
+      ${scriptBox(`"I totally understand. Just so I can help you better -- is it more about the monthly cost, the length of the commitment, or do you just feel like you don't need regular cleanings right now?"
+
+[Say nothing else. Wait. Do not suggest answers.]`)}
+      <div style="margin-top:14px"><div class="label">What trigger did they give you?</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px">
+          ${stepBtn('Monthly cost too high','negGo("cost")','background:linear-gradient(135deg,var(--coral),var(--magenta))')}
+          ${stepBtn('Commitment too long','negGo("term")','background:linear-gradient(135deg,var(--coral),var(--magenta))')}
+          ${stepBtn('Both cost + length','negGo("both")','background:linear-gradient(135deg,var(--coral),var(--magenta))')}
+          ${stepBtn("Don't need it regularly",'negGo("trust")','background:linear-gradient(135deg,var(--purple),var(--magenta))')}
+        </div>
+      </div>`);
+  }
+
+
+  if(negStep==='cost'){
+    return stepCard('Step 2 -- Cost trigger: offer lighter MF','var(--gold)',`
+      <div style="font-size:12.5px;color:var(--text-muted);margin-bottom:8px">Offer $54 first. Only go to $49 if they decline $54. Never go lower.</div>
+      ${scriptBox(`Okay I hear you. Let me see what I can do.
+
+I do have a lighter option -- I can bring your monthly membership down to <strong>$54 a month</strong>. Everything else stays exactly the same -- first cleaning free, $23/hour rate, same quality. Does that work better for you?`)}
+      <div style="margin-top:14px"><div class="label">Their response</div>
+        ${stepBtn('They said YES to $54 -- book FCF','negAccept(54,6)','background:linear-gradient(135deg,var(--green),#2ecc71);color:#0a2010')}
+        ${subBtn('They said NO to $54 -- try $49','negGo("cost2")')}
+        ${subBtn('Still not about cost -- try term offer','negGo("term")')}
+      </div>`);
+  }
+
+  if(negStep==='cost2'){
+    return stepCard('Step 2B -- Final MF offer: $49','var(--gold)',`
+      <div style="font-size:12.5px;color:var(--text-muted);margin-bottom:8px">This is the floor. Do NOT go lower. Tag for QA review if agreed.</div>
+      ${scriptBox(`Okay, let me check if I can do one better. I can actually bring it down to <strong>$49 a month</strong> -- that's the lowest I'm able to go. Everything else stays the same. Does that work for you?`)}
+      <div style="margin-top:14px"><div class="label">Their response</div>
+        ${stepBtn('They said YES to $49 -- book FCF','negAccept(49,6)','background:linear-gradient(135deg,var(--green),#2ecc71);color:#0a2010')}
+        ${subBtn('Still no -- offer Trial cleaning','negGo("trial")')}
+      </div>`);
+  }
+
+  if(negStep==='term'){
+    return stepCard('Step 2 -- Term trigger: offer shorter commitment','var(--gold)',`
+      <div style="font-size:12.5px;color:var(--text-muted);margin-bottom:8px">Shorten to 4 months. MF stays at $59 unless they also object to cost.</div>
+      ${scriptBox(`That's totally fair. Good news -- we can actually shorten that to just <strong>4 paid months</strong> instead of 6. The membership fee and everything else stays the same. Does that feel more comfortable?`)}
+      <div style="margin-top:14px"><div class="label">Their response</div>
+        ${stepBtn('They said YES to 4 months -- book FCF','negAccept(59,4)','background:linear-gradient(135deg,var(--green),#2ecc71);color:#0a2010')}
+        ${subBtn('Still no -- offer Trial cleaning','negGo("trial")')}
+      </div>`);
+  }
+
+  if(negStep==='both'){
+    return stepCard('Step 2 -- Both triggers: reduce MF + term together','var(--gold)',`
+      <div style="font-size:12.5px;color:var(--text-muted);margin-bottom:8px">Offer both together as one concession. $54 + 4 months is the first stop.</div>
+      ${scriptBox(`I hear you on both. Let me see what I can do -- I can bring the monthly fee down to <strong>$54</strong> AND shorten the commitment to just <strong>4 months</strong>. That's the most flexibility I can offer. Does that work for you?`)}
+      <div style="margin-top:14px"><div class="label">Their response</div>
+        ${stepBtn('They said YES -- book FCF at $54/4mo','negAccept(54,4)','background:linear-gradient(135deg,var(--green),#2ecc71);color:#0a2010')}
+        ${subBtn('Still no -- try $49 + 4 months','negGo("both2")')}
+      </div>`);
+  }
+
+  if(negStep==='both2'){
+    return stepCard('Step 2B -- Final combined offer: $49 + 4 months','var(--gold)',`
+      <div style="font-size:12.5px;color:var(--text-muted);margin-bottom:8px">Absolute floor. Tag for QA review if agreed.</div>
+      ${scriptBox(`Alright, let me push this as far as I can -- <strong>$49 a month for 4 months</strong>. That's the best I'm able to offer. Does that work?`)}
+      <div style="margin-top:14px"><div class="label">Their response</div>
+        ${stepBtn('They said YES -- book FCF at $49/4mo','negAccept(49,4)','background:linear-gradient(135deg,var(--green),#2ecc71);color:#0a2010')}
+        ${subBtn('Still no -- offer Trial cleaning','negGo("trial")')}
+      </div>`);
+  }
+
+  if(negStep==='trust'){
+    return stepCard('Step 2 -- "Don\'t need regular cleanings" -- reframe first','var(--magenta)',`
+      <div style="font-size:12.5px;color:var(--text-muted);margin-bottom:8px">This is a frequency objection, not a price objection. Reframe before discounting anything.</div>
+      ${scriptBox(`That makes total sense -- ForeverClean isn't just for people who clean every week. A lot of our customers use it once a month and still save a ton compared to booking one-time every time.
+
+But if a membership really isn't what you're looking for today, no worries at all. Let me set you up with something that fits what you need right now.`)}
+      <div style="margin-top:14px"><div class="label">Their response after the reframe</div>
+        ${stepBtn('They opened up -- offer FCF now','negGo("qualify")')}
+        ${subBtn('Still not interested in membership -- offer Trial','negGo("trial")')}
+      </div>`);
+  }
+
+  if(negStep==='trial'){
+    const trialAmt2=trial?'$'+trial:'[trial price]';
+    return stepCard('Step 3 -- Trial Cleaning offer (last membership attempt)','var(--magenta)',`
+      <div style="font-size:12.5px;color:var(--text-muted);margin-bottom:8px">This is the last membership-based option. Present it as a risk-free way to experience the service.</div>
+      ${scriptBox(`Totally understand. Here's what I can do -- I can set you up on a trial cleaning at a discounted rate of ${trialAmt2}. You have 30 days to cancel with absolutely no obligation. If it's not the right fit, just cancel and that's it.
+
+If you don't cancel within those 30 days, the membership will automatically continue at $59 a month with a 6-month commitment. And if you ever cancel that early, the fee is just $99. But there's zero pressure -- you've got the full 30 days.
+
+Does that work better for you?`)}
+      <div style="margin-top:14px"><div class="label">Their response</div>
+        ${stepBtn('They said YES to Trial -- log it and book','trialAccept()','background:linear-gradient(135deg,var(--green),#2ecc71);color:#0a2010')}
+        ${subBtn('Still no -- offer One-time Cleaning (OTC)','negGo("otc")')}
+      </div>`);
+  }
+
+  if(negStep==='otc'){
+    const otcP=otc?'$'+otc:'[OTC price]';
+    return stepCard('Step 4 -- One-time Cleaning (OTC): last resort','var(--pink)',`
+      <div style="font-size:12.5px;color:var(--text-muted);margin-bottom:8px">No membership. Standard rate. Book immediately -- don't oversell at this point.</div>
+      ${scriptBox(`Got it! We'd be happy to take care of that for you. For a standard one-time cleaning, this would be at our regular price of ${otcP} for ${h||3} hours. No membership, no commitment, nothing recurring.
+
+[If hours > 3 and they balk at OTC price:]
+I can also apply a special discount to bring it down to ${OTC_25[h]?'$'+OTC_25[h]:'[discounted rate]'} if that works better.
+
+Does this work for what you need today?`)}
+      <div style="margin-top:14px"><div class="label">Their response</div>
+        ${stepBtn('They said YES to OTC -- book it','otcAccept()','background:linear-gradient(135deg,var(--green),#2ecc71);color:#0a2010')}
+        ${subBtn('They said no to everything -- end call','negGo("dead")')}
+      </div>`);
+  }
+
+  if(negStep==='dead'){
+    return stepCard('Call not converted','var(--pink)',`
+      <div style="padding:12px 0;font-size:14px;color:var(--text-secondary)">
+        Log the call reason and set a specific callback if possible. A non-conversion today is still a future opportunity.
+      </div>
+      <div style="padding:10px 14px;background:var(--panel2);border-radius:8px;font-size:13.5px;color:var(--text-secondary)">
+        <b style="color:var(--text);display:block;margin-bottom:6px">Before you go:</b>
+        "I completely understand. Just so I can make a note -- is it something I can help with down the road, or was there something specific that didn't fit today?"<br><br>
+        [Set a specific callback date if they're open to it. Do NOT promise to "check back in." Name a date.]
+      </div>
+      <button class="big-btn secondary" style="margin-top:10px" onclick="pIdx=PHASES.length;renderEnd()">Log call as not converted</button>`);
+  }
+
+  return '';
+}
+
+function negGo(step){negStep=step;render();window.scrollTo({top:0,behavior:'smooth'})}
+function negAccept(mf,term){
+  D.negMF=mf;D.negTerm=term;D.offerType='fcf';
+  const el1=document.querySelector('input[data-f="negMF"]');if(el1)el1.value=mf;
+  const el2=document.querySelector('input[data-f="negTerm"]');if(el2)el2.value=term;
+  skipToBooking();
+}
+function trialAccept(){D.offerType='trial';skipToBooking()}
+function otcAccept(){D.offerType='otc';skipToBooking()}
+
 function render(){
   updateProgress();
   const stg=document.getElementById('stage');
@@ -784,10 +915,11 @@ function render(){
   // Negotiation: customer-accepted shortcut at the very top
   if(p.isNeg){
     html+=`<div class="card" style="background:var(--green-bg);border-color:var(--green-border)">
-      <div class="label" style="color:var(--green)">Customer accepted the pitch?</div>
-      <div style="font-size:13.5px;color:var(--text-secondary);margin-bottom:10px">If the customer said yes and you're ready to book, skip negotiation entirely.</div>
-      <button class="big-btn accepted" onclick="skipToBooking()">Customer accepted -- skip to Booking</button>
+      <div class="label" style="color:var(--green)">Customer changed their mind?</div>
+      <div style="font-size:13px;color:var(--text-secondary);margin-bottom:10px">If they accepted FCF after all, skip negotiation entirely.</div>
+      <button class="big-btn accepted" onclick="skipToBooking()">Customer accepted FCF -- go to Booking</button>
     </div>`;
+    html+=renderNegSteps();
   }
 
   html+=renderFields(p.fields);
@@ -859,9 +991,19 @@ function render(){
     <button class="big-btn back" onclick="stage='script';render()">Back to script</button>`;
   } else {
     const disabled=p.isPitch&&!D.offerType;
+    if(p.isPitch){
+      // TURNED DOWN button: large, vivid, impossible to miss -- shown BEFORE the good-to-go row
+      html+=`
+        <div style="margin-top:18px;margin-bottom:12px">
+          <button onclick="goToNeg()" style="display:block;width:100%;padding:18px 20px;border:none;cursor:pointer;font-family:inherit;font-size:17px;font-weight:800;background:linear-gradient(135deg,#E85567,#D14494);color:#fff;border-radius:14px;box-shadow:0 6px 22px rgba(232,85,103,.55);letter-spacing:.3px;transition:.15s" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 10px 28px rgba(232,85,103,.7)'" onmouseout="this.style.transform='';this.style.boxShadow='0 6px 22px rgba(232,85,103,.55)'">
+            They turned down the pitch -- Recover now
+          </button>
+          <div style="text-align:center;font-size:12px;color:var(--text-muted);margin-top:6px">Launches step-by-step negotiation to recover the sale</div>
+        </div>`;
+    }
     html+=`<div class="btn-row">
-      <button class="big-btn" onclick="goodToGo()" ${disabled?'disabled':''}>${disabled?'Pick an offer first':'Good to go -- continue to next phase'}</button>
-      <button class="big-btn secondary" onclick="stage='obj-list';showMore=false;render()">${stage==='obj-reply'?'Another objection? Handle it':'Customer objects -- handle it'}</button>
+      <button class="big-btn" onclick="goodToGo()" ${disabled?'disabled':''}>${disabled?'Pick an offer first -- log above':'Customer accepted -- Good to go, continue to Booking'}</button>
+      <button class="big-btn secondary" onclick="stage='obj-list';showMore=false;render()">${stage==='obj-reply'?'Another objection? Handle it':'Customer has a question -- handle it'}</button>
       <button class="big-btn ghost" onclick="openModal('m-offscript')">? Something else -- Off-script help</button>
       ${pIdx>0?`<button class="big-btn back" onclick="goBack()">Back to Phase ${pIdx}</button>`:''}
     </div>`;
@@ -871,6 +1013,7 @@ function render(){
 
 function pickObj(i,src){selObj=i;selSrc=src;stage='obj-reply';render();window.scrollTo({top:0,behavior:'smooth'})}
 function skipToBooking(){pIdx=4;stage='script';selObj=null;render();window.scrollTo({top:0,behavior:'smooth'})}
+function goToNeg(){negStep='qualify';pIdx=3;stage='script';selObj=null;render();window.scrollTo({top:0,behavior:'smooth'})}
 function goodToGo(){
   const p=PHASES[pIdx];
   if(p.isPitch&&!D.offerType)return;
