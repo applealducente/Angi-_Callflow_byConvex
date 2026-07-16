@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ANGI Call Flow &mdash; Convex</title>
+<title>ANGI Call Flow -- Convex</title>
 <style>
   :root{
     --bg:#140b1a;--bg2:#1c1024;--panel:#241531;--panel2:#2f1a3f;--panel3:#3d2352;
@@ -13,7 +13,7 @@
     --gold:#F2B85A;--gold-bg:rgba(242,184,90,.14);--gold-border:rgba(242,184,90,.45);
     --pink:#E85567;--pink-bg:rgba(232,85,103,.16);--pink-border:rgba(232,85,103,.5);
     --magenta:#D14494;--magenta-bg:rgba(209,68,148,.18);--magenta-border:rgba(209,68,148,.55);
-    --green:#4CD97B;--green-bg:rgba(76,217,123,.12);
+    --green:#4CD97B;--green-bg:rgba(76,217,123,.12);--green-border:rgba(76,217,123,.3);
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.55}
@@ -54,7 +54,7 @@
   .reco-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
   .reco-table th{background:var(--panel2);color:var(--gold);padding:6px 10px;font-size:11px;text-transform:uppercase;letter-spacing:.4px;text-align:left}
   .reco-table td{padding:7px 10px;border-top:1px solid var(--border);color:var(--text-secondary)}
-  .reco-table tr.highlight td{color:var(--gold);background:rgba(242,184,90,.06)}
+  .reco-table tr.hi td{color:var(--gold);background:rgba(242,184,90,.06)}
   .reco-table td:first-child{font-weight:700;color:var(--gold)}
   .script-block{background:var(--coral-bg);border:1px solid var(--coral-border);border-radius:10px;padding:14px 16px;font-size:15px;color:var(--text);white-space:pre-line;line-height:1.65}
   .script-block.legal{background:var(--pink-bg);border-color:var(--pink-border)}
@@ -83,7 +83,10 @@
   .offer-card .odesc{font-size:13px;color:var(--text-secondary);margin-bottom:6px}
   .offer-card .oprice{font-size:12.5px;color:var(--text-muted);border-top:1px solid var(--border);padding-top:6px}
   .offer-card .oprice b{color:var(--gold)}
-  .offer-card .orec{color:var(--magenta);font-weight:700;display:block;margin-top:4px;font-size:12px}
+  .offer-card .orec{font-weight:700;display:block;margin-top:4px;font-size:12px}
+  .offer-card.primary .orec{color:var(--coral)}
+  .offer-card.trial .orec{color:var(--magenta)}
+  .offer-card.otc .orec{color:var(--text-muted)}
   .btn-row{display:flex;flex-direction:column;gap:10px;margin-top:14px}
   .big-btn{display:block;width:100%;padding:14px 20px;border-radius:12px;border:0;background:linear-gradient(135deg,var(--coral),var(--magenta));color:#fff;font-size:15px;font-weight:700;cursor:pointer;transition:.15s;font-family:inherit;box-shadow:0 4px 14px rgba(245,143,107,.35);text-align:center}
   .big-btn:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(245,143,107,.5)}
@@ -113,14 +116,10 @@
   .ladder-pill{padding:8px 14px;background:var(--panel2);border:1px solid var(--border);border-radius:20px;font-size:13px;color:var(--text);cursor:pointer;font-family:inherit;font-weight:600}
   .ladder-pill:hover{border-color:var(--coral);color:var(--coral)}
   .ladder-pill.active{background:linear-gradient(135deg,var(--coral),var(--magenta));color:#fff;border-color:transparent}
-  /* Always-visible floating tools */
   .float-tools{position:fixed;bottom:20px;right:20px;z-index:50;display:none;flex-direction:column;gap:8px;align-items:flex-end}
-  .tool-btn{display:flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--border);border-radius:22px;padding:8px 14px;cursor:pointer;font-size:12.5px;color:var(--text);white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,.4);font-family:inherit;border:none;text-align:left}
-  .tool-btn:hover{border:1px solid var(--coral);background:var(--panel2)}
-  .tool-btn{border:1px solid var(--border)}
+  .tool-btn{display:flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--border);border-radius:22px;padding:8px 14px;cursor:pointer;font-size:12.5px;color:var(--text);white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,.4);font-family:inherit}
+  .tool-btn:hover{border-color:var(--coral);background:var(--panel2)}
   .tool-btn.help{background:var(--coral-bg);color:var(--coral);border-color:var(--coral-border);font-weight:700}
-  .tool-btn .icon{font-size:14px;flex-shrink:0}
-  /* Modals */
   .modal-overlay{display:none;position:fixed;inset:0;background:rgba(10,5,15,.85);align-items:center;justify-content:center;z-index:100;padding:20px}
   .modal-overlay.open{display:flex}
   .modal{background:var(--panel);border:1px solid var(--coral-border);border-radius:14px;padding:22px 24px;max-width:560px;width:100%;max-height:88vh;overflow:auto;box-shadow:0 10px 40px rgba(0,0,0,.6)}
@@ -144,7 +143,6 @@
   .off-item:hover{border-color:var(--coral);background:var(--coral-bg)}
   .off-item .cust{font-size:13px;color:var(--text);font-style:italic;margin-bottom:3px}
   .off-item .reply{font-size:12.5px;color:var(--text-secondary)}
-  /* End screen */
   .end-screen{text-align:center;padding:36px 20px}
   .end-screen .celebrate{font-size:60px;animation:pop .6s cubic-bezier(.34,1.56,.64,1);display:block;margin-bottom:6px}
   @keyframes pop{0%{transform:scale(0) rotate(-15deg)}100%{transform:scale(1) rotate(0)}}
@@ -156,7 +154,6 @@
   .qa-item .check{color:var(--green);font-weight:700;width:18px;text-align:center}
   .qa-item.covered{color:var(--text)}
   .end-screen .big-btn{max-width:280px;margin:8px auto}
-  /* Gate */
   .gate-overlay{position:fixed;inset:0;background:radial-gradient(ellipse at center,var(--bg2),var(--bg));z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
   .gate-card{width:360px;text-align:center;padding:20px}
   .gate-card h2{margin:8px 0 4px;background:linear-gradient(90deg,var(--coral),var(--magenta));-webkit-background-clip:text;background-clip:text;color:transparent}
@@ -172,7 +169,7 @@
     <img src="convex-logo.png" alt="Convex" style="height:44px;background:#fff;padding:4px 10px;border-radius:8px;margin-bottom:12px">
     <h2>ANGI Call Flow</h2>
     <p>Sign in to start a call.</p>
-    <div class="field"><label>Your name (Agent)</label><input id="g-name" placeholder="Jane Rivera"></div>
+    <div class="field"><label>Your name</label><input id="g-name" placeholder="Jane Rivera"></div>
     <div class="field"><label>Email</label><input id="g-email" placeholder="jane@convex.io"></div>
     <div class="field"><label>Team</label>
       <select id="g-team"><option value="">Select a team</option><option>Angi Sales</option><option>Angi Training</option><option>Team Lead / QA</option></select>
@@ -199,96 +196,84 @@
 </main>
 </div>
 
-<!-- Always-visible floating tools -->
 <div class="float-tools" id="float-tools">
-  <div class="tool-btn help" onclick="openModal('m-offscript')"><span class="icon">?</span> Off-script help</div>
-  <div class="tool-btn" onclick="openModal('m-pricing')"><span class="icon">💰</span> Pricing tables</div>
-  <div class="tool-btn" onclick="openModal('m-fcfcalc')"><span class="icon">🧮</span> FCF calculator</div>
-  <div class="tool-btn" onclick="openModal('m-otccalc')"><span class="icon">🧾</span> OTC / Trial calc</div>
-  <div class="tool-btn" onclick="openModal('m-worstcase')"><span class="icon">📊</span> Worst-case savings</div>
-  <div class="tool-btn" onclick="openModal('m-notes')"><span class="icon">📝</span> Notes</div>
+  <div class="tool-btn help" onclick="openModal('m-offscript')"><span>?</span> Off-script help</div>
+  <div class="tool-btn" onclick="openModal('m-pricing')"><span>&#128176;</span> Pricing tables</div>
+  <div class="tool-btn" onclick="openModal('m-fcfcalc')"><span>&#129518;</span> FCF calculator</div>
+  <div class="tool-btn" onclick="openModal('m-otccalc')"><span>&#128190;</span> OTC / Trial calc</div>
+  <div class="tool-btn" onclick="openModal('m-worstcase')"><span>&#128202;</span> Worst-case savings</div>
+  <div class="tool-btn" onclick="openModal('m-notes')"><span>&#128221;</span> Notes</div>
 </div>
 
 <!-- MODALS -->
 <div class="modal-overlay" id="m-offscript"><div class="modal"><button class="modal-close" onclick="closeModal('m-offscript')">&times;</button><h3>Off-script help</h3><div class="desc">Search what the customer said.</div><input class="search-box" id="off-search" placeholder="e.g. steal, refund, cancel, manager..." oninput="filterOffscript()"><div id="off-list"></div></div></div>
 
 <div class="modal-overlay" id="m-pricing"><div class="modal"><button class="modal-close" onclick="closeModal('m-pricing')">&times;</button><h3>Pricing tables (FCF v3)</h3>
-<div class="desc">FCF: $19 today = 1st month MF + first 3 hrs FREE. 4hr = +$19, 6hr = +$59 upcharge. Month 2 onwards = $59/mo.</div>
-<div style="margin-bottom:8px;font-size:13px;color:var(--gold);font-weight:700">FCF Today's Charge &amp; ETF by Hours</div>
-<table class="pricing-table"><tr><th>Hours</th><th>Today (upfront)</th><th>Breakdown</th><th>ETF (max $300)</th><th>OTC compare</th></tr>
-<tr><td>2 hrs</td><td><b>$19</b></td><td>$19 MF · 2-hr voucher FREE</td><td>$70</td><td>$126</td></tr>
-<tr><td>3 hrs</td><td><b>$19</b></td><td>$19 MF · 3-hr voucher FREE</td><td>$105</td><td>$189</td></tr>
+<div class="desc">Free 3-hr voucher upon enrollment. 4+ hrs are upcharged on top of the $19 MF.</div>
+<div style="margin-bottom:6px;font-size:13px;color:var(--gold);font-weight:700">FCF Today's Charge</div>
+<table class="pricing-table"><tr><th>Hours</th><th>Today</th><th>Breakdown</th><th>ETF (max $300)</th><th>OTC compare</th></tr>
+<tr><td>2 hrs</td><td><b>$19</b></td><td>$19 MF + 2-hr voucher FREE</td><td>$70</td><td>$126</td></tr>
+<tr><td>3 hrs</td><td><b>$19</b></td><td>$19 MF + 3-hr voucher FREE</td><td>$105</td><td>$189</td></tr>
 <tr><td>4 hrs</td><td><b>$38</b></td><td>$19 MF + $19 upcharge</td><td>$140</td><td>$252</td></tr>
-<tr><td>5 hrs</td><td><b>$57*</b></td><td>$19 MF + $38 upcharge (*confirm with compliance)</td><td>$175</td><td>$315</td></tr>
+<tr><td>5 hrs</td><td><b>$57*</b></td><td>$19 MF + $38 upcharge (*confirm)</td><td>$175</td><td>$315</td></tr>
 <tr><td>6 hrs</td><td><b>$78</b></td><td>$19 MF + $59 upcharge</td><td>$210</td><td>$378</td></tr>
 </table>
-<div style="margin-top:8px;padding:8px 12px;background:var(--panel2);border-radius:8px;font-size:12px;color:var(--text-muted)">
-  <b style="color:var(--gold)">How upcharges work:</b> Every ForeverClean signup includes a free 3-hour cleaning voucher. If the recommended hours are 2 or 3, the voucher covers it fully. If 4+ hours are needed, the agent charges $19 MF + upcharge for the extra hours. 5-hr is not in the official voucher table — confirm with compliance before quoting.
-</div>
-<div style="margin-top:12px;font-size:13px;color:var(--gold);font-weight:700">Hour Recommendation Table</div>
-<table class="pricing-table" style="margin-top:6px"><tr><th>Rec. Hours</th><th>Kitchen</th><th>Bathrooms</th><th>Bedrooms</th></tr>
-<tr><td>2 HR</td><td>Yes</td><td>1</td><td>0</td></tr>
-<tr><td>3 HR</td><td>Yes</td><td>1</td><td>1</td></tr>
-<tr><td>4 HR</td><td>Yes</td><td>2</td><td>1–2</td></tr>
-<tr><td>6 HR</td><td>Yes</td><td>3+</td><td>3+</td></tr>
+<div style="margin-top:10px;font-size:13px;color:var(--gold);font-weight:700">Hour Recommendation Table</div>
+<table class="pricing-table" style="margin-top:6px"><tr><th>Hours</th><th>Kitchen</th><th>Bathrooms</th><th>Bedrooms</th></tr>
+<tr><td>2 HR</td><td>Yes</td><td>1</td><td>0</td></tr><tr><td>3 HR</td><td>Yes</td><td>1</td><td>1</td></tr>
+<tr><td>4 HR</td><td>Yes</td><td>2</td><td>1 to 2</td></tr><tr><td>6 HR</td><td>Yes</td><td>3+</td><td>3+</td></tr>
 </table>
-<div style="margin-top:10px;font-size:12px;color:var(--text-muted)">Sales tax may apply in: AR, CT, DC, HI, KY, MN, NE, NJ, NM, NY, OH, PA, SD, TX, UT, WV</div>
+<div style="margin-top:8px;font-size:12px;color:var(--text-muted)">Sales tax may apply in: AR, CT, DC, HI, KY, MN, NE, NJ, NM, NY, OH, PA, SD, TX, UT, WV</div>
 </div></div>
 
 <div class="modal-overlay" id="m-fcfcalc"><div class="modal"><button class="modal-close" onclick="closeModal('m-fcfcalc')">&times;</button><h3>FCF calculator</h3>
-<div class="desc">$19 = 1st month MF + first 3 hrs FREE. Hours 4-6 are upcharged on top of $19. Month 2+ = MF + (CPC × frequency).</div>
-<div class="mfield"><label>First cleaning hours (2–6)</label><input type="number" id="fcf-h" value="3" min="2" max="6"></div>
+<div class="desc">$19 MF + voucher covers first 3 hrs free. Hours 4+ are upcharged. Month 2 onwards = MF + (CPC x frequency).</div>
+<div class="mfield"><label>First cleaning hours (2 to 6)</label><input type="number" id="fcf-h" value="3" min="2" max="6"></div>
 <div class="mfield"><label>Membership fee ($/mo)</label><select id="fcf-mf"><option value="59">$59/mo (standard)</option><option value="54">$54/mo (negotiated)</option><option value="49">$49/mo (negotiated)</option></select></div>
-<div class="mfield"><label>Cleaning frequency (from month 2)</label><select id="fcf-fr"><option value="1">Once a month</option><option value="2">Twice a month</option><option value="3">3× per month</option><option value="4">Weekly</option></select></div>
+<div class="mfield"><label>Cleaning frequency (from month 2)</label><select id="fcf-fr"><option value="1">Once a month</option><option value="2">Twice a month</option><option value="3">3x per month</option><option value="4">Weekly</option></select></div>
 <button class="calc-btn" onclick="calcFCF()">Calculate</button><div class="result" id="fcf-result" style="display:none"></div></div></div>
 
 <div class="modal-overlay" id="m-otccalc"><div class="modal"><button class="modal-close" onclick="closeModal('m-otccalc')">&times;</button><h3>OTC / Trial calculator</h3>
 <div class="desc">One-time or Trial pricing by cohort and hours.</div>
-<div class="mfield"><label>Hours (2–6)</label><input type="number" id="otc-h" value="3" min="2" max="6"></div>
-<div class="mfield"><label>Cohort type</label><select id="otc-t"><option value="otc30">OTC 30|30 (no commitment)</option><option value="otc25">OTC 25|25</option><option value="trial20">Trial 20|20 (30-day cancel)</option></select></div>
+<div class="mfield"><label>Hours (2 to 6)</label><input type="number" id="otc-h" value="3" min="2" max="6"></div>
+<div class="mfield"><label>Cohort type</label><select id="otc-t"><option value="otc30">OTC 30|30 (no commitment)</option><option value="otc25">OTC 25|25</option><option value="trial20">Trial 20|20 (30-day cancel window)</option></select></div>
 <button class="calc-btn" onclick="calcOTC()">Calculate</button><div class="result" id="otc-result" style="display:none"></div></div></div>
 
 <div class="modal-overlay" id="m-worstcase"><div class="modal"><button class="modal-close" onclick="closeModal('m-worstcase')">&times;</button><h3>Worst-case savings vs OTC</h3>
-<div class="desc">Even if customer cancels after first cleaning and pays the full ETF, they still pay less than a one-time cleaning.</div>
-<table class="pricing-table"><tr><th>Hours</th><th>FCF upfront</th><th>+ETF</th><th>=Worst case</th><th>OTC price</th><th>Savings</th></tr>
+<div class="desc">Even if customer cancels after first cleaning and pays full ETF, they still pay less than OTC.</div>
+<table class="pricing-table"><tr><th>Hours</th><th>FCF upfront</th><th>+ ETF</th><th>= Worst case</th><th>OTC price</th><th>Savings</th></tr>
 <tr><td>2 hrs</td><td>$19</td><td>$70</td><td>$89</td><td>$126</td><td style="color:var(--green);font-weight:700">$37 saved</td></tr>
 <tr><td>3 hrs</td><td>$19</td><td>$105</td><td>$124</td><td>$189</td><td style="color:var(--green);font-weight:700">$65 saved</td></tr>
 <tr><td>4 hrs</td><td>$38</td><td>$140</td><td>$178</td><td>$252</td><td style="color:var(--green);font-weight:700">$74 saved</td></tr>
 <tr><td>6 hrs</td><td>$78</td><td>$210</td><td>$288</td><td>$378</td><td style="color:var(--green);font-weight:700">$90 saved</td></tr>
 </table>
-<div style="margin-top:10px;font-size:12px;color:var(--text-muted)">ETF capped at $300. Only applies after first cleaning is invoiced. No ETF if canceled before first cleaning.</div>
+<div style="margin-top:8px;font-size:12px;color:var(--text-muted)">ETF capped at $300. Only applies after first cleaning is invoiced. No ETF if canceled before first cleaning.</div>
 </div></div>
 
 <div class="modal-overlay" id="m-notes"><div class="modal"><button class="modal-close" onclick="closeModal('m-notes')">&times;</button><h3>Notes</h3><div class="desc">Saved to this device.</div><textarea id="notes-area" placeholder="Notes..." style="width:100%;background:var(--panel2);border:1px solid var(--border);color:var(--text);padding:10px;border-radius:8px;font-size:14px;font-family:inherit;min-height:180px"></textarea><button class="calc-btn" onclick="saveNotes()">Save</button><div id="notes-saved" style="display:none;text-align:center;color:var(--gold);margin-top:8px">Saved.</div></div></div>
 
 <script>
-// ============ PRICING ============
-// Official voucher table: 3-hour free cleaning upon enrollment.
-// 2 & 3 hrs = only $19 MF (voucher covers the cleaning).
-// 4 hrs = $19 MF + $19 upcharge = $38 total.
-// 6 hrs = $19 MF + $59 upcharge = $78 total.
-// 5 hrs = NOT in official table — flag for compliance before use.
+// ============ PRICING (Official FCF v3 voucher table) ============
 const FCF_TODAY={2:19,3:19,4:38,5:57,6:78};
 const FCF_UPCHARGE={2:0,3:0,4:19,5:38,6:59};
 const FCF_ETF={2:70,3:105,4:140,5:175,6:210};
 const FCF_CPC={2:46,3:69,4:92,5:115,6:138};
+// National averages used in pitch (from CFG)
+const NATIONAL_AVG={2:150,3:225,4:300,5:375,6:450};
+// FCF member recurring rate per cleaning (same as CPC from pricing table)
+const MEMBER_RATE={2:46,3:69,4:92,5:115,6:138};
 const OTC_30={2:126,3:189,4:252,5:315,6:378};
 const OTC_25={2:null,3:173.25,4:231,5:288.75,6:346.50};
 const TRIAL_20={2:105,3:157.50,4:210,5:262.50,6:315};
 
-// HOUR RECOMMENDATION TABLE (from official table image)
-// 2HR: 1 bath, 0 beds
-// 3HR: 1 bath, 1 bed
-// 4HR: 2 bath, 1-2 beds
-// 6HR: 3+ bath, 3+ beds
+// Hour recommendation from official table
 function recHours(beds,baths){
-  if(!beds&&!baths)return null;
-  const b=parseInt(beds)||0, ba=parseInt(baths)||0;
+  const b=parseInt(beds)||0,ba=parseInt(baths)||0;
   if(ba>=3||b>=3)return 6;
-  if(ba>=2||(b>=1&&b<=2&&ba>=2))return 4;
-  if(ba>=1&&b>=1)return 3;
+  if(ba>=2)return 4;
+  if(b>=1&&ba>=1)return 3;
   if(ba>=1&&b===0)return 2;
-  return 3;
+  return null;
 }
 
 // ============ DATA ============
@@ -298,33 +283,44 @@ const D={
   motivation:'',focusAreas:'',specialNotes:'',
   offerType:'fcf',
   negMF:0,negTerm:0,negHours:0,
-  date:'',altDate:'',time:'',
+  date:'',altDate:'',altTime:'',time:'',
   address:'',email:'',phone:'',entry:''
 };
 
 function hrs(){return D.negHours||recHours(D.bedrooms,D.bathrooms)}
 function mf(){return D.negMF||59}
 function term(){return D.negTerm||6}
-function todayFCF(){const h=hrs();return h?FCF_TODAY[h]||null:null}
+function todayCharge(){
+  const h=hrs();if(!h)return null;
+  if(D.offerType==='fcf')return FCF_TODAY[h]||null;
+  if(D.offerType==='otc')return OTC_30[h]||null;
+  if(D.offerType==='trial')return TRIAL_20[h]||null;
+  return null;
+}
 function etfAmt(){const h=hrs();return h?Math.min(FCF_ETF[h]||0,300):null}
 function otcAmt(){const h=hrs();return h?(OTC_30[h]||null):null}
-function worstCase(){const t=todayFCF(),e=etfAmt();return(t!==null&&e!==null)?t+e:null}
-function upchargeAmt(){const h=hrs();return h?(FCF_UPCHARGE[h]||0):0}
+function trialAmt(){const h=hrs();return h?(TRIAL_20[h]||null):null}
+function worstCase(){const t=FCF_TODAY[hrs()],e=etfAmt();return(t!=null&&e!=null)?t+e:null}
+function natAvg(){const h=hrs();return h?(NATIONAL_AVG[h]||null):null}
+function memberRate(){const h=hrs();return h?(MEMBER_RATE[h]||null):null}
+function upcharge(){const h=hrs();return h?(FCF_UPCHARGE[h]||0):0}
 
 function fill(txt){
-  const h=hrs(),tc=D.offerType==='fcf'?todayFCF():otcAmt(),e=etfAmt(),wc=worstCase(),otc=otcAmt();
+  const h=hrs(),tc=todayCharge(),e=etfAmt(),wc=worstCase(),otc=otcAmt(),na=natAvg(),mr=memberRate();
   const map={
     'Customer Name':D.customerName,'Agent Name':D.agentName,
     'Bedrooms':D.bedrooms||'','Bathrooms':D.bathrooms||'',
     'Frequency':D.frequency,'City':D.city,
     'X hours':h?h+' hours':'','X':h||'',
     'Today':tc?'$'+tc:'','ETF':e?'$'+e:'',
-    'WorstCase':wc?'$'+wc:'','OTC':otc?'$'+otc:'',
+    'WorstCase':wc?'$'+wc:'','OTC':otc?'$'+otc:'','Trial':trialAmt()?'$'+trialAmt():'',
+    'NatAvg':na?'$'+na:'','MemberRate':mr?'$'+mr:'',
+    'Upcharge':upcharge()?'$'+upcharge():'',
     'MF':'$'+mf(),'Term':term(),
     'Motivation':D.motivation,'Focus':D.focusAreas,
-    'Upcharge':upchargeAmt()?'$'+upchargeAmt():'',
     'DateTime':(D.date&&D.time)?D.date+' at '+D.time:'',
-    'AltDate':D.altDate||'N/A',
+    'AltDate':D.altDate||(D.altTime?'':'N/A'),
+    'AltDateTime':(D.altDate&&D.altTime)?D.altDate+' at '+D.altTime:(D.altDate||'N/A'),
     'Address':D.address,'Email':D.email,'Phone':D.phone,'Entry':D.entry
   };
   return txt.replace(/\{([\w\s]+)\}/g,(m,k)=>{
@@ -334,46 +330,124 @@ function fill(txt){
   });
 }
 
+// ============ PITCH SCRIPTS (exact from CFG screenshots) ============
+function pitchScript(){
+  const h=hrs(),tc=todayCharge(),na=natAvg(),mr=memberRate(),e=etfAmt();
+  if(!h)return '(Fill in bedrooms + bathrooms in Discovery to generate the pitch for this home.)';
+
+  // Part I: The offer hook
+  let p1='';
+  if(h<=3){
+    p1=`Thanks for sharing all that with me. For a home your size, we usually recommend about ${h} hours for the first cleaning. Normally that would cost around ${na?'$'+na:'[national avg]'} - that's the national average.
+
+Instead of ${na?'$'+na:'[national avg]'}, with ForeverClean, every ${h}-hour cleaning is just around ${mr?'$'+mr:'[rate]'} every time.
+
+Here's what I can do for you - your first ${h} hours are completely free, and all you pay today is ${tc?'$'+tc:'[today]'}. How does that sound for you?`;
+  } else {
+    p1=`Thanks for sharing all that with me. For a home your size, we usually recommend about ${h} hours for the first cleaning. Normally that would cost around ${na?'$'+na:'[national avg]'} - that's the national average.
+
+Instead of ${na?'$'+na:'[national avg]'}, with ForeverClean, every ${h}-hour cleaning is just around ${mr?'$'+mr:'[rate]'} every time.
+
+Here's what I can do for you - your first ${h} hours of cleaning for only ${tc?'$'+tc:'[today]'}. How does that sound for you?`;
+  }
+
+  // Part II: How it works (varies by hours)
+  let p2='';
+  if(h<=3){
+    p2=`So here's how ForeverClean works, quick and simple.
+
+Today, you only pay ${tc?'$'+tc:'[today]'}. That covers your first month of membership, and your first ${h} hours of cleaning are completely free.
+
+After that, your membership continues at ${mf()?'$'+mf():'[MF]'} a month, billed on the same date each month, until you cancel. That's what keeps your discounted rate of around $23/hour going for every cleaning after your first one, and you can cancel anytime.
+
+The only thing to flag is a small early cancellation fee if you end it before ${term()} paid months. It's $35 times the hours of your first cleaning, so in your case that would be ${e?'$'+e:'[ETF]'} plus applicable taxes.
+
+When would you like to have your cleaning?`;
+  } else if(h===4){
+    p2=`So here's how ForeverClean works, quick and simple.
+
+Today, you only pay $38. The $19 covers your first month of membership, and the additional $19 covers the extra hour, since your home needs 4 hours instead of 3.
+
+After that, your membership continues at ${mf()?'$'+mf():'[MF]'} a month, billed on the same date each month, until you cancel. That's what keeps your discounted rate of around $23/hour going for every cleaning after your first one, and you can cancel anytime.
+
+The only thing to flag is a small early cancellation fee if you end it before ${term()} paid months. It's $35 times the hours of your first cleaning, so in your case that would be $140 plus applicable taxes.
+
+When would you like to have your cleaning?`;
+  } else {
+    // 5 or 6 hrs
+    const uc=upcharge();
+    const extraHrs=h-3;
+    p2=`So here's how ForeverClean works, quick and simple.
+
+Today, you only pay ${tc?'$'+tc:'[today]'}. The $19 covers your first month of membership, and the additional ${uc?'$'+uc:'[upcharge]'} covers the extra ${extraHrs} hour${extraHrs>1?'s':''}, since your home needs ${h} hours instead of 3.
+
+After that, your membership continues at ${mf()?'$'+mf():'[MF]'} a month, billed on the same date each month, until you cancel. That's what keeps your discounted rate of around $23/hour going for every cleaning after your first one, and you can cancel anytime, right from your dashboard.
+
+The only thing to flag is a small early cancellation fee if you end it before ${term()} paid months. It's $35 times the hours of your first cleaning, so in your case that would be ${e?'$'+e:'[ETF]'}.
+
+When would you like to have your cleaning?`;
+  }
+
+  return p1+'\n\n---\n\n'+p2;
+}
+
 // ============ VERBATIM ============
 function verbatim(){
   const h=hrs(),o=D.offerType;
   if(o==='otc')return VERB_OTC;
-  if(!h)return '(fill in bedrooms + bathrooms to generate the correct verbatim)';
-  if(h<=3)return VERB_FCF_3.replace(/\{FH\}/g,String(h));
+  if(o==='trial')return VERB_TRIAL;
+  if(!h)return '(Fill in bedrooms + bathrooms to generate the correct verbatim for this home.)';
+  if(h<=3)return VERB_FCF_23.replace(/\{FH\}/g,String(h));
   if(h===4)return VERB_FCF_4;
   if(h===5)return VERB_FCF_5;
   return VERB_FCF_6;
 }
-const VERB_OTC=`Just to confirm we got everything correctly, I'll just go over everything that we have discussed. Please answer with a clear yes if you agree. To start\u2026.
+
+const VERB_OTC=`Just to confirm we got everything correctly, I'll just go over everything that we have discussed. Please answer with a clear yes if you agree. To start...
 
 Your email is {Email}, phone number is {Phone}, and your address is {Address}. Are these correct?
 
 Your one-time cleaning request for {DateTime} for {X hours} has been booked.
-S1: The alternate cleaning date would be {AltDate}. Is that correct?
+S1: The alternate cleaning date would be {AltDateTime}. Is that correct?
 S2: There's no alternate cleaning date. Is that correct?
 
-We'll notify you when a cleaner claims your request, and their details will be on your dashboard. This cleaning will entail being charged upfront with a total amount of {Today}. This amount should cover a total of {X hours} of standard cleaning and in this appointment, you mentioned your priority areas are {Focus}. Note: If extras are included \u2013 This appointment will also include the cleaning of your (mention extras). Is this correct?`;
+We'll notify you when a cleaner claims your request, and their details will be on your dashboard. This cleaning will entail being charged upfront with a total amount of {Today}. This amount should cover a total of {X hours} of standard cleaning and in this appointment, you mentioned your priority areas are {Focus}. Note: If extras are included - This appointment will also include the cleaning of your (mention extras). Is this correct?`;
 
-const VERB_FCF_3=`Just to make sure we got everything right, I'll go over what we discussed. Please say yes if you agree.
+const VERB_TRIAL=`Just to confirm we got everything correctly, I'll just go over everything that we have discussed. Please answer with a clear yes if you agree. To start...
 
-To start \u2014 your email is {Email}, phone number is {Phone}, and your address is {Address}. Are these correct?
+Your email is {Email}, phone number is {Phone}, and your address is {Address}. Are these correct?
 
 Your cleaning request for {DateTime} for {X hours} has been booked.
-S1: The alternate cleaning date is {AltDate}. Correct?
+S1: The alternate cleaning date would be {AltDateTime}. Is that correct?
+S2: There's no alternate cleaning date. Is that correct?
+
+We'll notify you when a cleaner claims your request, and their details will be on your dashboard. You mentioned that for this cleaning, your priority areas are {Focus}. Note: If extras are included - This appointment will also include the cleaning of your (mention extras). Is that correct?
+
+This cleaning will be for a total of {X} hours and will be charged upfront at a discounted rate of {Today} and you have 30 days to cancel with no obligation. Is this clear?
+
+If you do not cancel within 30 days, the membership will continue automatically for $59 per month for 6-paid months, with future cleanings heavily discounted at around $23/hr. inclusive of a 15% transaction fee. Cancelling before the end of the 6-paid month term will have a $99 Early Cancellation Fee. Is that clear?`;
+
+const VERB_FCF_23=`Just to make sure we got everything right, I'll go over what we discussed. Please say yes if you agree.
+
+To start - your email is {Email}, phone number is {Phone}, and your address is {Address}. Are these correct?
+
+Your cleaning request for {DateTime} for {X hours} has been booked.
+
+S1: The alternate cleaning date is {AltDateTime}. Correct?
 S2: No alternate date. Correct?
 
 We'll let you know when a cleaner claims your request, and their details will show on your dashboard. Your first {FH} hours of this cleaning are completely free, covered by your ForeverClean membership, and your priority areas are {Focus}. If extras are included: "This appointment also includes cleaning of your (extras)." Any cleaning time beyond your first {FH} free hours will be billed at around $23 per hour. Is this clear?
 
 By signing up for ForeverClean today, a $19 charge has been processed. That's your first month of membership. Your ForeverClean membership will automatically renew each month, on the same date, until you choose to cancel. Starting from your second month, the regular {MF} monthly fee will apply. With ForeverClean, your future cleanings are heavily discounted at around $23 per hour, including a 15% transaction fee. Is this clear?
 
-You can cancel ForeverClean anytime. If you cancel before {Term}-Paid months, there's an early cancellation fee of {ETF}\u2014 that's $35 times the hours of your first cleaning. Are these terms clear?`;
+You can cancel ForeverClean anytime. If you cancel before {Term}-Paid months, there's an early cancellation fee of {ETF} - that's $35 times the hours of your first cleaning. Are these terms clear?`;
 
 const VERB_FCF_4=`Just to make sure we got everything right, I'll go over what we discussed. Please say yes if you agree.
 
-To start \u2014 your email is {Email}, phone number is {Phone}, and your address is {Address}. Are these correct?
+To start - your email is {Email}, phone number is {Phone}, and your address is {Address}. Are these correct?
 
 Your cleaning request for {DateTime} for 4 hours has been booked.
-S1: The alternate cleaning date is {AltDate}. Correct?
+S1: The alternate cleaning date is {AltDateTime}. Correct?
 S2: No alternate date. Correct?
 
 Your priority areas are {Focus}. If extras are included: "This appointment also includes cleaning of your (extras)." - is this correct?
@@ -384,19 +458,19 @@ Your ForeverClean membership will automatically renew each month, on the same da
 
 You can cancel ForeverClean anytime. If you cancel before {Term}-Paid months, there's an early cancellation fee of {ETF} - that's $35 times the 4 hours of your first cleaning. Are these terms clear?`;
 
-const VERB_FCF_5=`[Confirm 5-hour verbatim with compliance. Pattern follows 4-hour template.]
+const VERB_FCF_5=`[Confirm 5-hour verbatim with compliance before use. Pattern follows 4-hour template.]
 
 Just to make sure we got everything right, I'll go over what we discussed. Please say yes if you agree.
 
-To start \u2014 your email is {Email}, phone number is {Phone}, and your address is {Address}. Are these correct?
+To start - your email is {Email}, phone number is {Phone}, and your address is {Address}. Are these correct?
 
 Your cleaning request for {DateTime} for 5 hours has been booked.
-S1: The alternate cleaning date is {AltDate}. Correct?
+S1: The alternate cleaning date is {AltDateTime}. Correct?
 S2: No alternate date. Correct?
 
 Your priority areas are {Focus}. If extras are included: "This appointment also includes cleaning of your (extras)." - is this correct?
 
-We'll let you know when a cleaner claims your request. By signing up for ForeverClean today, a total of $57 has been processed. The $19 covers your first month of ForeverClean membership and includes 3 free hours of cleaning. The additional $38 is the upcharge for the extra 2 hours of your cleaning, since your home requires 5 hours instead of 3. Any cleaning time beyond your first 5 hours will be billed at around $23 per hour. Is this clear?
+We'll let you know when a cleaner claims your request. By signing up for ForeverClean today, a total of $57 has been processed. The $19 covers your first month of ForeverClean membership and includes 3 free hours of cleaning. The additional $38 is the upcharge for the extra 2 hours of your cleaning. Any cleaning time beyond your first 5 hours will be billed at around $23 per hour. Is this clear?
 
 Your ForeverClean membership will automatically renew each month. Starting from your second month, the regular {MF} monthly fee will apply. Future cleanings are discounted at around $23 per hour, including a 15% transaction fee. Is this clear?
 
@@ -404,10 +478,10 @@ You can cancel ForeverClean anytime. If you cancel before {Term}-Paid months, th
 
 const VERB_FCF_6=`Just to make sure we got everything right, I'll go over what we discussed. Please say yes if you agree.
 
-To start \u2014 your email is {Email}, phone number is {Phone}, and your address is {Address}. Are these correct?
+To start - your email is {Email}, phone number is {Phone}, and your address is {Address}. Are these correct?
 
 Your cleaning request for {DateTime} for 6 hours has been booked.
-S1: The alternate cleaning date is {AltDate}. Correct?
+S1: The alternate cleaning date is {AltDateTime}. Correct?
 S2: No alternate date. Correct?
 
 Your priority areas are {Focus}. If extras are included: "This appointment also includes cleaning of your (extras)." - is this correct?
@@ -420,21 +494,19 @@ You can cancel ForeverClean anytime. If you cancel before {Term}-Paid months, th
 
 // ============ 6 PHASES ============
 const PHASES=[
-// 1. Opening
 {t:"Opening",obj:"Reconnect the Angi request. Disclose recorded line. Take control fast.",legal:false,
  fields:[{k:'customerName',type:'text',label:'Customer name',placeholder:'e.g. John Smith',full:true}],
  script:`Hi, is this {Customer Name}?
 
 Hi {Customer Name}, this is {Agent Name} with Homeaglow on a recorded line.
 
-I'm reaching out because you recently requested a house cleaning through Angi. I've already got your request in front of me \u2014 I won't make you repeat what you entered.
+I'm reaching out because you recently requested a house cleaning through Angi. I've already got your request in front of me - I won't make you repeat what you entered.
 
 I just need a couple minutes to lock in the right option for your home. Sounds good?`,
  qa:['recorded'],
- tips:["<b>Assumptive close.</b> \"Sounds good?\" not \"is this a good time?\"",
-       "<b>If they say \"I only wanted a quote\":</b> \"You're getting one \u2014 an accurate one. Two questions and I'll have it.\"",
-       "<b>NEVER use the word \"try\" for the membership.</b> Say \"sign up\" or \"become a member.\""]},
-// 2. Discovery
+ tips:["<b>Assumptive close.</b> 'Sounds good?' not 'is this a good time?'",
+       "<b>If they say 'I only wanted a quote':</b> 'You're getting one - an accurate one. Two questions and I'll have it.'",
+       "<b>NEVER use the word 'try' for the membership.</b> Say 'sign up' or 'become a member.'"]},
 {t:"Discovery",obj:"Get their motivation (weaponize in pitch). Confirm home details and key them in.",legal:false,
  fields:[
    {k:'bedrooms',type:'number',label:'Bedrooms',placeholder:'2',min:0,max:10},
@@ -445,71 +517,64 @@ I just need a couple minutes to lock in the right option for your home. Sounds g
    {k:'focusAreas',type:'textarea',label:'Priority focus areas',placeholder:'e.g. kitchen, bathrooms, baseboards',full:true},
    {k:'specialNotes',type:'textarea',label:'Special notes',placeholder:'pets, parking, no key, allergies, etc.',full:true}
  ],
- script:`Perfect. I can see the basics from your request. The one thing it doesn't tell me is \u2014 what made now the right time to look for a cleaner?
+ script:`Perfect. I can see the basics from your request. The one thing it doesn't tell me is - what made now the right time to look for a cleaner?
 
 [Listen. Use one probe below if needed.]
 
 Quick confirm: you're at {Bedrooms} bedrooms, {Bathrooms} bathrooms, looking for {Frequency} cleaning in {City}. Is that right? Anywhere particular you want your cleaner to focus?`,
  probes:["What's been the biggest challenge keeping up with the house?","If this cleaning went exactly how you're hoping, what would that look like?","Have you hired a cleaner before?","Are you comparing companies, or just looking for someone reliable?"],
  showAutoCalc:true,qa:['discovery'],
- tips:["<b>Ask ONE probe. Listen fully.</b>","<b>Key in their motivation</b> \u2014 the Sales Pitch reads it back automatically."]},
-// 3. Sales Pitch
-{t:"Sales Pitch",obj:"Weaponize their motivation. First 3 hours FREE with $19 membership. Explain upcharge if 4+ hours. Pick offer.",legal:false,
- fields:[],isOffer:true,showAutoCalc:true,
- script:`Thanks for sharing all that with me. For a home your size, we usually recommend about {X hours} for the first cleaning. Normally that would cost around {OTC} \u2014 that's the market rate for a cleaning like this.
-
-But with ForeverClean, the rate drops to about $23 an hour. So instead of {OTC}, you're looking at around $23 an hour per cleaning once you're a member.
-
-Here's what I can do for you \u2014 your first {X} hours are completely free, and all you pay today is {Today}.
-
-Here's how ForeverClean works, quick and simple:
-
-Today, you only pay {Today}. That already covers your first month of membership, and your first {X} hours of cleaning are completely free.
-
-[If 4+ hours:] Just a heads up \u2014 since your home needs {X} hours, there's a small upcharge of {Upcharge} on top of the $19. That covers the extra hours beyond the 3 that are included free. So your total today is {Today}.
-
-Starting next month, it's {MF} a month. That's what keeps your $23/hour rate going for every cleaning after your first one.
-
-You can cancel anytime. There's just a small early cancellation fee if you cancel before {Term} months \u2014 it's $35 times the hours of your first cleaning, so in your case it would be {ETF}.
-
-When would you like to have your cleaning?`,
+ tips:["<b>Ask ONE probe. Listen fully.</b>","<b>Key in their motivation</b> - the Sales Pitch auto-fills it."]},
+{t:"Sales Pitch",obj:"Weaponize their motivation. Use the pitch for their specific hours. Then pick the offer.",legal:false,
+ fields:[],isPitch:true,showAutoCalc:true,
  qa:['rate_quoted_correctly'],
- tips:["<b>First 3 hours are FREE.</b> That's the lead. Never skip this.",
-       "<b>Always say \"roughly $23/hour\"</b> \u2014 never $18, never a firm $23.",
-       "<b>Upcharge explanation is required</b> when hours > 3. Explain it before confirming Today's charge.",
-       "<b>Never say \"try.\"</b> Say \"sign up\" or \"become a member.\"",
-       "<b>We do NOT offer insurance.</b> Route damage/theft questions to FAQs.",
-       "<b>Worst case math wins every time:</b> Even if they cancel, they pay less than OTC. Use the worst-case savings tool."]},
-// 4. Negotiation
-{t:"Negotiation",obj:"Only if customer pushed back. Ask what's holding them. Then negotiate based on the answer.",legal:false,isNeg:true,
+ tips:["<b>Pitch is generated from their bedrooms + bathrooms.</b> Speak naturally around it.",
+       "<b>First 3 hours are FREE</b> - that's the hook for 2-hr and 3-hr homes.",
+       "<b>4-hr homes: 'your first 4 hours for only $38'</b> - explain the upcharge in Part II.",
+       "<b>6-hr homes: 'your first 6 hours for only $78'</b> - explain the $59 upcharge.",
+       "<b>Always say 'roughly $23/hour'</b> - never a firm rate, never $18.",
+       "<b>ETF is '$35 x hours plus applicable taxes'</b> - always add 'plus taxes'.",
+       "<b>Do NOT say 'try'.</b> Say 'sign up' or 'become a member.'",
+       "<b>We do NOT offer insurance.</b> Route those questions to FAQs."]},
+{t:"Negotiation",obj:"Only if customer pushed back. Ask: cost, commitment, or don't need regular cleanings? Then negotiate based on the answer.",legal:false,isNeg:true,
  fields:[
    {k:'negMF',type:'number',label:'Negotiated MF ($/mo)',placeholder:'59',min:0,max:100,useLadder:true},
    {k:'negTerm',type:'number',label:'Negotiated term (months)',placeholder:'6',min:0,max:12,useTerm:true},
    {k:'negHours',type:'number',label:'Adjusted hours (if changed)',placeholder:'leave blank if same',min:0,max:8}
  ],
- script:`Just so I can point you in the right direction \u2014 is it more about the monthly cost, the length of the membership, or you just don't feel like you need regular cleanings right now?
+ script:`Step 1: Acknowledge
+I totally understand.
 
-[Based on their answer:]
+Step 2.1: Ask qualifying question
+Is the membership not a good fit because of the cost, there is a commitment, or because you just don't feel you need regular cleanings right now?
 
-COST \u2192 "I do have a lighter option \u2014 {MF}/mo." [If still no \u2192 $49/mo]
-LENGTH \u2192 "We can actually do {Term} months instead of 6. Everything else stays the same."
-BOTH \u2192 "$54/mo for 4 months." [If still no \u2192 $49/mo for 4 months]
-DON'T NEED REGULAR \u2192 [Use reframe below, then offer OTC if still no]
-ANY OTHER \u2192 Offer OTC.
+Step 2.2: Based on their answer:
 
-Reframe for "don't need regular cleanings":
-That makes sense. ForeverClean isn't just for people who clean every week. A lot of our customers use it once a month and still save a ton compared to booking one-time every time. And if it's really not for you, no worries at all \u2014 let's get your one-time set up.`,
+MF is the trigger: reduce to $54, then to $49 if necessary.
+MCT duration is the trigger: offer to shorten the term.
+Both MF and MCT: offer reducing both.
+Nothing to do with cost or commitment: proceed to Step 3 (Trial/OTC offer).
+
+If customer agrees: proceed to booking.
+If customer declines: proceed to Step 3.
+
+Step 3: Highlight FC value + offer Trial/OTC
+I totally understand that your (move-in/out, event) cleaning is the priority right now, and we're happy to take care of that for you. If the membership isn't the right fit, no worries at all!
+
+You can try our service at a discounted rate of {Trial} for 30 days. You can cancel with no obligation anytime within those 30 days if it's not the right fit. If you don't cancel within 30 days, the membership will automatically continue at $59 per month with a 6-month minimum commitment. If you cancel before completing 6 paid months of membership, a $99 early termination fee applies.
+
+Does this option work better for you?`,
  tips:["<b>Max 2 offers total</b> across all negotiation attempts.",
-       "<b>Frame as 'a lighter option'</b> \u2014 NEVER 'I can lower it' or 'price drop.'",
-       "<b>ETF stays fixed at $35/hr</b> regardless of negotiated MF or term.",
-       "<b>After final offer is declined \u2192 book OTC immediately.</b> No circling back.",
-       "<b>Resolve trust before negotiating price.</b> A discount doesn't convert skeptics."]},
-// 5. Booking
-{t:"Booking",obj:"Confirm the appointment, collect all details, take payment. Alternate date is required (or N/A).",legal:false,
+       "<b>Frame as 'a lighter option'</b> - NEVER 'I can lower it.'",
+       "<b>ETF stays at $35/hr</b> regardless of negotiated MF or term.",
+       "<b>After Step 3 is declined: book OTC immediately.</b> No circling back.",
+       "<b>Resolve trust before negotiating price.</b>"]},
+{t:"Booking",obj:"Confirm the appointment, collect all details, take payment. Both date and alternate date required.",legal:false,
  fields:[
    {k:'date',type:'date',label:'Appointment date'},
    {k:'time',type:'time',label:'Appointment time'},
-   {k:'altDate',type:'text',label:'Alternate date (or type N/A)',placeholder:'e.g. 07/25/2026 or N/A',full:false},
+   {k:'altDate',type:'date',label:'Alternate date (leave blank = N/A)'},
+   {k:'altTime',type:'time',label:'Alternate time (leave blank = N/A)'},
    {k:'address',type:'text',label:'Full address',placeholder:'123 Main St, Denver CO 80202',full:true},
    {k:'email',type:'email',label:'Email',placeholder:'name@email.com'},
    {k:'phone',type:'tel',label:'Phone',placeholder:'(555) 123-4567'},
@@ -519,49 +584,48 @@ That makes sense. ForeverClean isn't just for people who clean every week. A lot
 
 Would [Tuesday morning] or [Wednesday afternoon] work better?
 
-And just in case \u2014 do you have an alternate date in case a cleaner isn't available on that day?
+And just in case - do you have an alternate date if a cleaner isn't available on that day?
 
 Great. Taking payment now for {Today} to lock in your slot.`,
  qa:['booking_details'],
- tips:["<b>Assumptive close on the date.</b> \"Tuesday or Wednesday?\" not \"when works?\"",
-       "<b>Always ask for alternate date</b> \u2014 enter N/A if they decline.",
-       "<b>Take payment BEFORE moving to Verbatim.</b> Payment secures, Verbatim confirms."]},
-// 6. Verbatim
-{t:"Verbatim",obj:"LEGAL disclosure. Read word-for-word for the offer + hours. The alternate date is included.",legal:true,
+ tips:["<b>Assumptive close on the date.</b> 'Tuesday or Wednesday?' not 'when works?'",
+       "<b>Always ask for alternate date and time</b> - both fields. Leave blank if N/A.",
+       "<b>Take payment BEFORE moving to Verbatim.</b>"]},
+{t:"Verbatim",obj:"LEGAL disclosure. Read word-for-word for the offer and hours. Alternate date is included.",legal:true,
  fields:[],isVerbatim:true,
  qa:['mf','commitment','etf','schedule','final_recap','clear_yes'],
  tips:["<b>Read the whole block in one go.</b> Don't stop mid-block.",
-       "<b>If they object mid-verbatim:</b> handle it, then RESUME from where you stopped.",
+       "<b>If they object mid-verbatim:</b> handle it, then resume from where you stopped.",
        "<b>End with 'Are these terms clear?'</b> Wait for a clear yes.",
        "<b>After the call:</b> CRM flags + post-call email + SMS reminder."]}
 ];
 
 // ============ OBJECTIONS ============
 const PRIO_OBJ=[
-{id:1,name:"I don't want a membership",cust:"I don't want a membership / commitment / subscription.",hint:"Obj A — compare worst-case to OTC. It's always cheaper.",
- reply:`I get it \u2014 "membership" can sound like a big deal. The {Today} isn't really an extra fee. It's just how you get the cleaning at the lowest price.
+{id:1,name:"I don't want a membership",cust:"I don't want a membership / commitment / subscription.",hint:"Compare worst-case to OTC. It always wins.",
+ reply:`I get it - "membership" can sound like a big deal. The {Today} isn't really an extra fee. It's just how you get the cleaning at the lowest price.
 
-Here's the thing: a one-time {X hours} cleaning costs {OTC}. With ForeverClean, you pay {Today} today, your first cleaning is free, and even if the membership ends up not being for you long-term, your total cost would still only be {WorstCase} \u2014 less than the {OTC} one-time.
+Here's the thing: a one-time {X hours} cleaning costs {OTC}. With ForeverClean, you pay {Today} today, your first cleaning is free, and even if the membership ends up not being for you long-term, your total cost would still only be {WorstCase} - less than the {OTC} one-time.
 
 The membership is a {Term}-month agreement with {MF} a month starting from your second month. The cancellation fee only applies if you end it early. But either way, signing up today saves you money, and you keep the option to stay on at $23/hour if you love us. Want me to set it up?`,
- rules:["Do NOT use the word 'try.'","Compare worst-case total to OTC \u2014 it always wins.","If still resistant \u2192 Negotiation."]},
-{id:2,name:"Let me see the cleaning first",cust:"I want to see how the cleaning goes first / let me experience it first.",hint:"Obj B — $19 gets the full cleaning.",
- reply:`Totally fair \u2014 nobody wants to sign up for something they haven't experienced yet. Good news is, the {Today} today gets you the full cleaning AND your first month of membership.
+ rules:["Do NOT use the word 'try.'","Compare worst-case to OTC - it always wins.","If still resistant: go to negotiation."]},
+{id:2,name:"Let me see the cleaning first",cust:"I want to see how the cleaning goes first / I want to experience it before committing.",hint:"$19 gets the full cleaning. Show the math.",
+ reply:`Totally fair - nobody wants to sign up for something they haven't experienced yet. Good news is, the {Today} today gets you the full cleaning AND your first month of membership.
 
-Here's how the numbers work: a one-time {X hours} cleaning is {OTC}. With ForeverClean, you pay {Today} today, your first cleaning is free, and even if the membership ends up not being for you long-term, your total cost would still only be {WorstCase} \u2014 less than the {OTC} one-time.
+Here's how the numbers work: a one-time {X hours} cleaning is {OTC}. With ForeverClean, you pay {Today} today, your first cleaning is free, and even if the membership ends up not being for you long-term, your total cost would still only be {WorstCase} - less than the {OTC} one-time.
 
 The membership is a {Term}-month commitment with {MF} a month from month 2, and a cancellation fee only applies if you end it early. But either way, you're getting your first cleaning at the lowest possible price. And if you love us, you stay on at $23/hour. Should I get you set up?`,
- rules:["Do NOT use the word 'try.'","No Trial offer exists in FCF v3.","Show the worst-case math."]},
-{id:3,name:"Why is it cheaper this way?",cust:"Why would the company do that? / Why is the membership cheaper?",hint:"Obj C — honest business logic.",
+ rules:["Do NOT use the word 'try.'","Show the worst-case math."]},
+{id:3,name:"Why is it cheaper this way?",cust:"Why would the company do that? / Why is the membership cheaper?",hint:"Honest business logic.",
  reply:`Honestly, because we'd rather earn your business as a long-term member than make a one-time sale. Most of our members stay on once they see the savings at $23/hour. Either way, the math works out better for you than a one-time.`,
- rules:["Be honest and direct.","Don't oversell or add qualifiers."]},
-{id:4,name:"What's the catch?",cust:"What's the catch? / This sounds too good to be true.",hint:"Obj D — name the only real commitment.",
- reply:`Fair question. The only real commitment is the {Term} months, and the cancellation fee if you end early \u2014 and I already walked you through both. Everything else is exactly as I described: {Today} today, free cleaning, $23 per hour after. No hidden fees that surprise you later. That's it.`,
- rules:["Name the ETF and term again, clearly.","Do not add qualifiers."]},
+ rules:["Be honest and direct."]},
+{id:4,name:"What's the catch?",cust:"What's the catch? / This sounds too good to be true.",hint:"Name the only real commitment upfront.",
+ reply:`Fair question. The only real commitment is the {Term} months, and the cancellation fee if you end early - and I already walked you through both. Everything else is exactly as I described: {Today} today, free cleaning, $23 per hour after. No hidden fees. That's it.`,
+ rules:["Name ETF and term again clearly."]},
 {id:5,name:"Sticker shock / that's too much",cust:"That's too expensive / more than I expected.",hint:"Work backward from THEIR number. Go to Negotiation.",
  reply:`I hear you. What were you thinking of spending?
 
-[Wait for their number. Work backward from IT, not yours.]
+[Wait for their number. Work backward from it, not yours.]
 
 Let me see what lighter option I can get you. [Go to Negotiation phase]`,
  rules:["Anchor ONE total.","Don't defend your number.","Head to Negotiation after this."]}
@@ -570,24 +634,24 @@ const OTHER_OBJ=[
 {cust:"I already have a cleaner.",reply:"Honestly? Keep them. What people use us for is a backup if yours ever cancels. It's a plan B, not a replacement."},
 {cust:"Will you charge my card automatically?",reply:"Only after cleanings you book and approve. Nothing in the background."},
 {cust:"I'd rather pay cash.",reply:"On our platform payment runs through the app. Want me to text you a secure link to enter payment yourself?"},
-{cust:"The ETF is too high.",reply:"That fee only applies if you cancel before {Term} months and have completed a cleaning. And the worst case is {WorstCase} \u2014 still less than a one-time cleaning."},
+{cust:"The ETF is too high.",reply:"That fee only applies if you cancel before {Term} months and have completed a cleaning. And the worst case is {WorstCase} - still less than a one-time cleaning."},
 {cust:"I need to talk to my spouse.",reply:"Absolutely. Is your spouse concerned about the cost, the length, or making the decision together? [Whichever they say is the real objection.]"},
-{cust:"I thought I was just getting a quote.",reply:"You are \u2014 here it is. For {X hours}, it's {Today} today with the first cleaning free. Two minutes and we can lock it in."},
+{cust:"I thought I was just getting a quote.",reply:"You are - here it is. For {X hours}, it's {Today} today with the first cleaning free. Two minutes and we can lock it in."},
 {cust:"I've been burned by subscriptions.",reply:"Completely fair. No charges without your approval, and you can cancel anytime for {ETF}. I'll text you the cancel link right after."}
 ];
 const OFFSCRIPT=[
 {cust:"How do I know the cleaner is trustworthy?",reply:"Every cleaner is background-checked and rated by customers near you. You'll see their name and reviews before they show up."},
 {cust:"What if the cleaning is bad?",reply:"Within 24 hours, let us know and we send someone back or refund it."},
-{cust:"Can I request the same cleaner?",reply:"For members, yes \u2014 favorite them and we'll book them by default when available."},
+{cust:"Can I request the same cleaner?",reply:"For members, yes - favorite them and we'll book them by default when available."},
 {cust:"What if I need to reschedule?",reply:"Dashboard reschedule up to 24 hours before. Under 24, small fee."},
-{cust:"Do you offer insurance?",reply:"Damage and theft questions are handled through the platform's protection process \u2014 refer to the FAQs for full details."},
+{cust:"Do you offer insurance?",reply:"Damage and theft questions are handled through the platform's protection process - refer to the FAQs for full details."},
 {cust:"Spanish-speaking cleaners?",reply:"Yes, most areas. We note it on the booking."},
 {cust:"Add fridge, oven, windows?",reply:"Those are add-ons. They add time and cost. Want any on this one?"},
-{cust:"Do I need to be home?",reply:"Nope \u2014 leave a key or code. Whatever's easiest."},
-{cust:"Talk to a manager.",reply:"Absolutely \u2014 team lead calls you back within the hour."},
+{cust:"Do I need to be home?",reply:"Nope - leave a key or code. Whatever's easiest."},
+{cust:"Talk to a manager.",reply:"Absolutely - team lead calls you back within the hour."},
 {cust:"Need it TODAY.",reply:"Let me check same-day availability."},
 {cust:"What if the cleaner cancels?",reply:"We send a backup. That's part of what the membership covers."},
-{cust:"Can I cancel after the first cleaning?",reply:"Yes \u2014 for {ETF}. That's the only fee, and it only applies after the first cleaning is invoiced."}
+{cust:"Can I cancel after the first cleaning?",reply:"Yes - for {ETF}. That's the only fee, and it only applies after the first cleaning is invoiced."}
 ];
 
 // ============ STATE ============
@@ -611,7 +675,12 @@ function updateField(k,v,type){
   if(type==='number')v=v===''?0:parseInt(v,10);
   D[k]=v;
   const el=document.getElementById('live-script');
-  if(el){const p=PHASES[pIdx];el.innerHTML=fill(p.isVerbatim?verbatim():p.script)}
+  if(el){
+    const p=PHASES[pIdx];
+    if(p.isVerbatim)el.innerHTML=fill(verbatim());
+    else if(p.isPitch)el.innerHTML=fill(pitchScript());
+    else el.innerHTML=fill(p.script);
+  }
   const ac=document.getElementById('live-ac');
   if(ac)ac.innerHTML=acHTML();
 }
@@ -622,7 +691,6 @@ function pickLadder(v,field){
   if(el)el.value=v;
   render();
 }
-
 function updateProgress(){
   const w={script:.4,'obj-list':.6,'obj-reply':.8};
   const pct=pIdx>=PHASES.length?100:Math.round(((pIdx+(w[stage]||0))/PHASES.length)*100);
@@ -632,22 +700,25 @@ function updateProgress(){
 
 function acHTML(){
   const h=hrs();
-  if(!h)return `<div class="auto-calc"><div class="label-auto">Hour recommendation</div><div style="color:var(--text-muted);font-size:13px">Fill in bedrooms + bathrooms to see the recommended hours.</div>
-    <table class="reco-table" style="margin-top:8px"><tr><th>Hours</th><th>Kitchen</th><th>Bathrooms</th><th>Bedrooms</th></tr>
+  if(!h)return `<div class="auto-calc"><div class="label-auto">Hour recommendation</div>
+    <div style="color:var(--text-muted);font-size:13px;margin-bottom:8px">Fill in bedrooms + bathrooms to see recommended hours.</div>
+    <table class="reco-table"><tr><th>Hours</th><th>Kitchen</th><th>Bathrooms</th><th>Bedrooms</th></tr>
     <tr><td>2 HR</td><td>Yes</td><td>1</td><td>0</td></tr><tr><td>3 HR</td><td>Yes</td><td>1</td><td>1</td></tr>
-    <tr><td>4 HR</td><td>Yes</td><td>2</td><td>1–2</td></tr><tr><td>6 HR</td><td>Yes</td><td>3+</td><td>3+</td></tr></table>
+    <tr><td>4 HR</td><td>Yes</td><td>2</td><td>1 to 2</td></tr><tr><td>6 HR</td><td>Yes</td><td>3+</td><td>3+</td></tr></table>
   </div>`;
-  const tc=todayFCF(),e=etfAmt(),wc=worstCase(),otc=otcAmt(),uc=upchargeAmt();
+  const tc=FCF_TODAY[h],e=etfAmt(),wc=worstCase(),otc=otcAmt(),na=natAvg(),mr=memberRate(),uc=upcharge();
   return `<div class="auto-calc">
     <div class="label-auto">Numbers for this call (${D.bedrooms}bed / ${D.bathrooms}bath)</div>
     <div class="value-big">${h} hours recommended</div>
-    <div class="value-line"><span>Today's charge (FCF)</span><b>${tc?'$'+tc:'—'}</b></div>
-    ${uc?`<div class="value-line"><span>= $19 MF + $${uc} upcharge (official voucher table)</span><b></b></div>`:`<div class="value-line"><span>= $19 MF · ${h}-hr cleaning voucher FREE</span><b></b></div>`}
-    ${h===5?`<div class="value-line"><span style="color:var(--pink)">⚠ 5 hrs not in official table — confirm before quoting</span><b></b></div>`:''}
-    <div class="value-line"><span>OTC comparison price</span><b>${otc?'$'+otc:'—'}</b></div>
-    <div class="value-line"><span>ETF (worst case, capped $300)</span><b>${e?'$'+e:'—'}</b></div>
-    <div class="value-line"><span>Worst case total (FCF + ETF)</span><b>${wc?'$'+wc:'—'}</b></div>
-    <div class="value-line"><span>Savings vs OTC even in worst case</span><b style="color:var(--green)">${(wc&&otc)?'$'+(otc-wc)+' saved':'—'}</b></div>
+    <div class="value-line"><span>National average (what you compare against)</span><b>${na?'$'+na:'--'}</b></div>
+    <div class="value-line"><span>FCF member recurring rate</span><b>${mr?'$'+mr+' per cleaning':'--'}</b></div>
+    <div class="value-line"><span>Today's charge (FCF)</span><b>${tc?'$'+tc:'--'}</b></div>
+    <div class="value-line"><span>${uc?'= $19 MF + $'+uc+' upcharge (official voucher table)':'= $19 MF + '+h+'-hr voucher FREE'}</span><b></b></div>
+    ${h===5?'<div class="value-line"><span style="color:var(--pink)">5 hrs not in official table - confirm with compliance</span><b></b></div>':''}
+    <div class="value-line"><span>OTC comparison price</span><b>${otc?'$'+otc:'--'}</b></div>
+    <div class="value-line"><span>ETF (worst case, capped $300)</span><b>${e?'$'+e+' plus taxes':'--'}</b></div>
+    <div class="value-line"><span>Worst case total (FCF + ETF)</span><b>${wc?'$'+wc:'--'}</b></div>
+    <div class="value-line"><span>Savings vs OTC even in worst case</span><b style="color:var(--green)">${(wc&&otc)?'$'+(otc-wc)+' saved':'--'}</b></div>
   </div>`;
 }
 
@@ -680,53 +751,67 @@ function render(){
   const p=PHASES[pIdx];
   let html=`<div class="phase-name">Phase ${pIdx+1} of ${PHASES.length}</div><h1>${p.t}</h1><div class="objective">${p.obj}</div>`;
   if(p.legal)html+=`<div class="legal-banner"><span class="badge">LEGAL</span> Read every line word-for-word. QA scores this.</div>`;
-  // Negotiation: shortcut button at the very top
+
+  // Negotiation: customer-accepted shortcut at the very top
   if(p.isNeg){
-    html+=`<div class="card" style="background:var(--green-bg);border-color:rgba(76,217,123,.4)">
+    html+=`<div class="card" style="background:var(--green-bg);border-color:var(--green-border)">
       <div class="label" style="color:var(--green)">Customer accepted the pitch?</div>
       <div style="font-size:13.5px;color:var(--text-secondary);margin-bottom:10px">If the customer said yes and you're ready to book, skip negotiation entirely.</div>
-      <button class="big-btn accepted" onclick="skipToBooking()">\u2705 Customer accepted \u2014 skip to Booking</button>
+      <button class="big-btn accepted" onclick="skipToBooking()">Customer accepted -- skip to Booking</button>
     </div>`;
   }
+
   html+=renderFields(p.fields);
   if(p.showAutoCalc)html+=`<div id="live-ac">${acHTML()}</div>`;
-  // Offer picker
-  if(p.isOffer){
-    const h=hrs(),tc=todayFCF(),e=etfAmt(),otc=otcAmt();
+
+  // Offer picker (Sales Pitch phase)
+  if(p.isPitch){
+    const h=hrs(),tc=FCF_TODAY[h],e=etfAmt(),otc=otcAmt(),trial=trialAmt(),uc=upcharge();
     html+=`<div class="card"><div class="label">Pick the offer</div>
       <div class="offer-grid">
-        <div class="offer-card ${D.offerType==='fcf'?'selected':''}" onclick="pickOffer('fcf')">
-          <div class="oname">ForeverClean (FCF) ${D.offerType==='fcf'?'✓':''}</div>
-          <div class="odesc">$19 today = 1st month membership + ${h&&h<=3?h+'-hr cleaning voucher FREE (no extra charge).':h?'3-hr voucher FREE + $'+(FCF_UPCHARGE[h]||0)+' upcharge for the extra '+(h-3)+' hour(s). Total = $'+tc+'.':''} From month 2, $59/mo.</div>
-          <div class="oprice">Today: <b>${tc?'$'+tc:'$19+'}</b> &nbsp; Then <b>$59/mo</b> &nbsp; ETF: <b>${e?'$'+e:'—'}</b><span class="orec">PRIMARY OFFER — start here.</span></div>
+        <div class="offer-card primary ${D.offerType==='fcf'?'selected':''}" onclick="pickOffer('fcf')">
+          <div class="oname">ForeverClean (FCF) ${D.offerType==='fcf'?'&#10003;':''}</div>
+          <div class="odesc">${h&&h<=3?'$19 today = 1st month membership + '+h+'-hr voucher FREE. From month 2, $59/mo.':h?'$'+tc+' today = $19 MF + $'+uc+' upcharge for '+h+' hrs. First 3 hrs FREE, hrs 4-'+h+' upcharged. From month 2, $59/mo.':'Fill in bedrooms and bathrooms to see pricing.'}</div>
+          <div class="oprice">Today: <b>${tc?'$'+tc:'--'}</b> &nbsp; Then <b>$59/mo</b> &nbsp; ETF: <b>${e?'$'+e+' + taxes':'--'}</b><span class="orec">PRIMARY OFFER -- start here.</span></div>
         </div>
-        <div class="offer-card ${D.offerType==='otc'?'selected':''}" onclick="pickOffer('otc')">
-          <div class="oname">One-time Cleaning (OTC) ${D.offerType==='otc'?'✓':''}</div>
-          <div class="odesc">No membership. Single cleaning at standard rate. No recurring charges, no ETF.</div>
-          <div class="oprice">Today: <b>${otc?'$'+otc:'—'}</b> (${h||3}hr, 30|30 cohort). No commitment.<span class="orec">Only after FCF is declined through negotiation.</span></div>
+        <div class="offer-card trial ${D.offerType==='trial'?'selected':''}" onclick="pickOffer('trial')">
+          <div class="oname">Trial Cleaning ${D.offerType==='trial'?'&#10003;':''}</div>
+          <div class="odesc">Discounted cleaning, 30 days to cancel before FCF auto-enrolls at $59/mo for 6-month commitment.</div>
+          <div class="oprice">Today: <b>${trial?'$'+trial:'--'}</b> (${h||3}hr). ETF if cancel after: <b>$99</b><span class="orec">After negotiation -- before booking OTC.</span></div>
+        </div>
+        <div class="offer-card otc ${D.offerType==='otc'?'selected':''}" onclick="pickOffer('otc')">
+          <div class="oname">One-time Cleaning (OTC) ${D.offerType==='otc'?'&#10003;':''}</div>
+          <div class="odesc">No membership. Single cleaning at standard rate. No recurring, no ETF.</div>
+          <div class="oprice">Today: <b>${otc?'$'+otc:'--'}</b> (${h||3}hr, 30|30 cohort). No commitment.<span class="orec">LAST RESORT -- only after FCF and Trial are declined.</span></div>
         </div>
       </div>
-      ${D.offerType==='otc'?`<div style="margin-top:10px;padding:10px 14px;background:var(--magenta-bg);border:1px solid var(--magenta-border);border-radius:8px;font-size:13px;color:var(--magenta)">Booking OTC: "No problem at all \u2014 let's get your one-time cleaning set up at $${otc||189}. Let me grab a few details\u2026"</div>`:''}
+      ${D.offerType==='otc'?`<div style="margin-top:10px;padding:10px 14px;background:var(--magenta-bg);border:1px solid var(--magenta-border);border-radius:8px;font-size:13px;color:var(--magenta)">Booking OTC: "No problem at all - let's get your one-time cleaning set up at $${otc||189}. Let me grab a few details..."</div>`:''}
     </div>`;
   }
-  // Script / Verbatim
-  const scriptTxt=p.isVerbatim?verbatim():p.script;
+
+  // Script / Pitch / Verbatim
+  let scriptTxt='';
+  if(p.isVerbatim)scriptTxt=verbatim();
+  else if(p.isPitch)scriptTxt=pitchScript();
+  else scriptTxt=p.script;
+
   html+=`<div class="card"><div class="label">${p.isVerbatim?'Read this word-for-word':'What you say'}</div>
     <div class="script-block${p.legal?' legal':''}">
-      <div class="vtag${p.legal?' legal':''}">${p.legal?'Legal verbatim \u2014 do NOT paraphrase':'Guidance \u2014 speak naturally around the gold values'}</div>
+      <div class="vtag${p.legal?' legal':''}">${p.legal?'Legal verbatim -- do NOT paraphrase':'Guidance -- speak naturally around the gold values'}</div>
       <div id="live-script">${fill(scriptTxt)}</div>
     </div>`;
   if(p.probes){
-    html+=`<div style="margin-top:10px"><div class="label">Discovery probes \u2014 pick ONE</div>`;
-    p.probes.forEach(pr=>{html+=`<div style="padding:7px 11px;background:var(--panel2);border-radius:6px;margin-bottom:6px;font-size:13px;color:var(--text-secondary)">\u2022 ${pr}</div>`});
+    html+=`<div style="margin-top:10px"><div class="label">Discovery probes -- pick ONE</div>`;
+    p.probes.forEach(pr=>{html+=`<div style="padding:7px 11px;background:var(--panel2);border-radius:6px;margin-bottom:6px;font-size:13px;color:var(--text-secondary)">- ${pr}</div>`});
     html+=`</div>`;
   }
   if(p.tips){
-    html+=`<div class="coach-tips"><button class="coach-toggle" onclick="toggleCoach()"><span>\ud83d\udca1 Coach tips (${p.tips.length})</span><span style="color:var(--text-muted)">click</span></button>
+    html+=`<div class="coach-tips"><button class="coach-toggle" onclick="toggleCoach()"><span>Coach tips (${p.tips.length})</span><span style="color:var(--text-muted)">click</span></button>
     <div class="coach-body" id="coach-body">${p.tips.map(t=>`<div class="tip">${t}</div>`).join('')}</div></div>`;
   }
   html+=`</div>`;
-  // Objection reply panel
+
+  // Objection reply
   if(stage==='obj-reply'&&selObj!==null){
     const src=selSrc==='prio'?PRIO_OBJ:(selSrc==='other'?OTHER_OBJ:OFFSCRIPT);
     const o=src[selObj];
@@ -734,34 +819,32 @@ function render(){
     if(o.rules){html+=`<div style="margin-top:8px">`;o.rules.forEach(r=>{html+=`<div class="rule-item">${r}</div>`});html+=`</div>`}
     html+=`<div style="margin-top:10px;padding:9px 12px;background:var(--panel2);border-radius:8px;border:1px dashed var(--border);font-size:12.5px;color:var(--text-secondary)"><b style="color:var(--gold)">After:</b> Customer accepts, or raises another concern. Loop as needed.</div></div>`;
   }
+
   // Objection list
   if(stage==='obj-list'){
     html+=`<div class="card"><div class="label">Top 5 objections from Angi call analysis</div>`;
     PRIO_OBJ.forEach((o,i)=>{html+=`<div class="prio-obj" onclick="pickObj(${i},'prio')"><div class="num">${o.id}</div><div style="flex:1"><div class="obj-cust">${o.cust}</div><div class="obj-hint">${o.hint}</div></div></div>`});
     if(!showMore)html+=`<button class="more-toggle" onclick="toggleMore()">+ Show ${OTHER_OBJ.length} more</button>`;
     else{html+=`<div style="margin-top:10px"><div class="label">More objections</div>`;OTHER_OBJ.forEach((o,i)=>{html+=`<div class="other-obj" onclick="pickObj(${i},'other')">${o.cust}</div>`});html+=`</div>`}
-    html+=`<button class="big-btn ghost" style="margin-top:10px" onclick="openModal('m-offscript')">? Something else \u2014 Off-script help</button></div>
-    <button class="big-btn back" onclick="stage='script';render()">\u2190 Back to script</button>`;
+    html+=`<button class="big-btn ghost" style="margin-top:10px" onclick="openModal('m-offscript')">? Something else -- Off-script help</button></div>
+    <button class="big-btn back" onclick="stage='script';render()">Back to script</button>`;
   } else {
-    const disabled=p.isOffer&&!D.offerType;
+    const disabled=p.isPitch&&!D.offerType;
     html+=`<div class="btn-row">
-      <button class="big-btn" onclick="goodToGo()" ${disabled?'disabled':''}>${disabled?'\u26a0 Pick an offer first':'\u2705 Good to go \u2014 continue to next phase'}</button>
-      <button class="big-btn secondary" onclick="stage='obj-list';showMore=false;render()">${stage==='obj-reply'?'Another objection? Handle it':'Customer objects \u2014 handle it'}</button>
-      <button class="big-btn ghost" onclick="openModal('m-offscript')">? Something else \u2014 Off-script help</button>
-      ${pIdx>0?`<button class="big-btn back" onclick="goBack()">\u2190 Back to Phase ${pIdx}</button>`:''}
+      <button class="big-btn" onclick="goodToGo()" ${disabled?'disabled':''}>${disabled?'Pick an offer first':'Good to go -- continue to next phase'}</button>
+      <button class="big-btn secondary" onclick="stage='obj-list';showMore=false;render()">${stage==='obj-reply'?'Another objection? Handle it':'Customer objects -- handle it'}</button>
+      <button class="big-btn ghost" onclick="openModal('m-offscript')">? Something else -- Off-script help</button>
+      ${pIdx>0?`<button class="big-btn back" onclick="goBack()">Back to Phase ${pIdx}</button>`:''}
     </div>`;
   }
   stg.innerHTML=html;
 }
 
 function pickObj(i,src){selObj=i;selSrc=src;stage='obj-reply';render();window.scrollTo({top:0,behavior:'smooth'})}
-function skipToBooking(){
-  // Mark negotiation QA items and jump to booking (phase 4 = index 4)
-  pIdx=4;stage='script';selObj=null;render();window.scrollTo({top:0,behavior:'smooth'});
-}
+function skipToBooking(){pIdx=4;stage='script';selObj=null;render();window.scrollTo({top:0,behavior:'smooth'})}
 function goodToGo(){
   const p=PHASES[pIdx];
-  if(p.isOffer&&!D.offerType)return;
+  if(p.isPitch&&!D.offerType)return;
   if(p.qa)p.qa.forEach(q=>qaTracked.add(q));
   if(pIdx>=PHASES.length-1){renderEnd();return}
   pIdx++;stage='script';selObj=null;render();window.scrollTo({top:0,behavior:'smooth'});
@@ -770,21 +853,21 @@ function renderEnd(){
   const stg=document.getElementById('stage');
   const cl=[
     {k:'recorded',l:'Informed call is recorded'},{k:'discovery',l:'Asked discovery questions'},
-    {k:'rate_quoted_correctly',l:'Quoted ~$23/hour (roughly)'},{k:'mf',l:'Explained Membership Fee'},
-    {k:'commitment',l:'Explained Commitment Term'},{k:'etf',l:'Explained ETF'},
+    {k:'rate_quoted_correctly',l:'Quoted roughly $23/hour'},{k:'mf',l:'Explained Membership Fee'},
+    {k:'commitment',l:'Explained Commitment Term'},{k:'etf',l:'Explained ETF plus applicable taxes'},
     {k:'schedule',l:'Explained Schedule of Charges (upcharge if 4+ hrs)'},{k:'final_recap',l:'Ran final verbatim recap'},
     {k:'clear_yes',l:'Got a clear yes'}
   ];
   stg.innerHTML=`<div class="end-screen">
-    <span class="celebrate">\ud83c\udf89</span>
+    <span class="celebrate">&#127881;</span>
     <h2>Great call, ${D.agentName||'Agent'}!</h2>
-    <div class="end-sub">${D.customerName?D.customerName+' booked on '+(D.offerType==='fcf'?'ForeverClean':'OTC')+'.':'All phases complete.'}</div>
-    <div class="qa-list"><h3>QA checklist</h3>${cl.map(q=>{const c=qaTracked.has(q.k);return `<div class="qa-item ${c?'covered':''}"><span class="check">${c?'\u2713':'\u25cb'}</span><span>${q.l}</span></div>`}).join('')}</div>
+    <div class="end-sub">${D.customerName?D.customerName+' booked on '+(D.offerType==='fcf'?'ForeverClean':D.offerType==='trial'?'Trial':'OTC')+'.':'All phases complete.'}</div>
+    <div class="qa-list"><h3>QA checklist</h3>${cl.map(q=>{const c=qaTracked.has(q.k);return `<div class="qa-item ${c?'covered':''}"><span class="check">${c?'&#10003;':'&#9675;'}</span><span>${q.l}</span></div>`}).join('')}</div>
     <div class="qa-list"><h3>After the call</h3>
-      <div class="qa-item"><span class="check">\u25cb</span>CRM: Add Agent_Sales_Conversion flag</div>
-      <div class="qa-item"><span class="check">\u25cb</span>CRM: Add fcsales_lead to internal note</div>
-      <div class="qa-item"><span class="check">\u25cb</span>Send post-call email (correct cohort template)</div>
-      <div class="qa-item"><span class="check">\u25cb</span>SMS reminder to check email</div>
+      <div class="qa-item"><span class="check">&#9675;</span>CRM: Add Agent_Sales_Conversion flag</div>
+      <div class="qa-item"><span class="check">&#9675;</span>CRM: Add fcsales_lead to internal note</div>
+      <div class="qa-item"><span class="check">&#9675;</span>Send post-call email (correct cohort template)</div>
+      <div class="qa-item"><span class="check">&#9675;</span>SMS reminder to check email</div>
     </div>
     <button class="big-btn gold" onclick="restart()">Start a new call</button>
     <button class="big-btn secondary" onclick="openModal('m-notes')">Log call notes</button>
@@ -801,38 +884,36 @@ function calcFCF(){
   const h=+document.getElementById('fcf-h').value||0;
   const mfv=+document.getElementById('fcf-mf').value||59;
   const fr=+document.getElementById('fcf-fr').value||1;
-  if(h<2||h>6){document.getElementById('fcf-result').style.display='block';document.getElementById('fcf-result').innerHTML='<div style="color:var(--pink)">Hours must be 2–6.</div>';return}
-  const today=FCF_TODAY[h]||19, cpc=FCF_CPC[h]||69, etfv=Math.min(h*35,300), monthly=mfv+(cpc*fr), uc=today-19;
+  if(h<2||h>6){document.getElementById('fcf-result').style.display='block';document.getElementById('fcf-result').innerHTML='<div style="color:var(--pink)">Hours must be 2 to 6.</div>';return}
+  const today=FCF_TODAY[h]||19,cpc=FCF_CPC[h]||69,etfv=Math.min(h*35,300),monthly=mfv+(cpc*fr),uc=FCF_UPCHARGE[h]||0;
   const el=document.getElementById('fcf-result');el.style.display='block';
   el.innerHTML=`<div class="big">$${today} today</div>
     <div class="line"><span>1st month MF</span><b>$19</b></div>
-    <div class="line"><span>${h<=3?h+'-hr voucher (FREE)':'Upcharge for hrs beyond 3 (official table)'}</span><b>${uc?'+ $'+uc:'$0'}</b></div>
-    <div class="line"><span>Monthly from month 2 (${fr}x/mo)</span><b>$${monthly.toFixed(2)}</b></div>
-    <div class="line"><span>ETF (capped $300)</span><b>$${etfv}</b></div>
+    <div class="line"><span>${h<=3?h+'-hr voucher (FREE)':'Upcharge for extra hrs (official table)'}</span><b>${uc?'+ $'+uc:'$0'}</b></div>
+    <div class="line"><span>Monthly from month 2 (${fr}x/mo at $${cpc}/cleaning)</span><b>$${monthly.toFixed(2)}</b></div>
+    <div class="line"><span>ETF (capped $300)</span><b>$${etfv} plus applicable taxes</b></div>
     <div class="line"><span>Worst case (today + ETF)</span><b>$${today+etfv}</b></div>`;
 }
 function calcOTC(){
   const h=+document.getElementById('otc-h').value||0;
   const t=document.getElementById('otc-t').value;
-  if(h<2||h>6){document.getElementById('otc-result').style.display='block';document.getElementById('otc-result').innerHTML='<div style="color:var(--pink)">Hours must be 2–6.</div>';return}
+  if(h<2||h>6){document.getElementById('otc-result').style.display='block';document.getElementById('otc-result').innerHTML='<div style="color:var(--pink)">Hours must be 2 to 6.</div>';return}
   const tables={otc30:OTC_30,otc25:OTC_25,trial20:TRIAL_20};
   const price=(tables[t]||OTC_30)[h];
   const el=document.getElementById('otc-result');el.style.display='block';
   el.innerHTML=price?`<div class="big">$${price}</div>
     <div class="line"><span>Type</span><b>${t==='otc30'?'OTC 30|30':t==='otc25'?'OTC 25|25':'Trial 20|20'}</b></div>
     <div class="line"><span>Hours</span><b>${h}</b></div>
-    ${t==='trial20'?`<div class="line"><span>Auto-enrolls to $59/mo after 30 days if not canceled</span><b>&mdash;</b></div>`:'<div class="line"><span>No membership, no ETF</span><b>&mdash;</b></div>'}`:
-    '<div style="color:var(--pink)">Price not available for this cohort/hours combo.</div>';
+    ${t==='trial20'?`<div class="line"><span>Auto-enrolls to $59/mo after 30 days if not canceled</span><b></b></div><div class="line"><span>Trial ETF if cancel after FCF starts</span><b>$99</b></div>`:'<div class="line"><span>No membership, no ETF</span><b></b></div>'}`:
+    '<div style="color:var(--pink)">Price not available for this cohort and hours combo.</div>';
 }
 function saveNotes(){localStorage.setItem('angi-notes',document.getElementById('notes-area').value);document.getElementById('notes-saved').style.display='block'}
-
 function renderOffscript(filter){
   filter=(filter||'').toLowerCase();
   const items=OFFSCRIPT.filter(o=>!filter||o.cust.toLowerCase().includes(filter)||o.reply.toLowerCase().includes(filter));
   document.getElementById('off-list').innerHTML=items.length?items.map(o=>{const i=OFFSCRIPT.indexOf(o);return`<div class="off-item" onclick="pickObj(${i},'offscript');closeModal('m-offscript')"><div class="cust">\u201c${o.cust}\u201d</div><div class="reply">${o.reply}</div></div>`}).join(''):'<div style="color:var(--text-muted);text-align:center;padding:16px">No matches.</div>';
 }
 function filterOffscript(){renderOffscript(document.getElementById('off-search').value)}
-
 window.addEventListener('DOMContentLoaded',()=>{
   const s=localStorage.getItem('angi-notes');
   if(s)document.getElementById('notes-area').value=s;
