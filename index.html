@@ -762,8 +762,8 @@ function renderNegSteps(){
   // helper: step card
   const stepCard=(title,color,content)=>`<div class="card" style="border-color:${color};margin-top:10px"><div class="label" style="color:${color}">${title}</div>${content}</div>`;
   const scriptBox=(txt)=>`<div class="script-block" style="margin-top:8px;font-size:14px">${txt}</div>`;
-  const stepBtn=(label,onclick,style='')=>`<button class="big-btn" style="margin-top:10px;${style}" onclick="${onclick}">${label}</button>`;
-  const subBtn=(label,onclick)=>`<button class="big-btn secondary" style="margin-top:8px" onclick="${onclick}">${label}</button>`;
+  const stepBtn=(label,onclick,style='')=>`<button class="big-btn" style="margin-top:10px;${style}" onclick='${onclick}'>${label}</button>`;
+  const subBtn=(label,onclick)=>`<button class="big-btn secondary" style="margin-top:8px" onclick='${onclick}'>${label}</button>`;
 
   if(negStep==='qualify'){
     return stepCard('Step 1 of 3 -- Find the TRIGGER before offering anything','var(--coral)',`
