@@ -765,8 +765,45 @@ function renderNegSteps(){
   const stepBtn=(label,onclick,style='')=>`<button class="big-btn" style="margin-top:10px;${style}" onclick='${onclick}'>${label}</button>`;
   const subBtn=(label,onclick)=>`<button class="big-btn secondary" style="margin-top:8px" onclick='${onclick}'>${label}</button>`;
 
+  // Always-visible adjustment panel at top of every step
+  const alwaysPanel=`<div class="card" style="border-color:var(--gold-border);background:var(--gold-bg)">
+    <div class="label" style="color:var(--gold)">Always available -- adjust anytime during negotiation</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:4px">
+      <div>
+        <div style="font-size:11px;color:var(--text-secondary);font-weight:600;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px">Membership Fee</div>
+        <div class="ladder" style="margin-top:0">
+          <span class="ladder-pill ${mfV===59?'active':''}" onclick="pickLadder(59,'negMF')">$59</span>
+          <span class="ladder-pill ${mfV===54?'active':''}" onclick="pickLadder(54,'negMF')">$54</span>
+          <span class="ladder-pill ${mfV===49?'active':''}" onclick="pickLadder(49,'negMF')">$49</span>
+        </div>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:6px">Current: <b style="color:var(--gold)">$${mfV}/mo</b></div>
+      </div>
+      <div>
+        <div style="font-size:11px;color:var(--text-secondary);font-weight:600;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px">Commitment Term</div>
+        <div class="ladder" style="margin-top:0">
+          <span class="ladder-pill ${termV===6?'active':''}" onclick="pickLadder(6,'negTerm')">6 months</span>
+          <span class="ladder-pill ${termV===4?'active':''}" onclick="pickLadder(4,'negTerm')">4 months</span>
+        </div>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:6px">Current: <b style="color:var(--gold)">${termV} paid months</b></div>
+      </div>
+    </div>
+    <div style="margin-top:10px;padding:8px 12px;background:var(--panel2);border-radius:8px;font-size:12.5px;color:var(--text-secondary)">
+      <b style="color:var(--text)">Active offer:</b> $${mfV}/mo for ${termV} months &nbsp;|&nbsp; ETF: $${Math.min((h||3)*35,300)} plus applicable taxes
+      &nbsp;&nbsp;
+      <button class="big-btn accepted" style="display:inline-block;width:auto;padding:6px 14px;font-size:12px;margin-top:0;box-shadow:none" onclick="negAccept(${mfV},${termV})">Accept this -- go to Booking</button>
+    </div>
+  </div>`;
+
+  // Shared "no more FCF" buttons -- Trial + OTC both available
+  const noMoreFCF=`<div style="margin-top:10px"><div class="label">No more FCF offers -- pivot to:</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px">
+      ${stepBtn('Offer Trial Cleaning','negGo("trial")','background:linear-gradient(135deg,var(--magenta),var(--purple))')}
+      ${stepBtn('Offer One-time (OTC)','negGo("otc")','background:var(--panel2);color:var(--text);border:1px solid var(--border);box-shadow:none')}
+    </div>
+  </div>`;
+
   if(negStep==='qualify'){
-    return stepCard('Step 1 of 3 -- Find the TRIGGER before offering anything','var(--coral)',`
+    return alwaysPanel + stepCard('Step 1 of 3 -- Find the TRIGGER before offering anything','var(--coral)',`
       <div style="font-size:13px;color:var(--text-secondary);padding:8px 12px;background:var(--panel2);border-radius:8px;margin-bottom:10px"><b style="color:var(--text)">Do NOT offer a discount yet.</b> You need to know exactly WHY they said no first -- responding to the wrong trigger loses the sale.</div>
       ${scriptBox(`"I totally understand. Just so I can help you better -- is it more about the monthly cost, the length of the commitment, or do you just feel like you don't need regular cleanings right now?"
 
@@ -783,7 +820,7 @@ function renderNegSteps(){
 
 
   if(negStep==='cost'){
-    return stepCard('Step 2 -- Cost trigger: offer lighter MF','var(--gold)',`
+    return alwaysPanel + stepCard('Step 2 -- Cost trigger: reduce MF','var(--gold)',`
       <div style="font-size:12.5px;color:var(--text-muted);margin-bottom:8px">Offer $54 first. Only go to $49 if they decline $54. Never go lower.</div>
       ${scriptBox(`Okay I hear you. Let me see what I can do.
 
@@ -796,27 +833,27 @@ I do have a lighter option -- I can bring your monthly membership down to <stron
   }
 
   if(negStep==='cost2'){
-    return stepCard('Step 2B -- Final MF offer: $49','var(--gold)',`
+    return alwaysPanel + stepCard('Step 2B -- Final MF offer: $49 (floor)','var(--gold)',`
       <div style="font-size:12.5px;color:var(--text-muted);margin-bottom:8px">This is the floor. Do NOT go lower. Tag for QA review if agreed.</div>
       ${scriptBox(`Okay, let me check if I can do one better. I can actually bring it down to <strong>$49 a month</strong> -- that's the lowest I'm able to go. Everything else stays the same. Does that work for you?`)}
       <div style="margin-top:14px"><div class="label">Their response</div>
         ${stepBtn('They said YES to $49 -- book FCF','negAccept(49,6)','background:linear-gradient(135deg,var(--green),#2ecc71);color:#0a2010')}
-        ${subBtn('Still no -- offer Trial cleaning','negGo("trial")')}
+        ${noMoreFCF}
       </div>`);
   }
 
   if(negStep==='term'){
-    return stepCard('Step 2 -- Term trigger: offer shorter commitment','var(--gold)',`
+    return alwaysPanel + stepCard('Step 2 -- Term trigger: shorten commitment','var(--gold)',`
       <div style="font-size:12.5px;color:var(--text-muted);margin-bottom:8px">Shorten to 4 months. MF stays at $59 unless they also object to cost.</div>
       ${scriptBox(`That's totally fair. Good news -- we can actually shorten that to just <strong>4 paid months</strong> instead of 6. The membership fee and everything else stays the same. Does that feel more comfortable?`)}
       <div style="margin-top:14px"><div class="label">Their response</div>
         ${stepBtn('They said YES to 4 months -- book FCF','negAccept(59,4)','background:linear-gradient(135deg,var(--green),#2ecc71);color:#0a2010')}
-        ${subBtn('Still no -- offer Trial cleaning','negGo("trial")')}
+        ${noMoreFCF}
       </div>`);
   }
 
   if(negStep==='both'){
-    return stepCard('Step 2 -- Both triggers: reduce MF + term together','var(--gold)',`
+    return alwaysPanel + stepCard('Step 2 -- Both triggers: reduce MF and term together','var(--gold)',`
       <div style="font-size:12.5px;color:var(--text-muted);margin-bottom:8px">Offer both together as one concession. $54 + 4 months is the first stop.</div>
       ${scriptBox(`I hear you on both. Let me see what I can do -- I can bring the monthly fee down to <strong>$54</strong> AND shorten the commitment to just <strong>4 months</strong>. That's the most flexibility I can offer. Does that work for you?`)}
       <div style="margin-top:14px"><div class="label">Their response</div>
@@ -826,24 +863,24 @@ I do have a lighter option -- I can bring your monthly membership down to <stron
   }
 
   if(negStep==='both2'){
-    return stepCard('Step 2B -- Final combined offer: $49 + 4 months','var(--gold)',`
+    return alwaysPanel + stepCard('Step 2B -- Final combined offer: $49 + 4 months (floor)','var(--gold)',`
       <div style="font-size:12.5px;color:var(--text-muted);margin-bottom:8px">Absolute floor. Tag for QA review if agreed.</div>
       ${scriptBox(`Alright, let me push this as far as I can -- <strong>$49 a month for 4 months</strong>. That's the best I'm able to offer. Does that work?`)}
       <div style="margin-top:14px"><div class="label">Their response</div>
         ${stepBtn('They said YES -- book FCF at $49/4mo','negAccept(49,4)','background:linear-gradient(135deg,var(--green),#2ecc71);color:#0a2010')}
-        ${subBtn('Still no -- offer Trial cleaning','negGo("trial")')}
+        ${noMoreFCF}
       </div>`);
   }
 
   if(negStep==='trust'){
-    return stepCard('Step 2 -- "Don\'t need regular cleanings" -- reframe first','var(--magenta)',`
+    return alwaysPanel + stepCard('Step 2 -- Frequency objection -- reframe first, then adjust if needed','var(--magenta)',`
       <div style="font-size:12.5px;color:var(--text-muted);margin-bottom:8px">This is a frequency objection, not a price objection. Reframe before discounting anything.</div>
       ${scriptBox(`That makes total sense -- ForeverClean isn't just for people who clean every week. A lot of our customers use it once a month and still save a ton compared to booking one-time every time.
 
 But if a membership really isn't what you're looking for today, no worries at all. Let me set you up with something that fits what you need right now.`)}
       <div style="margin-top:14px"><div class="label">Their response after the reframe</div>
         ${stepBtn('They opened up -- offer FCF now','negGo("qualify")')}
-        ${subBtn('Still not interested in membership -- offer Trial','negGo("trial")')}
+        ${noMoreFCF}
       </div>`);
   }
 
