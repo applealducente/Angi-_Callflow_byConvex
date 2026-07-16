@@ -343,76 +343,74 @@ function pitchScript(){
   const h=hrs(),tc=todayCharge(),na=natAvg(),mr=memberRate(),e=etfAmt();
   if(!h)return '(Fill in bedrooms + bathrooms in Discovery to generate the pitch for this home.)';
 
+  // Pitch is always the FCF pitch - the offer picker is agent's internal choice AFTER delivering the pitch
+  // never change the pitch based on offer type selected
   const extraHrs=h>3?h-3:0;
   const uc=upcharge();
 
-  // PART I: Anchor + Hook (varies by hours per CFG)
+  // PART I: Anchor + free cleaning hook (per CFG, varies by hours)
   let p1='';
   if(h===2){
-    p1=`Thanks for sharing that with me, {Customer Name}. Based on what you've told me, for a home your size, we typically recommend a 2-hour cleaning to start.
+    p1=`Thanks for sharing that with me, {Customer Name}. Based on what you've told me, for a home your size we typically recommend a 2-hour cleaning to start.
 
-Now, just to give you a point of reference - a standard 2-hour cleaning from a professional cleaner in your area runs about $150 on average. That's what you'd pay booking someone directly or through most platforms.
+Now just to give you a reference point - a standard 2-hour cleaning from a professional cleaner in your area runs about $150 on average.
 
-With ForeverClean, every 2-hour cleaning is just $46 - that's the rate our members pay every single time.
-
-But here's what I want to do for you today: your first 2 hours are completely free. All you pay today is just $19. That's it. How does that sound?`;
+With ForeverClean, every 2-hour cleaning is just $46. But here's what I want to do for you today: your first 2 hours are completely free - all you pay today is just $19. How does that sound?`;
   } else if(h===3){
-    p1=`Thanks for sharing that with me, {Customer Name}. Based on what you've told me, for a home your size, we typically recommend a 3-hour cleaning to start.
+    p1=`Thanks for sharing that with me, {Customer Name}. Based on what you've told me, for a home your size we typically recommend a 3-hour cleaning to start.
 
-Now, just to give you a point of reference - a standard 3-hour cleaning in your area runs about $225 on average. That's the going rate for a professional cleaner.
+Now just to give you a reference point - a standard 3-hour cleaning in your area runs about $225 on average.
 
-With ForeverClean, every 3-hour cleaning is just $69 - that's the discounted member rate.
-
-But here's what I want to do for you today: your first 3 hours are completely free. All you pay today is just $19. How does that sound?`;
+With ForeverClean, every 3-hour cleaning is just $69. But here's what I want to do for you today: your first 3 hours are completely free - all you pay today is just $19. How does that sound?`;
   } else if(h===4){
-    p1=`Thanks for sharing that with me, {Customer Name}. Based on what you've told me, for a home your size, we typically recommend a 4-hour cleaning to start - that gives your cleaner enough time to focus on {Focus} the right way.
+    p1=`Thanks for sharing that with me, {Customer Name}. Based on what you've told me, for a home your size we typically recommend a 4-hour cleaning to start - that gives your cleaner enough time to actually focus on {Focus} the right way.
 
-Now, a standard 4-hour cleaning in your area runs about $300 on average.
+Now just to give you a reference point - a standard 4-hour cleaning in your area runs about $300 on average.
 
 With ForeverClean, every 4-hour cleaning is just $92 - and for your first cleaning, we cover the first 3 hours completely free. The only thing you pay for today is the extra hour, plus your first month of membership - that comes out to just $38 total. How does that sound?`;
   } else {
-    p1=`Thanks for sharing that with me, {Customer Name}. Based on what you've told me, for a home your size, we typically recommend a 6-hour cleaning to start - that gives your cleaner the time to really get through everything properly, especially {Focus}.
+    p1=`Thanks for sharing that with me, {Customer Name}. Based on what you've told me, for a home your size we typically recommend a 6-hour cleaning to start - that gives your cleaner the time to really get through everything properly${D.focusAreas?', especially '+D.focusAreas:''}.
 
-A standard 6-hour cleaning in your area runs about $450 on average.
+Now just to give you a reference point - a standard 6-hour cleaning in your area runs about $450 on average.
 
-With ForeverClean, every 6-hour cleaning is just $138 - and for your first cleaning today, you only pay $78 total. That's your first month of membership plus the extra hours beyond 3. How does that sound?`;
+With ForeverClean, every 6-hour cleaning is just $138 - and for your first cleaning today, you only pay $78 total. How does that sound?`;
   }
 
-  // PART II: How it works (after customer shows interest)
+  // PART II: How it works - always FCF, explain the mechanics after customer shows interest
   let p2='';
   if(h<=3){
     p2=`So here's how ForeverClean works, quick and simple.
 
-Today, you only pay ${tc?'$'+tc:'$19'}. That covers your first month of membership, and your first ${h} hours of cleaning are completely free.
+Today, you only pay $${FCF_TODAY[h]||19}. That covers your first month of membership, and your first ${h} hours of cleaning are completely free.
 
-After that, your membership continues at ${mf()?'$'+mf():'$59'} a month, billed on the same date each month, until you cancel. That keeps your discounted rate of around $23/hour going for every cleaning after your first one. You can cancel anytime.
+After that, your membership continues at $59 a month, billed on the same date each month until you cancel. That keeps your discounted rate of around $23 per hour going for every cleaning after your first one. And you can cancel anytime.
 
-The only thing to flag is a small early cancellation fee if you end it before ${term()} paid months. It's $35 times the hours of your first cleaning - so in your case that's ${e?'$'+e:'[ETF]'} plus applicable taxes.
+The only thing to flag is a small early cancellation fee if you end it before 6 paid months - it's $35 times the hours of your first cleaning, so in your case that's $${FCF_ETF[h]||105} plus applicable taxes.
 
 When would you like to have your cleaning?`;
   } else if(h===4){
     p2=`So here's how ForeverClean works, quick and simple.
 
-Today, you only pay $38 total. The $19 covers your first month of membership, and the additional $19 covers the extra hour, since your home needs 4 hours instead of 3. The first 3 hours are completely free.
+Today, you only pay $38 total. The $19 covers your first month of membership, and the additional $19 covers the extra hour since your home needs 4 hours instead of 3. The first 3 hours are completely free.
 
-After that, your membership continues at ${mf()?'$'+mf():'$59'} a month, billed on the same date each month, until you cancel. That keeps your discounted rate of around $23/hour going for every cleaning after your first one.
+After that, your membership continues at $59 a month, billed on the same date each month until you cancel. That keeps your discounted rate of around $23 per hour going for every cleaning after your first one.
 
-The only thing to flag is a small early cancellation fee if you end it before ${term()} paid months - it's $140 plus applicable taxes.
+The only thing to flag is a small early cancellation fee if you end it before 6 paid months - it's $140 plus applicable taxes.
 
 When would you like to have your cleaning?`;
   } else {
     p2=`So here's how ForeverClean works, quick and simple.
 
-Today, you only pay ${tc?'$'+tc:'[today]'} total. The $19 covers your first month of membership and includes 3 free hours. The additional ${uc?'$'+uc:'[upcharge]'} covers the extra ${extraHrs} hour${extraHrs>1?'s':''}, since your home needs ${h} hours instead of 3.
+Today, you only pay $${FCF_TODAY[h]||78} total. The $19 covers your first month of membership and includes 3 free hours. The additional $${FCF_UPCHARGE[h]||59} covers the extra ${extraHrs} hour${extraHrs>1?'s':''} since your home needs ${h} hours instead of 3.
 
-After that, your membership continues at ${mf()?'$'+mf():'$59'} a month, billed on the same date, until you cancel. That keeps your rate around $23/hour for every cleaning after your first one.
+After that, your membership continues at $59 a month, billed on the same date each month until you cancel. That keeps your discounted rate of around $23 per hour for every cleaning after your first one.
 
-The only thing to flag is a small early cancellation fee if you end it before ${term()} paid months - it's ${e?'$'+e:'[ETF]'} plus applicable taxes.
+The only thing to flag is a small early cancellation fee if you end it before 6 paid months - it's $${FCF_ETF[h]||210} plus applicable taxes.
 
 When would you like to have your cleaning?`;
   }
 
-  return p1+'\n\n[If they say "sounds good" or "tell me more" -- continue below]\n\n'+p2;
+  return p1+'\n\n[If they say yes or "tell me more" -- continue]\n\n'+p2;
 }
 
 // ============ VERBATIM ============
@@ -798,7 +796,7 @@ function render(){
   // Offer picker (Sales Pitch phase)
   if(p.isPitch){
     const h=hrs(),tc=FCF_TODAY[h],e=etfAmt(),otc=otcAmt(),trial=trialAmt(),uc=upcharge();
-    html+=`<div class="card"><div class="label">Pick the offer</div>
+    html+=`<div class="card"><div class="label">What did the customer go with? (internal tracking -- pitch above stays the same)</div>
       <div class="offer-grid">
         <div class="offer-card primary ${D.offerType==='fcf'?'selected':''}" onclick="pickOffer('fcf')">
           <div class="oname">ForeverClean (FCF) ${D.offerType==='fcf'?'&#10003;':''}</div>
@@ -807,13 +805,8 @@ function render(){
         </div>
         <div class="offer-card trial ${D.offerType==='trial'?'selected':''}" onclick="pickOffer('trial')">
           <div class="oname">Trial Cleaning ${D.offerType==='trial'?'&#10003;':''}</div>
-          <div class="odesc">Discounted cleaning, 30 days to cancel before FCF auto-enrolls at $59/mo for 6-month commitment.</div>
-          <div class="oprice">Today: <b>${trial?'$'+trial:'--'}</b> (${h||3}hr). ETF if cancel after: <b>$99</b><span class="orec">After negotiation -- before booking OTC.</span></div>
-        </div>
-        <div class="offer-card trial ${D.offerType==='trial'?'selected':''}" onclick="pickOffer('trial')">
-          <div class="oname">Trial Cleaning ${D.offerType==='trial'?'&#10003;':''}</div>
-          <div class="odesc">Discounted first cleaning. 30 days to cancel before auto-enrolling to FCF at $59/mo for 6-month commitment. ETF if cancel after: $99.</div>
-          <div class="oprice">Today: <b>${trial?'$'+trial:'--'}</b> (${h||3}hr, 20|20 cohort).<span class="orec">After negotiation -- offer before OTC.</span></div>
+          <div class="odesc">Discounted first cleaning (20|20 cohort). 30 days to cancel before auto-enrolling to FCF at $59/mo for 6-month commitment.</div>
+          <div class="oprice">Today: <b>${trial?'$'+trial:'--'}</b> (${h||3}hr). ETF if cancel after FCF starts: <b>$99</b><span class="orec">Only after negotiation -- before OTC.</span></div>
         </div>
         <div class="offer-card otc ${D.offerType==='otc'?'selected':''}" onclick="pickOffer('otc')">
           <div class="oname">One-time Cleaning (OTC) ${D.offerType==='otc'?'&#10003;':''}</div>
