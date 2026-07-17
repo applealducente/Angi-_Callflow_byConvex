@@ -439,7 +439,7 @@ function verbatim(){
   const h=hrs(),o=D.offerType;
   if(o==='otc')return VERB_OTC;
   if(o==='trial')return VERB_TRIAL;
-  if(!h)return '(Fill in bedrooms + bathrooms to generate the correct verbatim for this home.)';
+  if(!h)return `<span style="color:var(--pink);font-weight:600">No hours set yet.</span> Use the hour selector above to generate the verbatim, or go back to Discovery and fill in bedrooms + bathrooms.`;
   if(h<=3)return VERB_FCF_23.replace(/\{FH\}/g,String(h));
   if(h===4)return VERB_FCF_4;
   if(h===5)return VERB_FCF_5;
@@ -825,7 +825,13 @@ function updateField(k,v,type){
   const ac=document.getElementById('live-ac');
   if(ac)ac.innerHTML=acHTML();
 }
-function pickOffer(k){D.offerType=k;render()}
+function pickOffer(k){
+  D.offerType=k;
+  render();
+  // If on verbatim phase, also update live-script immediately
+  const el=document.getElementById('live-script');
+  if(el && PHASES[pIdx] && PHASES[pIdx].isVerbatim){ el.innerHTML=fill(verbatim()); }
+}
 function pickLadder(v,field){
   D[field]=v;
   const el=document.querySelector(`input[data-f="${field}"]`);
@@ -1388,8 +1394,14 @@ const PREDICTED = {
     label: "They might respond with...",
     responses: [
       { text: "I didn't request this / wrong number", type: "branch",
-        reply: `"I completely understand -- you may have put in a request through Angi and forgotten. Let me ask: are you still looking for a house cleaner? If not, no problem at all and I won't call again."`,
-        rule: "One check only. If they say no -- mark as DNC and move on. Never argue." },
+        reply: `"Oh, I completely understand -- and I'm sorry for the confusion! Here's the thing though, since I have you for just a second: do you currently have anyone who helps with your home cleaning?
+
+[If they say no or hesitate:]
+"Perfect timing then! I actually have something really quick to share -- we work with professional cleaners in your area and the first cleaning can be completely free. It takes less than two minutes. Would that be worth a quick listen?"
+
+[If they engage: you're in. Go straight to the pitch.]
+[If they say no a second time:] "No problem at all -- really sorry for interrupting your day. Have a wonderful one!"`,
+        rule: "Never give up after the first no. One smooth pivot -- they have a house, they answered the phone. If they say no TWICE then close warmly and move on. No compliance language, no lists." },
       { text: "I'm busy / call me back later", type: "branch",
         reply: `"Of course -- I'll be quick. I just need to confirm one thing: are you still looking for a house cleaning? It takes two minutes and I already have your info pulled up."`,
         rule: "Try once. If they push back again: get a SPECIFIC callback time, then let them go." },
@@ -1615,6 +1627,32 @@ function render(){
 
   // Risk alert at high-loss phases
   html+=renderRiskAlert(pIdx);
+
+  // Verbatim phase: show hours + offer override picker if not set
+  if(p.isVerbatim){
+    const h=hrs(), o=D.offerType;
+    html+=`<div class="card" style="border-color:var(--gold-border);background:var(--gold-bg)">
+      <div class="label" style="color:var(--gold)">Set hours + offer before reading (auto-fills verbatim below)</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:4px">
+        <div>
+          <div style="font-size:11px;color:var(--text-secondary);font-weight:600;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px">Cleaning hours</div>
+          <div class="ladder" style="margin-top:0">
+            ${[2,3,4,5,6].map(n=>`<span class="ladder-pill ${h===n?'active':''}" onclick="pickLadder(${n},'negHours')">${n}hr</span>`).join('')}
+          </div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:6px">Current: <b style="color:var(--gold)">${h?h+' hours':'not set'}</b></div>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--text-secondary);font-weight:600;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px">Offer type</div>
+          <div class="ladder" style="margin-top:0">
+            <span class="ladder-pill ${o==='fcf'?'active':''}" onclick="pickOffer('fcf')">FCF</span>
+            <span class="ladder-pill ${o==='trial'?'active':''}" onclick="pickOffer('trial')">Trial</span>
+            <span class="ladder-pill ${o==='otc'?'active':''}" onclick="pickOffer('otc')">OTC</span>
+          </div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:6px">Current: <b style="color:var(--gold)">${o||'not set'}</b></div>
+        </div>
+      </div>
+    </div>`;
+  }
 
   // Script / Pitch / Verbatim
   let scriptTxt='';
