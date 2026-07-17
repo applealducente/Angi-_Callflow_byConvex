@@ -1,40 +1,265 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Usage | Convex</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Usage -- ANGI Call Flow</title>
 <style>
-  :root{--bg:#1a1226;--panel:#241832;--border:#3a2851;--text:#f4ecdf;--text-secondary:#c9b8d4;--text-muted:#8f7a9c;--accent:#ff7a45;--gold:#ffb347;--coral:#ff5e78;--lilac:#c084fc}
-  body{margin:0;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(ellipse at top right,rgba(255,122,69,0.15),transparent 50%),radial-gradient(ellipse at bottom left,rgba(192,132,252,0.12),transparent 50%),var(--bg);background-attachment:fixed;min-height:100vh}
-  header{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;border-bottom:0.5px solid var(--border);background:rgba(26,18,38,0.85);backdrop-filter:blur(10px)}
-  .brand{font-size:15px;font-weight:700;letter-spacing:2px;background:linear-gradient(90deg,var(--gold),var(--accent),var(--coral));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-  nav a{color:var(--text-secondary);text-decoration:none;font-size:13px;margin-left:18px}
-  nav a:hover{color:var(--accent)}
-  main{max-width:1080px;margin:0 auto;padding:28px 24px 80px}
-  h1{font-size:22px;font-weight:600;margin:0 0 4px}
-  p.subtitle{color:var(--text-secondary);font-size:14px;margin:0 0 24px}
-  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
-  .card{border:0.5px solid var(--border);border-radius:12px;padding:18px 20px;background:var(--panel);box-shadow:0 8px 24px -12px rgba(255,122,69,0.15)}
-  .card .label{font-size:11px;text-transform:uppercase;letter-spacing:0.6px;color:var(--gold);margin-bottom:6px;font-weight:600}
-  .card .num{font-size:24px;font-weight:600;color:var(--accent)}
-  .note{margin-top:24px;color:var(--text-muted);font-size:13px}
+:root{--bg:#140b1a;--bg2:#1c1024;--panel:#241531;--panel2:#2f1a3f;--panel3:#3d2352;--border:#4a2d5e;--text:#fdf3ea;--text-secondary:#c9b0be;--text-muted:#9078a0;--coral:#F58F6B;--gold:#F2B85A;--pink:#E85567;--magenta:#D14494;--green:#4CD97B;--purple:#8B2FA8}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100vh}
+header{display:flex;align-items:center;justify-content:space-between;padding:12px 24px;border-bottom:.5px solid var(--border);background:var(--bg);position:sticky;top:0;z-index:10}
+.brand{font-size:15px;font-weight:700;background:linear-gradient(90deg,var(--coral),var(--magenta));-webkit-background-clip:text;background-clip:text;color:transparent}
+nav a{color:var(--text-secondary);text-decoration:none;font-size:13px;margin-left:18px}
+nav a:hover{color:var(--coral)}
+.convex-logo{height:34px;background:#fff;border-radius:5px;padding:2px 7px}
+main{max-width:1100px;margin:0 auto;padding:28px 24px 80px}
+h1{font-size:22px;font-weight:600;margin:0 0 4px}
+.subtitle{color:var(--text-secondary);font-size:14px;margin:0 0 24px}
+.gate{max-width:380px;margin:80px auto;background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:28px;text-align:center}
+.gate h2{margin:0 0 6px;font-size:20px}
+.gate p{color:var(--text-secondary);font-size:13px;margin:0 0 20px}
+.field{margin-bottom:12px;text-align:left}
+.field label{display:block;font-size:11px;color:var(--text-secondary);font-weight:600;text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px}
+.field input{width:100%;background:var(--panel2);border:1px solid var(--border);color:var(--text);padding:10px 12px;border-radius:8px;font-size:14px;font-family:inherit}
+.field input:focus{outline:none;border-color:var(--coral)}
+.btn{padding:10px 18px;border-radius:8px;border:none;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
+.btn-primary{background:linear-gradient(135deg,var(--coral),var(--magenta));color:#fff;width:100%;padding:12px;font-size:14px}
+.btn-sm{padding:7px 14px;font-size:12px;border-radius:7px}
+.btn-secondary{background:var(--panel2);color:var(--text);border:1px solid var(--border)}
+.btn-secondary:hover{border-color:var(--gold)}
+.err{color:var(--pink);font-size:13px;margin-top:8px;display:none}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:28px}
+.stat-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px 18px}
+.stat-label{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--gold);font-weight:700;margin-bottom:6px}
+.stat-val{font-size:28px;font-weight:700;color:var(--text)}
+.stat-sub{font-size:12px;color:var(--text-muted);margin-top:3px}
+.section-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--gold);margin-bottom:12px}
+.toolbar{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.search-box{background:var(--panel2);border:1px solid var(--border);color:var(--text);padding:8px 12px;border-radius:8px;font-size:13px;font-family:inherit;width:220px}
+.search-box:focus{outline:none;border-color:var(--coral)}
+.filter-select{background:var(--panel2);border:1px solid var(--border);color:var(--text);padding:8px 12px;border-radius:8px;font-size:13px;font-family:inherit}
+.table-wrap{background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden;overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:750px}
+th{background:var(--panel2);color:var(--gold);font-size:11px;text-transform:uppercase;letter-spacing:.5px;padding:10px 14px;text-align:left;font-weight:700;white-space:nowrap}
+td{padding:10px 14px;border-top:1px solid var(--border);color:var(--text-secondary);vertical-align:middle}
+tr:hover td{background:var(--panel2)}
+.badge{display:inline-block;padding:2px 9px;border-radius:10px;font-size:11px;font-weight:700}
+.b-fcf{background:rgba(76,217,123,.2);color:var(--green)}
+.b-trial{background:rgba(209,68,148,.2);color:var(--magenta)}
+.b-otc{background:rgba(242,184,90,.2);color:var(--gold)}
+.b-drop{background:rgba(232,85,103,.2);color:var(--pink)}
+.b-ip{background:rgba(245,143,107,.15);color:var(--coral)}
+.pill{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;background:var(--panel2);border:1px solid var(--border);color:var(--text-secondary)}
+.empty{text-align:center;padding:40px;color:var(--text-muted)}
+.agents-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px}
+.agent-chip{padding:5px 12px;background:var(--panel2);border:1px solid var(--border);border-radius:20px;font-size:12px;color:var(--text-secondary)}
+.agent-chip.active{background:rgba(76,217,123,.15);border-color:var(--green);color:var(--green)}
+#dash-content{display:none}
 </style>
 </head>
 <body>
 <header>
-  <div class="brand">CONVEX</div>
+  <div class="brand">ANGI Call Flow -- Usage</div>
   <nav><a href="index.html">Guide</a><a href="admin.html">Admin</a></nav>
+  <img src="convex-logo.png" alt="Convex" class="convex-logo">
 </header>
-<main>
-  <h1>Usage</h1>
-  <p class="subtitle">Per-agent drilling and guide activity. Wire this up to the real event log when ready.</p>
-  <div class="cards">
-    <div class="card"><div class="label">Guide opens this week</div><div class="num">&mdash;</div></div>
-    <div class="card"><div class="label">Branch 2 views</div><div class="num">&mdash;</div></div>
-    <div class="card"><div class="label">Calculator uses</div><div class="num">&mdash;</div></div>
-    <div class="card"><div class="label">Active agents</div><div class="num">&mdash;</div></div>
+
+<div id="gate-view">
+  <div class="gate">
+    <img src="convex-logo.png" style="height:44px;background:#fff;padding:4px 10px;border-radius:8px;margin-bottom:14px">
+    <h2>Usage Dashboard</h2>
+    <p>Password required to view session data.</p>
+    <div class="field"><label>Dashboard Password</label><input type="password" id="dash-pw" placeholder="Enter password" onkeydown="if(event.key==='Enter')tryDashLogin()"></div>
+    <button class="btn btn-primary" onclick="tryDashLogin()">View Dashboard</button>
+    <div class="err" id="dash-err">Incorrect password. Try again.</div>
   </div>
-  <p class="note">Placeholder page. Connect to your analytics or HubSpot event source to populate these.</p>
+</div>
+
+<div id="dash-content">
+<main>
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px">
+    <div><h1>Usage Dashboard</h1><p class="subtitle" style="margin:0">All agent sessions -- shared across all devices in real time.</p></div>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-secondary btn-sm" onclick="loadSessions()">Refresh</button>
+      <button class="btn btn-sm" style="background:linear-gradient(135deg,var(--coral),var(--magenta));color:#fff" onclick="exportCSV()">Download CSV</button>
+    </div>
+  </div>
+
+  <div class="stat-grid">
+    <div class="stat-card"><div class="stat-label">Total sessions</div><div class="stat-val" id="s-total">--</div><div class="stat-sub">All time</div></div>
+    <div class="stat-card"><div class="stat-label">Active today</div><div class="stat-val" id="s-today">--</div><div class="stat-sub" id="s-date">--</div></div>
+    <div class="stat-card"><div class="stat-label">FCF bookings</div><div class="stat-val" id="s-fcf">--</div><div class="stat-sub">Logged outcomes</div></div>
+    <div class="stat-card"><div class="stat-label">Trial bookings</div><div class="stat-val" id="s-trial">--</div><div class="stat-sub">Logged outcomes</div></div>
+    <div class="stat-card"><div class="stat-label">Not converted</div><div class="stat-val" id="s-drop">--</div><div class="stat-sub">Logged outcomes</div></div>
+    <div class="stat-card"><div class="stat-label">Unique agents</div><div class="stat-val" id="s-agents">--</div><div class="stat-sub">This week</div></div>
+  </div>
+
+  <div class="section-title">Active today</div>
+  <div class="agents-row" id="agents-row"></div>
+
+  <div class="section-title">Session log</div>
+  <div class="toolbar">
+    <input class="search-box" id="search" placeholder="Search agent, email, team, customer..." oninput="filterTable()">
+    <select class="filter-select" id="f-outcome" onchange="filterTable()">
+      <option value="">All outcomes</option>
+      <option>FCF</option><option>Trial</option><option>OTC</option>
+      <option value="Not converted">Not converted</option>
+      <option value="In progress">In progress</option>
+    </select>
+    <select class="filter-select" id="f-team" onchange="filterTable()">
+      <option value="">All teams</option>
+    </select>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr>
+        <th>#</th><th>Date / Time</th><th>Agent</th><th>Email</th>
+        <th>Team</th><th>Customer</th><th>Offer</th><th>Outcome</th>
+        <th>Phase reached</th><th>Duration</th>
+      </tr></thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
 </main>
+</div>
+
+<script>
+const UPSTASH_URL = "https://smiling-tomcat-118187.upstash.io";
+const UPSTASH_TOKEN = "gQAAAAAAAc2rAAIgcDFkMjMzZDVjYmZhMGU0ZjkwOTU3M2NmMzIyNjlkYTRlNA";
+const KEY_SESSIONS = "angi:sessions";
+const KEY_DASH_PW = "angi:dash-password";
+const DEFAULT_DASH_PW = "convex2024";
+
+async function upstashGet(key){
+  const r = await fetch(`${UPSTASH_URL}/get/${encodeURIComponent(key)}`,{headers:{"Authorization":`Bearer ${UPSTASH_TOKEN}`}});
+  const d = await r.json();
+  return d.result ? JSON.parse(d.result) : null;
+}
+async function upstashSet(key, val){
+  const body = JSON.stringify(["SET", key, JSON.stringify(val)]);
+  await fetch(`${UPSTASH_URL}/pipeline`,{method:"POST",headers:{"Authorization":`Bearer ${UPSTASH_TOKEN}`,"Content-Type":"application/json"},body});
+}
+
+async function tryDashLogin(){
+  const pw = document.getElementById('dash-pw').value;
+  let correctPw = DEFAULT_DASH_PW;
+  try { const saved = await upstashGet(KEY_DASH_PW); if(saved) correctPw = saved; } catch(e){}
+  if(pw === correctPw){
+    document.getElementById('gate-view').style.display='none';
+    document.getElementById('dash-content').style.display='block';
+    loadSessions();
+  } else {
+    const err = document.getElementById('dash-err');
+    err.style.display='block';
+    setTimeout(()=>err.style.display='none',3000);
+  }
+}
+
+let allSessions = [];
+
+async function loadSessions(){
+  document.getElementById('tbody').innerHTML='<tr><td colspan="10" class="empty">Loading...</td></tr>';
+  try { allSessions = await upstashGet(KEY_SESSIONS) || []; }
+  catch(e){ allSessions=[]; }
+  renderStats();
+  renderAgents();
+  renderTable(allSessions);
+  populateTeamFilter();
+}
+
+function renderStats(){
+  const today = new Date().toDateString();
+  const week = new Date(Date.now()-7*24*60*60*1000);
+  document.getElementById('s-total').textContent = allSessions.length;
+  document.getElementById('s-today').textContent = allSessions.filter(s=>new Date(s.startTime).toDateString()===today).length;
+  document.getElementById('s-date').textContent = new Date().toLocaleDateString();
+  document.getElementById('s-fcf').textContent = allSessions.filter(s=>s.outcome==='FCF').length;
+  document.getElementById('s-trial').textContent = allSessions.filter(s=>s.outcome==='Trial').length;
+  document.getElementById('s-drop').textContent = allSessions.filter(s=>s.outcome==='Not converted').length;
+  document.getElementById('s-agents').textContent = new Set(allSessions.filter(s=>new Date(s.startTime)>week).map(s=>s.agentEmail)).size;
+}
+
+function renderAgents(){
+  const today = new Date().toDateString();
+  const todayAgents = allSessions.filter(s=>new Date(s.startTime).toDateString()===today);
+  const seen = new Set();
+  const chips = todayAgents.filter(s=>{if(seen.has(s.agentEmail))return false;seen.add(s.agentEmail);return true;});
+  const row = document.getElementById('agents-row');
+  if(!chips.length){row.innerHTML='<div style="color:var(--text-muted);font-size:13px">No sessions today yet.</div>';return;}
+  row.innerHTML = chips.map(s=>{
+    const isActive = s.outcome==='In progress';
+    return `<div class="agent-chip ${isActive?'active':''}">${s.agentName||s.agentEmail} ${isActive?'<span style="font-size:10px">(active)</span>':''}
+      <span style="font-size:10px;opacity:.7;margin-left:4px">${s.team||''}</span>
+    </div>`;
+  }).join('');
+}
+
+function populateTeamFilter(){
+  const teams = [...new Set(allSessions.map(s=>s.team).filter(Boolean))];
+  const sel = document.getElementById('f-team');
+  sel.innerHTML = '<option value="">All teams</option>' + teams.map(t=>`<option>${t}</option>`).join('');
+}
+
+const PHASE_NAMES = ['Opening','Discovery','Sales Pitch','Negotiation','Booking','Verbatim'];
+function badgeClass(o){
+  if(!o||o==='In progress')return 'b-ip';
+  if(o==='FCF')return 'b-fcf';
+  if(o==='Trial')return 'b-trial';
+  if(o==='OTC')return 'b-otc';
+  if(o==='Not converted')return 'b-drop';
+  return 'b-ip';
+}
+
+function renderTable(sessions){
+  const tbody = document.getElementById('tbody');
+  if(!sessions.length){tbody.innerHTML='<tr><td colspan="10" class="empty">No sessions yet.</td></tr>';return;}
+  const sorted = [...sessions].sort((a,b)=>new Date(b.startTime)-new Date(a.startTime));
+  tbody.innerHTML = sorted.map((s,i)=>{
+    const dt = new Date(s.startTime);
+    const dur = s.endTime ? Math.round((new Date(s.endTime)-dt)/60000)+'m' : '--';
+    const phase = PHASE_NAMES[s.phaseReached] || '--';
+    return `<tr>
+      <td style="color:var(--text-muted)">${sorted.length-i}</td>
+      <td><div style="color:var(--text);font-weight:600">${dt.toLocaleDateString()}</div><div style="font-size:11px;color:var(--text-muted)">${dt.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</div></td>
+      <td style="color:var(--text);font-weight:600">${s.agentName||'--'}</td>
+      <td>${s.agentEmail||'--'}</td>
+      <td><span class="pill">${s.team||'--'}</span></td>
+      <td>${s.customerName||'--'}</td>
+      <td>${(s.offerType||'--').toUpperCase()}</td>
+      <td><span class="badge ${badgeClass(s.outcome)}">${s.outcome||'In progress'}</span></td>
+      <td>${phase}</td>
+      <td>${dur}</td>
+    </tr>`;
+  }).join('');
+}
+
+function filterTable(){
+  const q = document.getElementById('search').value.toLowerCase();
+  const outcome = document.getElementById('f-outcome').value;
+  const team = document.getElementById('f-team').value;
+  renderTable(allSessions.filter(s=>{
+    const mq = !q||(s.agentName||'').toLowerCase().includes(q)||(s.agentEmail||'').toLowerCase().includes(q)||(s.team||'').toLowerCase().includes(q)||(s.customerName||'').toLowerCase().includes(q);
+    const mo = !outcome||(s.outcome||'In progress')===outcome;
+    const mt = !team||s.team===team;
+    return mq&&mo&&mt;
+  }));
+}
+
+function exportCSV(){
+  if(!allSessions.length){alert('No sessions to export.');return;}
+  const headers=['#','Date','Time','Agent Name','Email','Team','Customer','Offer','Outcome','Phase','Duration (min)'];
+  const rows=[...allSessions].sort((a,b)=>new Date(b.startTime)-new Date(a.startTime)).map((s,i)=>{
+    const dt=new Date(s.startTime);
+    return [allSessions.length-i,dt.toLocaleDateString(),dt.toLocaleTimeString(),s.agentName||'',s.agentEmail||'',s.team||'',s.customerName||'',(s.offerType||'').toUpperCase(),s.outcome||'In progress',PHASE_NAMES[s.phaseReached]||'',s.endTime?Math.round((new Date(s.endTime)-dt)/60000):''];
+  });
+  const csv=[headers,...rows].map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download=`angi-sessions-${new Date().toISOString().slice(0,10)}.csv`;a.click();
+}
+
+document.getElementById('dash-pw').addEventListener('keydown',e=>{if(e.key==='Enter')tryDashLogin()});
+setInterval(()=>{if(document.getElementById('dash-content').style.display!=='none')loadSessions();},30000);
+</script>
 </body>
 </html>

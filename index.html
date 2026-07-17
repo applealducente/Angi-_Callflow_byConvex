@@ -795,9 +795,14 @@ let qaTracked=new Set();
 
 function enterGuide(){
   D.agentName=document.getElementById('g-name').value||'Agent';
+  D.agentEmail=document.getElementById('g-email').value||'';
+  D.team=document.getElementById('g-team').value||'';
+  D._sessionStart = new Date().toISOString();
   document.getElementById('gate').style.display='none';
   document.getElementById('app').style.display='block';
   document.getElementById('float-tools').style.display='flex';
+  // Log session start to shared storage
+  logSession({outcome:'In progress', phaseReached:0});
   render();
 }
 function openModal(id){
@@ -1066,7 +1071,7 @@ Does this work for what you need today?`)}
         "I completely understand. Just so I can make a note -- is it something I can help with down the road, or was there something specific that didn't fit today?"<br><br>
         [Set a specific callback date if they're open to it. Do NOT promise to "check back in." Name a date.]
       </div>
-      <button class="big-btn secondary" style="margin-top:10px" onclick="pIdx=PHASES.length;renderEnd()">Log call as not converted</button>`);
+      <button class="big-btn secondary" style="margin-top:10px" onclick="logSession({outcome:'Not converted',endTime:new Date().toISOString()});pIdx=PHASES.length;renderEnd()">Log call as not converted</button>`);
   }
 
   return '';
@@ -1579,6 +1584,40 @@ function copySMS(i){
 }
 
 
+// ============ UPSTASH SESSION LOGGING ============
+const UPSTASH_URL = 'https://smiling-tomcat-118187.upstash.io';
+const UPSTASH_TOKEN = 'gQAAAAAAAc2rAAIgcDFkMjMzZDVjYmZhMGU0ZjkwOTU3M2NmMzIyNjlkYTRlNA';
+const KV_PREFIX = 'angi:';
+
+async function kvGet(key){
+  try{
+    const r=await fetch(`${UPSTASH_URL}/pipeline`,{method:'POST',headers:{Authorization:`Bearer ${UPSTASH_TOKEN}`,'Content-Type':'application/json'},body:JSON.stringify([['GET',KV_PREFIX+key]])});
+    const d=await r.json();
+    return d[0]?.result||null;
+  }catch(e){return null;}
+}
+async function kvSet(key,val){
+  try{
+    await fetch(`${UPSTASH_URL}/pipeline`,{method:'POST',headers:{Authorization:`Bearer ${UPSTASH_TOKEN}`,'Content-Type':'application/json'},body:JSON.stringify([['SET',KV_PREFIX+key,typeof val==='string'?val:JSON.stringify(val)]])});
+  }catch(e){/* silent -- never interrupt call flow */}
+}
+
+async function logSession(update){
+  try{
+    const raw=await kvGet('sessions');
+    let sessions=raw?JSON.parse(raw):[];
+    const sid=D._sessionStart||new Date().toISOString();
+    const idx=sessions.findIndex(s=>s.startTime===sid);
+    const session={
+      startTime:sid,agentName:D.agentName||'',agentEmail:D.agentEmail||'',
+      team:D.team||'',customerName:D.customerName||'',offerType:D.offerType||'',
+      phaseReached:pIdx,outcome:update.outcome||'In progress',endTime:update.endTime||null
+    };
+    if(idx>=0)sessions[idx]=session; else sessions.push(session);
+    await kvSet('sessions',JSON.stringify(sessions));
+  }catch(e){/* silent */}
+}
+
 function render(){
   updateProgress();
   const stg=document.getElementById('stage');
@@ -1737,8 +1776,13 @@ function goodToGo(){
   const p=PHASES[pIdx];
   if(p.isPitch&&!D.offerType)return;
   if(p.qa)p.qa.forEach(q=>qaTracked.add(q));
-  if(pIdx>=PHASES.length-1){renderEnd();return}
-  pIdx++;stage='script';selObj=null;render();window.scrollTo({top:0,behavior:'smooth'});
+  if(pIdx>=PHASES.length-1){
+    logSession({outcome: D.offerType==='fcf'?'FCF':D.offerType==='trial'?'Trial':D.offerType==='otc'?'OTC':'Completed', endTime:new Date().toISOString()});
+    renderEnd();return;
+  }
+  pIdx++;stage='script';selObj=null;
+  logSession({outcome:'In progress'});
+  render();window.scrollTo({top:0,behavior:'smooth'});
 }
 function renderEnd(){
   const stg=document.getElementById('stage');
