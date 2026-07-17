@@ -599,9 +599,9 @@ Quick confirm: you're at {Bedrooms} bedrooms, {Bathrooms} bathrooms, looking for
 {t:"Booking",obj:"Confirm the appointment, collect all details, take payment. Both date and alternate date required.",legal:false,
  fields:[
    {k:'date',type:'date',label:'Appointment date'},
-   {k:'time',type:'time',label:'Appointment time'},
+   {k:'time',type:'timepicker',label:'Appointment time'},
    {k:'altDate',type:'date',label:'Alternate date (leave blank = N/A)'},
-   {k:'altTime',type:'time',label:'Alternate time (leave blank = N/A)'},
+   {k:'altTime',type:'timepicker',label:'Alternate time (leave blank = N/A)'},
    {k:'address',type:'text',label:'Full address',placeholder:'123 Main St, Denver CO 80202',full:true},
    {k:'email',type:'email',label:'Email',placeholder:'name@email.com'},
    {k:'phone',type:'tel',label:'Phone',placeholder:'(555) 123-4567'},
@@ -884,7 +884,21 @@ function renderFields(fields){
       const val=D[f.k]!==undefined?D[f.k]:'';
       const cls=f.full?' full':'';
       let inp='';
-      if(f.type==='select'){
+      if(f.type==='timepicker'){
+        // Generate slots: 6am to 9pm, on the hour and :30
+        const slots=[];
+        for(let h=6;h<=21;h++){
+          const ampm=h<12?'AM':'PM';
+          const h12=h===0?12:h>12?h-12:h;
+          slots.push(`${h12}:00 ${ampm}`);
+          if(h<21)slots.push(`${h12}:30 ${ampm}`);
+        }
+        const selected=val||'';
+        inp=`<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:2px">
+          <span onclick="updateField('${f.k}','')" style="padding:5px 10px;border-radius:16px;font-size:12px;cursor:pointer;font-family:inherit;border:1px solid var(--border);background:${!selected?'linear-gradient(135deg,var(--coral),var(--magenta))':'var(--panel2)'};color:${!selected?'#fff':'var(--text-muted)'};white-space:nowrap">N/A</span>
+          ${slots.map(s=>`<span onclick="updateField('${f.k}','${s}')" style="padding:5px 10px;border-radius:16px;font-size:12px;cursor:pointer;font-family:inherit;border:1px solid ${selected===s?'var(--coral)':'var(--border)'};background:${selected===s?'linear-gradient(135deg,var(--coral),var(--magenta))':'var(--panel2)'};color:${selected===s?'#fff':'var(--text-secondary)'};white-space:nowrap">${s}</span>`).join('')}
+        </div>`;
+      } else if(f.type==='select'){
         inp=`<select onchange="updateField('${f.k}',this.value)"><option value="">Select...</option>${f.options.map(o=>o?`<option value="${o}" ${String(val)===o?'selected':''}>${o}</option>`:'').join('')}</select>`;
       } else if(f.type==='textarea'){
         inp=`<textarea placeholder="${f.placeholder||''}" oninput="updateField('${f.k}',this.value)">${val||''}</textarea>`;
