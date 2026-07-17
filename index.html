@@ -160,6 +160,26 @@
   .gate-card p{color:var(--text-secondary);font-size:13px;margin-bottom:22px}
   .gate-card .field{text-align:left;margin-bottom:12px}
   #app{display:none}
+
+  /* Predicted responses */
+  .predict-section{margin-top:14px;padding:12px 14px;background:rgba(122,44,153,.15);border:1px solid rgba(122,44,153,.35);border-radius:10px}
+  .predict-label{font-size:10px;text-transform:uppercase;letter-spacing:.7px;color:#a855f7;font-weight:700;margin-bottom:8px}
+  .predict-chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{padding:7px 12px;background:var(--panel2);border:1px solid rgba(122,44,153,.4);border-radius:20px;font-size:12.5px;color:var(--text);cursor:pointer;font-family:inherit;transition:.15s;text-align:left}
+  .chip:hover{background:rgba(122,44,153,.25);border-color:#a855f7;color:#fff;transform:translateY(-1px)}
+  /* Risk alert */
+  .risk-banner{background:rgba(232,85,103,.2);border:2px solid var(--pink);border-radius:10px;padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;gap:12px}
+  .risk-banner .risk-icon{font-size:24px;flex-shrink:0}
+  .risk-banner .risk-text{flex:1}
+  .risk-banner .risk-title{font-size:13px;font-weight:700;color:var(--pink);margin-bottom:2px}
+  .risk-banner .risk-sub{font-size:12px;color:var(--text-secondary)}
+  /* SMS scripts */
+  .sms-card{background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px}
+  .sms-label{font-size:10px;text-transform:uppercase;letter-spacing:.6px;color:var(--gold);font-weight:700;margin-bottom:6px}
+  .sms-body{font-size:13.5px;color:var(--text);line-height:1.6;background:var(--panel);border-radius:6px;padding:10px 12px;border-left:3px solid var(--gold)}
+  /* Interrupt handler */
+  .interrupt-btn{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:var(--pink-bg);border:1px solid var(--pink-border);border-radius:16px;font-size:12px;color:var(--pink);cursor:pointer;font-family:inherit;font-weight:600;margin-top:8px}
+  .interrupt-btn:hover{background:var(--pink);color:#fff}
 </style>
 </head>
 <body>
@@ -203,6 +223,7 @@
   <div class="tool-btn" onclick="openModal('m-otccalc')"><span>&#128190;</span> OTC / Trial calc</div>
   <div class="tool-btn" onclick="openModal('m-worstcase')"><span>&#128202;</span> Worst-case savings</div>
   <div class="tool-btn" onclick="openModal('m-notes')"><span>&#128221;</span> Notes</div>
+  <div class="tool-btn" onclick="openModal('m-sms')"><span>&#128241;</span> SMS callback scripts</div>
 </div>
 
 <!-- MODALS -->
@@ -779,7 +800,13 @@ function enterGuide(){
   document.getElementById('float-tools').style.display='flex';
   render();
 }
-function openModal(id){document.getElementById(id).classList.add('open')}
+function openModal(id){
+  document.getElementById(id).classList.add('open');
+  if(id==='m-sms'){
+    const c=document.getElementById('sms-modal-content');
+    if(c) c.innerHTML=renderSMSPanel();
+  }
+}
 function closeModal(id){document.getElementById(id).classList.remove('open')}
 function toggleCoach(){document.getElementById('coach-body').classList.toggle('open')}
 function toggleMore(){showMore=!showMore;render()}
@@ -1254,56 +1281,93 @@ Would it be worth giving us one shot based on that? Your first cleaning is only 
 
 function renderObjPanel(){
   const filterVal = window._objFilter || '';
-  const filtered = filterVal
-    ? OBJ_CATS.filter(o=>
-        o.label.toLowerCase().includes(filterVal.toLowerCase()) ||
-        o.cust.toLowerCase().includes(filterVal.toLowerCase()) ||
-        o.name.toLowerCase().includes(filterVal.toLowerCase()))
-    : OBJ_CATS;
-
   let html = `<div class="card">
     <div class="label">What is the customer saying? -- tap the one that matches</div>
-    <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px">12 real objections from your call tracker. Tap to get word-for-word recovery + rules.</div>
+    <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px">Covers all 12 objection tiles + every off-script question. Type anything to search all of them.</div>
     <input
       type="text"
-      placeholder="Type a keyword to filter... (e.g. 'card', 'expensive', 'cleaner', 'scam')"
+      id="obj-search-input"
+      placeholder="Search any objection or question... e.g. insurance, card, cancel, scam, spouse, cash, cleaner"
       value="${filterVal}"
       oninput="window._objFilter=this.value;document.getElementById('obj-grid').innerHTML=renderObjGrid()"
-      style="width:100%;background:var(--panel2);border:1px solid var(--border);color:var(--text);padding:10px 12px;border-radius:8px;font-size:14px;font-family:inherit;margin-bottom:12px">
+      style="width:100%;background:var(--panel2);border:1px solid ${filterVal?'var(--coral)':'var(--border)'};color:var(--text);padding:11px 14px;border-radius:8px;font-size:14px;font-family:inherit;margin-bottom:12px">
     <div id="obj-grid">${renderObjGrid()}</div>
-    <button class="big-btn ghost" style="margin-top:10px" onclick="openModal('m-offscript')">? Not listed above -- search off-script help</button>
   </div>`;
   return html;
 }
 
 function renderObjGrid(){
   const filterVal = window._objFilter || '';
-  const filtered = filterVal
+  const q = filterVal.toLowerCase();
+
+  const matchCats = filterVal
     ? OBJ_CATS.filter(o=>
-        o.label.toLowerCase().includes(filterVal.toLowerCase()) ||
-        o.cust.toLowerCase().includes(filterVal.toLowerCase()) ||
-        o.name.toLowerCase().includes(filterVal.toLowerCase()))
+        o.label.toLowerCase().includes(q)||o.cust.toLowerCase().includes(q)||
+        o.name.toLowerCase().includes(q)||o.hint.toLowerCase().includes(q)||
+        (o.reply||'').toLowerCase().includes(q))
     : OBJ_CATS;
 
-  if(!filtered.length) return `<div style="text-align:center;padding:20px;color:var(--text-muted)">No match. Try a different keyword or use Off-script help below.</div>`;
+  const matchOffscript = filterVal
+    ? OFFSCRIPT.filter(o=>o.cust.toLowerCase().includes(q)||(o.reply||'').toLowerCase().includes(q))
+    : [];
 
-  return `<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-    ${filtered.map(o=>`
-      <button onclick='pickObjCat("${o.id}")' style="
-        display:flex;flex-direction:column;align-items:flex-start;
-        background:var(--panel2);border:1px solid ${o.colorBorder};
-        border-radius:12px;padding:12px 14px;cursor:pointer;
-        text-align:left;font-family:inherit;transition:.15s;
-        color:var(--text)
-      " onmouseover="this.style.background='${o.colorBg}';this.style.borderColor='${o.color}';this.style.transform='translateY(-2px)'"
-         onmouseout="this.style.background='var(--panel2)';this.style.borderColor='${o.colorBorder}';this.style.transform=''">
-        <span style="font-size:22px;margin-bottom:6px">${o.icon}</span>
-        <span style="font-size:13px;font-weight:700;color:${o.color};line-height:1.3">${o.label}</span>
-        <span style="font-size:11px;color:var(--text-muted);margin-top:4px;line-height:1.4">${o.hint.split('.')[0]}.</span>
-      </button>
-    `).join('')}
-  </div>`;
+  const matchOther = filterVal
+    ? OTHER_OBJ.filter(o=>o.cust.toLowerCase().includes(q)||(o.reply||'').toLowerCase().includes(q))
+    : [];
+
+  const matchPrio = filterVal
+    ? PRIO_OBJ.filter(o=>o.name.toLowerCase().includes(q)||o.cust.toLowerCase().includes(q)||(o.reply||'').toLowerCase().includes(q))
+    : [];
+
+  const total = matchCats.length+matchOffscript.length+matchOther.length+matchPrio.length;
+
+  if(filterVal && total===0){
+    return `<div style="text-align:center;padding:20px;color:var(--text-muted)">No match for "${filterVal}". Try a different keyword.</div>`;
+  }
+
+  let out = '';
+
+  if(matchCats.length){
+    if(filterVal) out+=`<div style="font-size:11px;color:var(--gold);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Main objection tiles (${matchCats.length})</div>`;
+    out+=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:${filterVal&&(matchOffscript.length||matchOther.length)?'14px':'0'}">
+      ${matchCats.map(o=>`
+        <button onclick='pickObjCat("${o.id}")' style="display:flex;flex-direction:column;align-items:flex-start;background:var(--panel2);border:1px solid ${o.colorBorder};border-radius:12px;padding:12px 14px;cursor:pointer;text-align:left;font-family:inherit;transition:.15s;color:var(--text)" onmouseover="this.style.background='${o.colorBg}';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='var(--panel2)';this.style.transform=''">
+          <span style="font-size:22px;margin-bottom:6px">${o.icon}</span>
+          <span style="font-size:13px;font-weight:700;color:${o.color};line-height:1.3">${o.label}</span>
+          <span style="font-size:11px;color:var(--text-muted);margin-top:4px;line-height:1.4">${o.hint.split('.')[0]}.</span>
+        </button>`).join('')}
+    </div>`;
+  }
+
+  if(matchOffscript.length){
+    out+=`<div style="margin-top:${matchCats.length?'14px':'0'}">
+      <div style="font-size:11px;color:var(--magenta);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Questions &amp; off-script (${matchOffscript.length})</div>
+      ${matchOffscript.map(o=>`
+        <div onclick="pickObj(${OFFSCRIPT.indexOf(o)},'offscript')" style="padding:10px 14px;background:var(--panel2);border:1px solid var(--magenta-border);border-radius:10px;margin-bottom:6px;cursor:pointer;transition:.15s" onmouseover="this.style.background='var(--magenta-bg)'" onmouseout="this.style.background='var(--panel2)'">
+          <div style="font-size:13px;color:var(--text);font-style:italic;margin-bottom:3px">"${o.cust}"</div>
+          <div style="font-size:12px;color:var(--text-muted)">${(o.reply||'').slice(0,90)}...</div>
+        </div>`).join('')}
+    </div>`;
+  }
+
+  if(matchOther.length){
+    out+=`<div style="margin-top:${(matchCats.length||matchOffscript.length)?'14px':'0'}">
+      <div style="font-size:11px;color:var(--coral);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">More objections (${matchOther.length})</div>
+      ${matchOther.map(o=>`
+        <div onclick="pickObj(${OTHER_OBJ.indexOf(o)},'other')" style="padding:10px 14px;background:var(--panel2);border:1px solid var(--coral-border);border-radius:10px;margin-bottom:6px;cursor:pointer;transition:.15s" onmouseover="this.style.background='var(--coral-bg)'" onmouseout="this.style.background='var(--panel2)'">
+          <div style="font-size:13px;color:var(--text);font-style:italic;margin-bottom:3px">"${o.cust}"</div>
+          <div style="font-size:12px;color:var(--text-muted)">${(o.reply||'').slice(0,90)}...</div>
+        </div>`).join('')}
+    </div>`;
+  }
+
+  if(!filterVal){
+    out+=`<div style="margin-top:12px"><button class="big-btn ghost" onclick="openModal('m-offscript')">? Not listed above -- open full off-script search</button></div>`;
+  }
+
+  return out;
 }
+
 
 function pickObjCat(id){
   const o = OBJ_CATS.find(x=>x.id===id);
@@ -1313,6 +1377,193 @@ function pickObjCat(id){
   stage = 'obj-reply';
   render();
   window.scrollTo({top:0,behavior:'smooth'});
+}
+
+
+// ============ GENIUS UPGRADE: PREDICTED RESPONSES + RISK + SMS + BRANCHES ============
+
+// Predicted customer responses per phase
+const PREDICTED = {
+  0: { // Opening
+    label: "They might respond with...",
+    responses: [
+      { text: "I didn't request this / wrong number", type: "branch",
+        reply: `"I completely understand -- you may have put in a request through Angi and forgotten. Let me ask: are you still looking for a house cleaner? If not, no problem at all and I won't call again."`,
+        rule: "One check only. If they say no -- mark as DNC and move on. Never argue." },
+      { text: "I'm busy / call me back later", type: "branch",
+        reply: `"Of course -- I'll be quick. I just need to confirm one thing: are you still looking for a house cleaning? It takes two minutes and I already have your info pulled up."`,
+        rule: "Try once. If they push back again: get a SPECIFIC callback time, then let them go." },
+      { text: "Yes, I remember / I did request this", type: "good",
+        reply: "You're in. Move straight to Discovery -- do not re-explain who you are." },
+      { text: "How did you get my number?", type: "branch",
+        reply: `"Through your Angi request -- when you submitted a cleaning request, it came to us to fulfill. I'm here to help you book that cleaning."`,
+        rule: "Don't get defensive. State the fact simply and move forward." }
+    ]
+  },
+  1: { // Discovery
+    label: "They might respond with...",
+    responses: [
+      { text: "Just give me a price / I only want a quote", type: "branch",
+        reply: `"You're getting one -- an accurate one. I just need two quick things: how many bedrooms and bathrooms? Then I can give you the exact number."`,
+        rule: "Don't pause the flow. Pivot to the two questions you need and keep moving." },
+      { text: "I already told someone this / I've been called before", type: "branch",
+        reply: `"I completely understand -- I'm sorry for the repeat. I have your info right here, I just want to make sure we get the right option locked in for you. Quick question: what's the main area you'd want your cleaner to focus on?"`,
+        rule: "Acknowledge, apologize briefly, pivot to a forward question. Never dwell on it." },
+      { text: "I'm just looking around / comparing prices", type: "branch",
+        reply: `"Perfect -- then let me give you something to compare. For a home your size, most services charge around [national avg]. I can give you the full breakdown in about two minutes. Worth a listen?"`,
+        rule: "Position yourself as the comparison, not the competitor." },
+      { text: "They answer your questions cooperatively", type: "good",
+        reply: "Good sign. Key in all the data, note their motivation word-for-word. This is gold for the pitch." }
+    ]
+  },
+  2: { // Sales Pitch
+    label: "After the hook -- they might say...",
+    responses: [
+      { text: "That sounds good / tell me more", type: "good",
+        reply: "Green light. Deliver Part II (how it works) immediately. Don't pause, don't ask questions -- go." },
+      { text: "Wait -- what's the catch? / What's the commitment?", type: "branch",
+        reply: `"Great question -- I was just about to walk you through that. There's a [term]-month membership at $59 a month starting from month two. That's what keeps your rate at $23/hour. And if it's ever not the right fit, you can cancel -- there's just a small fee. Want me to walk you through the exact numbers?"`,
+        rule: "Don't get flustered. This means they're interested enough to ask. Walk them through Part II now." },
+      { text: "I need to think about it / let me think", type: "branch",
+        reply: `"Totally fair. Just so I can help you think through it -- is it more about the monthly cost, the length of the commitment, or something else?"`,
+        rule: "Find the real objection. Don't accept 'think about it' as a final answer." },
+      { text: "[Interrupts mid-pitch] I already have a cleaner", type: "branch",
+        reply: `"That's great! Is it someone you've used before or someone new? [listen] The reason I ask -- a lot of our members actually keep us as a backup, because if your cleaner ever cancels last minute, we send someone automatically. It's only [Today] to have that safety net. Worth considering?"`,
+        rule: "Never ignore the interruption. Acknowledge it directly then pivot to the backup angle." },
+      { text: "[Interrupts] How much is it every month?", type: "branch",
+        reply: `"So from month two it's $59 a month. That covers your cleaner rate at $23/hour every time. But today you only pay [Today] to get started -- and your first cleaning is [free/discounted]. Want me to finish walking you through it?"`,
+        rule: "Give them the number directly. Never dodge a direct pricing question." }
+    ]
+  },
+  4: { // Booking
+    label: "During booking -- they might say...",
+    responses: [
+      { text: "I don't have my card on me right now", type: "branch",
+        reply: `"No problem at all -- I'll text you a secure payment link right now. You can complete it from your phone whenever you're ready. Should I send it to [phone number]?"`,
+        rule: "Send the link immediately while they're still on the call. Don't hang up before it's sent." },
+      { text: "Can I change the date later?", type: "branch",
+        reply: `"Absolutely -- you can reschedule through your dashboard up to 24 hours before. I'll note that down for you. Now let's lock in the first date so we have a slot reserved."`,
+        rule: "Answer yes, then immediately redirect back to locking in the date. Don't get derailed." },
+      { text: "What's the address for the cleaner?", type: "branch",
+        reply: `"Your cleaner will see your full address once they claim your request -- their details will show on your dashboard. Let me confirm the address I have: is it [address they gave]?"`,
+        rule: "Reassure then confirm. Keep the flow moving forward." },
+      { text: "I changed my mind / actually I don't want to proceed", type: "branch",
+        reply: `"Of course -- before I let you go, can I ask what changed? Was it the price, the timing, or something else? [listen] I just want to make sure I understand in case there's something I can help with."`,
+        rule: "This is a last-chance save. Find the trigger. If they're firm: close warmly. Never push hard at this stage." }
+    ]
+  },
+  5: { // Verbatim
+    label: "During verbatim -- they might say...",
+    responses: [
+      { text: "Wait -- I didn't know about that fee", type: "branch",
+        reply: `"I completely understand -- let me clarify. The fee is only {ETF} and it only applies if you cancel AFTER your first cleaning. If you cancel before the cleaning happens, there's no fee at all. And even with the fee in the worst case, you'd pay {WorstCase} -- still less than the {OTC} one-time rate. Does that make sense?"`,
+        rule: "Do NOT skip this. Address it fully, run the math, then RESUME the verbatim from where you stopped." },
+      { text: "Can you lower the monthly fee?", type: "branch",
+        reply: `"Let me see what I can do. [Go to Negotiation] I can work with you on that -- but I do need to finish reading through the terms first so you have everything. Can I finish that and then we'll look at the options?"`,
+        rule: "Acknowledge, promise to address it, finish the verbatim FIRST. Never negotiate in the middle of verbatim." },
+      { text: "Yes / clear / I understand [at end]", type: "good",
+        reply: "Perfect. The sale is confirmed. Move to the end screen and complete the after-call checklist." },
+      { text: "Actually I want to cancel / I changed my mind", type: "branch",
+        reply: `"Of course -- before I do anything, can I ask what specifically changed? Was it the monthly cost, the commitment, or something I explained?  [Find the trigger -- this is your last save opportunity before the call ends]"`,
+        rule: "Last save attempt. If they're firm after one try: process the cancellation and close warmly. Don't beg." }
+    ]
+  }
+};
+
+// Risk levels per phase
+const RISK_LEVELS = {
+  2: { level: "HIGH LOSS", color: "var(--pink)", icon: "🚨",
+       msg: "Sales Pitch -- most calls are lost here. Customer is deciding right now.",
+       sub: "Stay calm. Deliver the hook clean. STOP after 'How does that sound?' and wait." },
+  5: { level: "CRITICAL", color: "#ff4444", icon: "⚠️",
+       msg: "Verbatim -- second highest loss point. Every word matters. QA is scoring this.",
+       sub: "Read the whole block. Handle any objection AFTER finishing verbatim, not during." }
+};
+
+// SMS callback scripts
+const SMS_SCRIPTS = [
+  { label: "Callback reminder (they asked you to call back)", 
+    body: `Hi {Customer Name}, this is [Agent] from Homeaglow! Just following up on your house cleaning request. I have everything pulled up -- just need 2 minutes of your time to lock in your spot. When works best for a quick call today?` },
+  { label: "After 'I'll think about it' close",
+    body: `Hi {Customer Name}! Just sent over your cleaning details. Quick heads up -- the $19 first-month rate is available now, and your first {X} hours of cleaning are completely free. Happy to answer any questions before you decide! -- [Agent]` },
+  { label: "After 'needs to talk to spouse'",
+    body: `Hi {Customer Name}! Here's a quick summary for you and your partner: First cleaning {X} hrs, only {Today} today. Then $59/mo. You can cancel anytime. Happy to answer questions -- just reply here or I'll call at [time]. -- [Agent]` },
+  { label: "After card info declined (secure link)",
+    body: `Hi {Customer Name}! Here's your secure payment link to complete your booking: [INSERT LINK]. All encrypted, I never see your card info. Let me know if you have any questions! -- [Agent]` },
+  { label: "Cold re-engage (no answer, multiple attempts)",
+    body: `Hi {Customer Name}, this is [Agent] from Homeaglow. I've been trying to reach you about your cleaning request. If you're still interested, I can hold your rate for today -- just reply YES and I'll call you right back!` },
+  { label: "After 'I already found a cleaner'",
+    body: `Hi {Customer Name}! No problem at all. Just keeping this open in case your cleaner ever cancels last minute -- we automatically send a backup. It's only $19 to have that backup plan. Here if you need it! -- [Agent]` }
+];
+
+function renderPredicted(phaseIdx){
+  const p = PREDICTED[phaseIdx];
+  if(!p) return '';
+  return `<div class="predict-section">
+    <div class="predict-label">🔮 ${p.label}</div>
+    <div class="predict-chips">
+      ${p.responses.map((r,i)=>`
+        <button class="chip" onclick="showPredictReply(${phaseIdx},${i})" style="border-color:${r.type==='good'?'var(--green-border)':r.type==='branch'?'rgba(122,44,153,.4)':'var(--border)'}">
+          ${r.type==='good'?'✅':r.type==='branch'?'↩️':'💬'} ${r.text}
+        </button>`).join('')}
+    </div>
+    <div id="predict-reply-${phaseIdx}" style="display:none;margin-top:10px"></div>
+  </div>`;
+}
+
+function showPredictReply(phaseIdx, respIdx){
+  const p = PREDICTED[phaseIdx];
+  const r = p.responses[respIdx];
+  const el = document.getElementById('predict-reply-'+phaseIdx);
+  if(!el) return;
+  const isShowing = el.style.display !== 'none' && el.dataset.idx === String(respIdx);
+  if(isShowing){ el.style.display='none'; return; }
+  el.dataset.idx = respIdx;
+  el.style.display = 'block';
+  el.innerHTML = `
+    <div style="background:${r.type==='good'?'var(--green-bg)':'rgba(122,44,153,.15)'};border:1px solid ${r.type==='good'?'var(--green-border)':'rgba(122,44,153,.4)'};border-radius:8px;padding:12px 14px">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:${r.type==='good'?'var(--green)':'#a855f7'};margin-bottom:6px">${r.type==='good'?'Green light -- go':'Your reply'}</div>
+      <div style="font-size:14px;color:var(--text);line-height:1.6">${fill(r.reply)}</div>
+      ${r.rule?`<div style="margin-top:8px;font-size:12px;color:var(--gold);border-top:1px solid var(--border);padding-top:8px">⚡ ${r.rule}</div>`:''}
+    </div>`;
+}
+
+function renderRiskAlert(phaseIdx){
+  const r = RISK_LEVELS[phaseIdx];
+  if(!r) return '';
+  return `<div class="risk-banner">
+    <div class="risk-icon">${r.icon}</div>
+    <div class="risk-text">
+      <div class="risk-title">${r.level} PHASE -- ${r.msg}</div>
+      <div class="risk-sub">${r.sub}</div>
+    </div>
+  </div>`;
+}
+
+function renderSMSPanel(){
+  const h=hrs(), tc=todayCharge();
+  return `<div class="card" style="border-color:var(--gold-border)">
+    <div class="label" style="color:var(--gold)">📱 SMS / Callback scripts -- copy and send</div>
+    <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px">Use these when the call ends without a booking. Send immediately while the lead is still warm.</div>
+    ${SMS_SCRIPTS.map((s,i)=>`
+      <div class="sms-card">
+        <div class="sms-label">${s.label}</div>
+        <div class="sms-body" id="sms-${i}">${fill(s.body)}</div>
+        <button onclick="copySMS(${i})" style="margin-top:8px;padding:5px 12px;background:var(--gold-bg);border:1px solid var(--gold-border);border-radius:8px;color:var(--gold);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit">
+          📋 Copy
+        </button>
+        <span id="sms-copied-${i}" style="display:none;margin-left:8px;font-size:12px;color:var(--green)">Copied!</span>
+      </div>`).join('')}
+  </div>`;
+}
+
+function copySMS(i){
+  const el = document.getElementById('sms-'+i);
+  if(!el) return;
+  navigator.clipboard.writeText(el.innerText).then(()=>{
+    const copied = document.getElementById('sms-copied-'+i);
+    if(copied){ copied.style.display='inline'; setTimeout(()=>copied.style.display='none', 2000); }
+  });
 }
 
 
@@ -1362,6 +1613,9 @@ function render(){
     </div>`;
   }
 
+  // Risk alert at high-loss phases
+  html+=renderRiskAlert(pIdx);
+
   // Script / Pitch / Verbatim
   let scriptTxt='';
   if(p.isVerbatim)scriptTxt=verbatim();
@@ -1372,7 +1626,8 @@ function render(){
     <div class="script-block${p.legal?' legal':''}">
       <div class="vtag${p.legal?' legal':''}">${p.legal?'Legal verbatim -- do NOT paraphrase':'Guidance -- speak naturally around the gold values'}</div>
       <div id="live-script">${fill(scriptTxt)}</div>
-    </div>`;
+    </div>
+    ${renderPredicted(pIdx)}`;
   if(p.probes){
     html+=`<div style="margin-top:10px"><div class="label">Discovery probes -- pick ONE</div>`;
     p.probes.forEach(pr=>{html+=`<div style="padding:7px 11px;background:var(--panel2);border-radius:6px;margin-bottom:6px;font-size:13px;color:var(--text-secondary)">- ${pr}</div>`});
@@ -1429,7 +1684,7 @@ function render(){
     }
     html+=`<div class="btn-row">
       <button class="big-btn" onclick="goodToGo()" ${disabled?'disabled':''}>${disabled?'Pick an offer first -- log above':'Customer accepted -- Good to go, continue to Booking'}</button>
-      <button class="big-btn secondary" onclick="stage='obj-list';showMore=false;render()">${stage==='obj-reply'?'Another objection? Handle it':'Customer has a question -- handle it'}</button>
+      <button class="big-btn secondary" onclick="stage='obj-list';showMore=false;render()">${stage==='obj-reply'?'Another question or objection? Handle it':'Customer has a question or objection -- handle it'}</button>
       <button class="big-btn ghost" onclick="openModal('m-offscript')">? Something else -- Off-script help</button>
       ${pIdx>0?`<button class="big-btn back" onclick="goBack()">Back to Phase ${pIdx}</button>`:''}
     </div>`;
@@ -1518,5 +1773,6 @@ window.addEventListener('DOMContentLoaded',()=>{
   renderOffscript('');
 });
 </script>
+<div class="modal-overlay" id="m-sms"><div class="modal"><button class="modal-close" onclick="closeModal('m-sms')">&times;</button><h3>SMS / Callback scripts</h3><div class="desc">Send immediately when a call ends without a booking. Copy and paste into your SMS platform.</div><div id="sms-modal-content"></div><script>document.getElementById("m-sms").addEventListener("click",function(e){if(e.target===this)closeModal("m-sms")})</script></div></div>
 </body>
 </html>
