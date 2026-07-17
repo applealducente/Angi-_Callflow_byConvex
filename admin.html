@@ -1,40 +1,403 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin | Convex</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin -- ANGI Call Flow</title>
 <style>
-  :root{--bg:#1a1226;--panel:#241832;--border:#3a2851;--text:#f4ecdf;--text-secondary:#c9b8d4;--text-muted:#8f7a9c;--accent:#ff7a45;--gold:#ffb347;--coral:#ff5e78;--lilac:#c084fc}
-  body{margin:0;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(ellipse at top right,rgba(255,122,69,0.15),transparent 50%),radial-gradient(ellipse at bottom left,rgba(192,132,252,0.12),transparent 50%),var(--bg);background-attachment:fixed;min-height:100vh}
-  header{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;border-bottom:0.5px solid var(--border);background:rgba(26,18,38,0.85);backdrop-filter:blur(10px)}
-  .brand{font-size:15px;font-weight:700;letter-spacing:2px;background:linear-gradient(90deg,var(--gold),var(--accent),var(--coral));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-  nav a{color:var(--text-secondary);text-decoration:none;font-size:13px;margin-left:18px}
-  nav a:hover{color:var(--accent)}
-  main{max-width:760px;margin:0 auto;padding:28px 24px 80px}
-  h1{font-size:22px;font-weight:600;margin:0 0 4px}
-  p.subtitle{color:var(--text-secondary);font-size:14px;margin:0 0 24px}
-  table{width:100%;border-collapse:collapse;font-size:13.5px;background:var(--panel);border-radius:12px;overflow:hidden}
-  th,td{text-align:left;padding:12px 16px;border-bottom:0.5px solid var(--border)}
-  tr:last-child td{border-bottom:none}
-  th{color:var(--gold);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.6px;background:rgba(255,122,69,0.05)}
-  .note{margin-top:24px;color:var(--text-muted);font-size:13px}
+:root{--bg:#140b1a;--panel:#241531;--panel2:#2f1a3f;--panel3:#3d2352;--border:#4a2d5e;--text:#fdf3ea;--text-secondary:#c9b0be;--text-muted:#9078a0;--coral:#F58F6B;--gold:#F2B85A;--pink:#E85567;--magenta:#D14494;--green:#4CD97B}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100vh}
+header{display:flex;align-items:center;justify-content:space-between;padding:12px 24px;border-bottom:.5px solid var(--border);background:var(--bg);position:sticky;top:0;z-index:10}
+.brand{font-size:15px;font-weight:700;background:linear-gradient(90deg,var(--coral),var(--magenta));-webkit-background-clip:text;background-clip:text;color:transparent}
+nav a{color:var(--text-secondary);text-decoration:none;font-size:13px;margin-left:18px}
+.convex-logo{height:34px;background:#fff;border-radius:5px;padding:2px 7px}
+.save-bar{display:flex;align-items:center;gap:10px}
+.btn{padding:8px 16px;border-radius:8px;border:none;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
+.btn-primary{background:linear-gradient(135deg,var(--coral),var(--magenta));color:#fff}
+.btn-primary:hover{opacity:.9}
+.btn-secondary{background:var(--panel2);color:var(--text);border:1px solid var(--border)}
+.btn-secondary:hover{border-color:var(--gold)}
+.btn-danger{background:rgba(232,85,103,.15);color:var(--pink);border:1px solid rgba(232,85,103,.4)}
+.btn-danger:hover{background:var(--pink);color:#fff}
+.btn-sm{padding:5px 11px;font-size:12px}
+.gate{max-width:380px;margin:80px auto;background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:28px;text-align:center}
+.gate h2{margin:0 0 6px}
+.gate p{color:var(--text-secondary);font-size:13px;margin:0 0 20px}
+.field{margin-bottom:12px;text-align:left}
+.field label{display:block;font-size:11px;color:var(--text-secondary);font-weight:600;text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px}
+.field input{width:100%;background:var(--panel2);border:1px solid var(--border);color:var(--text);padding:10px 12px;border-radius:8px;font-size:14px;font-family:inherit}
+.field input:focus{outline:none;border-color:var(--coral)}
+.err{color:var(--pink);font-size:13px;margin-top:8px;display:none}
+main{max-width:940px;margin:0 auto;padding:24px 24px 80px}
+h1{font-size:20px;font-weight:600;margin:0 0 4px}
+.subtitle{color:var(--text-secondary);font-size:13px;margin:0 0 22px}
+.tab-bar{display:flex;gap:2px;border-bottom:1px solid var(--border);margin-bottom:24px;overflow-x:auto}
+.tab{padding:10px 18px;border:none;background:transparent;color:var(--text-muted);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;border-bottom:2px solid transparent;white-space:nowrap;transition:.15s}
+.tab.active{color:var(--coral);border-bottom-color:var(--coral)}
+.tab:hover:not(.active){color:var(--text)}
+.section{display:none}
+.section.active{display:block}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:14px}
+.card-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--gold);margin-bottom:12px}
+.lbl{display:block;font-size:11px;color:var(--text-secondary);font-weight:600;text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px;margin-top:12px}
+textarea,input[type=text],input[type=password],input[type=number],select{background:var(--panel2);border:1px solid var(--border);color:var(--text);padding:9px 12px;border-radius:8px;font-size:13px;font-family:inherit}
+textarea{width:100%;resize:vertical;min-height:80px;line-height:1.55}
+input[type=text],input[type=password],input[type=number]{width:100%}
+textarea:focus,input:focus,select:focus{outline:none;border-color:var(--coral)}
+select{width:100%}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.row-item{display:flex;align-items:center;gap:10px;background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;margin-bottom:8px}
+.row-item input{flex:1;background:transparent;border:none;color:var(--text);font-size:13px;font-family:inherit;padding:0}
+.row-item input:focus{outline:none}
+.add-btn{background:transparent;border:1px dashed var(--border);border-radius:8px;padding:10px;width:100%;color:var(--text-muted);font-size:13px;cursor:pointer;font-family:inherit;margin-top:6px}
+.add-btn:hover{border-color:var(--coral);color:var(--coral)}
+.hint-box{background:rgba(242,184,90,.08);border:1px solid rgba(242,184,90,.25);border-radius:8px;padding:10px 14px;font-size:12.5px;color:var(--text-secondary);margin-bottom:14px;line-height:1.5}
+.success-toast{position:fixed;top:20px;right:20px;background:rgba(76,217,123,.2);border:1px solid rgba(76,217,123,.4);border-radius:8px;padding:10px 16px;color:var(--green);font-size:13px;font-weight:600;z-index:999;display:none}
+hr{border:none;border-top:1px solid var(--border);margin:18px 0}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--panel2);border:1px solid var(--border);border-radius:8px;margin-bottom:8px}
+.toggle-row span{font-size:13px;color:var(--text)}
+#admin-content{display:none}
 </style>
 </head>
 <body>
 <header>
-  <div class="brand">CONVEX</div>
+  <div class="brand">ANGI Call Flow -- Admin</div>
   <nav><a href="index.html">Guide</a><a href="dashboard.html">Usage</a></nav>
+  <div class="save-bar">
+    <button class="btn btn-primary" onclick="saveAndPublish()" id="publish-btn">Save &amp; publish live</button>
+    <button class="btn btn-secondary" onclick="resetToDefaults()">Reset to defaults</button>
+    <button class="btn btn-secondary" onclick="logout()">Log out</button>
+  </div>
+  <img src="convex-logo.png" alt="Convex" class="convex-logo">
 </header>
+
+<div id="gate-view">
+  <div class="gate">
+    <img src="convex-logo.png" style="height:44px;background:#fff;padding:4px 10px;border-radius:8px;margin-bottom:14px">
+    <h2>Admin Access</h2>
+    <p>Two-factor required.</p>
+    <div class="field"><label>Admin Password</label><input type="password" id="pw" placeholder="Password" onkeydown="if(event.key==='Enter')document.getElementById('code').focus()"></div>
+    <div class="field"><label>Secret Code</label><input type="password" id="code" placeholder="Secret code" onkeydown="if(event.key==='Enter')tryLogin()"></div>
+    <button class="btn btn-primary" style="width:100%;padding:12px;font-size:14px" onclick="tryLogin()">Sign in to Admin</button>
+    <div class="err" id="login-err">Incorrect password or code.</div>
+  </div>
+</div>
+
+<div id="admin-content">
+<div class="success-toast" id="toast"></div>
 <main>
-  <h1>Admin</h1>
-  <p class="subtitle">Team rosters and content ownership.</p>
-  <table>
-    <tr><th>Deliverable</th><th>Owner</th><th>Status</th></tr>
-    <tr><td>Call flow guide (this page)</td><td>Apple</td><td>Draft</td></tr>
-    <tr><td>VoiceLab simulator (5 scenarios)</td><td>Training &mdash; TBD</td><td>Not started</td></tr>
-    <tr><td>Callback tagging fix</td><td>NLS</td><td>In progress</td></tr>
-  </table>
-  <p class="note">Placeholder page. Replace with real team/role management when this moves past draft.</p>
+  <h1>Admin Panel</h1>
+  <p class="subtitle">Changes save to Upstash and update for all agents immediately after clicking Save &amp; publish live.</p>
+
+  <div class="tab-bar">
+    <button class="tab active" onclick="showTab('scripts',this)">Tabs &amp; Scripts</button>
+    <button class="tab" onclick="showTab('rates',this)">Calculator Rates</button>
+    <button class="tab" onclick="showTab('footer',this)">Footer Buttons</button>
+    <button class="tab" onclick="showTab('teams',this)">Teams</button>
+    <button class="tab" onclick="showTab('settings',this)">Settings</button>
+  </div>
+
+  <!-- TABS & SCRIPTS -->
+  <div class="section active" id="tab-scripts">
+    <div class="hint-box">Edit the script content for each call phase. Content supports plain text. Use {Customer Name}, {Agent Name}, {Today}, {ETF}, {MF}, {Term}, {X hours}, {Focus}, {DateTime}, {AltDateTime} as dynamic fields.</div>
+    <div id="scripts-list"></div>
+    <div class="card" style="border:1px dashed var(--border)">
+      <div class="card-title">Announcement banner</div>
+      <span class="lbl" style="margin-top:0">Banner text (leave blank to hide)</span>
+      <textarea id="ann-text" rows="2" placeholder="e.g. COMPLIANCE: Always say 'plus applicable taxes' after ETF amount."></textarea>
+      <span class="lbl">Type</span>
+      <select id="ann-type"><option value="info">Info</option><option value="warning">Warning</option><option value="urgent">Urgent / Red</option></select>
+    </div>
+  </div>
+
+  <!-- CALCULATOR RATES -->
+  <div class="section" id="tab-rates">
+    <div class="hint-box">Global rates used across all calculators in the call flow. Changes apply immediately after Save &amp; publish live.</div>
+    <div class="card">
+      <div class="card-title">Rate settings</div>
+      <div class="grid2">
+        <div><span class="lbl">ETF rate ($/hr)</span><input type="number" id="r-etf" value="35"></div>
+        <div><span class="lbl">FCF membership fee ($/mo standard)</span><input type="number" id="r-mf" value="59"></div>
+        <div><span class="lbl">FCF recurring rate ($/hr)</span><input type="number" id="r-cpc" value="23"></div>
+        <div><span class="lbl">OTC rate ($/hr)</span><input type="number" id="r-otc" value="63"></div>
+        <div><span class="lbl">Trial rate ($/hr)</span><input type="number" id="r-trial" value="52.5"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">DHJ Voucher pricing (hours : today's charge)</div>
+      <div id="voucher-list"></div>
+      <button class="add-btn" onclick="addVoucherRow()">+ Add hours tier</button>
+    </div>
+    <div class="card">
+      <div class="card-title">National average reference pricing (hours : price)</div>
+      <div id="natavg-list"></div>
+      <button class="add-btn" onclick="addNatAvgRow()">+ Add hours tier</button>
+    </div>
+    <div class="card">
+      <div class="card-title">Membership fee options ($/mo) -- shown in negotiation ladder</div>
+      <div id="mf-list"></div>
+      <button class="add-btn" onclick="addMFRow()">+ Add fee option</button>
+    </div>
+    <div class="card">
+      <div class="card-title">Frequency options (visits / month)</div>
+      <div id="freq-list"></div>
+      <button class="add-btn" onclick="addFreqRow()">+ Add frequency option</button>
+    </div>
+  </div>
+
+  <!-- FOOTER BUTTONS -->
+  <div class="section" id="tab-footer">
+    <div class="hint-box">Shortcut buttons on the floating toolbar (bottom-right of the call flow). Each button opens a modal. Icon field accepts an emoji.</div>
+    <div id="footer-list"></div>
+    <button class="add-btn" onclick="addFooterRow()">+ Add footer button</button>
+  </div>
+
+  <!-- TEAMS -->
+  <div class="section" id="tab-teams">
+    <div class="hint-box">Teams that appear in the sign-in dropdown. Uncheck Active to hide a team from sign-in without deleting it. Changes apply after Save &amp; publish live -- no redeployment needed.</div>
+    <div id="teams-list"></div>
+    <button class="add-btn" onclick="addTeamRow()">+ Add team</button>
+  </div>
+
+  <!-- SETTINGS -->
+  <div class="section" id="tab-settings">
+    <div class="card">
+      <div class="card-title">Change credentials</div>
+      <div class="grid2">
+        <div><span class="lbl">New admin password</span><input type="password" id="new-pw" placeholder="New password"></div>
+        <div><span class="lbl">New secret code</span><input type="password" id="new-code" placeholder="New code"></div>
+      </div>
+      <div><span class="lbl">New dashboard password</span><input type="password" id="new-dash-pw" placeholder="New dashboard password" style="max-width:300px"></div>
+      <button class="btn btn-primary btn-sm" style="margin-top:14px" onclick="saveCredentials()">Update credentials</button>
+    </div>
+    <div class="card" style="border-color:rgba(232,85,103,.35)">
+      <div class="card-title" style="color:var(--pink)">Danger zone</div>
+      <p style="font-size:13px;color:var(--text-secondary);margin:0 0 12px">These actions cannot be undone.</p>
+      <button class="btn btn-danger btn-sm" onclick="clearSessions()">Clear all session logs</button>
+      &nbsp;&nbsp;
+      <button class="btn btn-danger btn-sm" onclick="resetToDefaults()">Reset all to defaults</button>
+    </div>
+  </div>
 </main>
+</div>
+
+<script>
+const UPSTASH_URL = "https://smiling-tomcat-118187.upstash.io";
+const UPSTASH_TOKEN = "gQAAAAAAAc2rAAIgcDFkMjMzZDVjYmZhMGU0ZjkwOTU3M2NmMzIyNjlkYTRlNA";
+const KEYS = {config:'angi:admin:config', creds:'angi:admin:credentials', dashPw:'angi:dash-password', sessions:'angi:sessions'};
+const DEFAULT_PW = 'convex2024', DEFAULT_CODE = 'angi-admin';
+
+async function up(cmd){
+  const r = await fetch(`${UPSTASH_URL}/pipeline`,{method:'POST',headers:{'Authorization':`Bearer ${UPSTASH_TOKEN}`,'Content-Type':'application/json'},body:JSON.stringify([cmd])});
+  return (await r.json())[0]?.result;
+}
+async function upGet(k){ const r=await up(['GET',k]); return r?JSON.parse(r):null; }
+async function upSet(k,v){ await up(['SET',k,JSON.stringify(v)]); }
+
+// ============ AUTH ============
+async function tryLogin(){
+  const pw=document.getElementById('pw').value, code=document.getElementById('code').value;
+  const saved = await upGet(KEYS.creds) || {pw:DEFAULT_PW,code:DEFAULT_CODE};
+  if(pw===saved.pw && code===saved.code){
+    document.getElementById('gate-view').style.display='none';
+    document.getElementById('admin-content').style.display='block';
+    loadAllData();
+  } else {
+    const err=document.getElementById('login-err');
+    err.style.display='block';setTimeout(()=>err.style.display='none',3000);
+  }
+}
+function logout(){ location.reload(); }
+
+// ============ TABS ============
+function showTab(id,el){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  el.classList.add('active');
+}
+
+// ============ TOAST ============
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent='✓ '+msg; t.style.display='block';
+  setTimeout(()=>t.style.display='none',2500);
+}
+
+// ============ DEFAULT DATA ============
+const DEFAULTS = {
+  scripts:[
+    {label:'Opening',title:'Phase 1: Opening',content:'Hi, is this {Customer Name}?\n\nHi {Customer Name}, this is {Agent Name} with Homeaglow on a recorded line.\n\nI\'m reaching out because you recently requested a house cleaning through Angi. I\'ve already got your request in front of me - I won\'t make you repeat what you entered.\n\nI just need a couple minutes to lock in the right option for your home. Sounds good?'},
+    {label:'Discovery',title:'Phase 2: Discovery',content:'Perfect. I can see the basics from your request. The one thing it doesn\'t tell me is - what made now the right time to look for a cleaner?\n\n[Listen. Use one probe if needed.]\n\nQuick confirm: you\'re at {Bedrooms} bedrooms, {Bathrooms} bathrooms, looking for {Frequency} cleaning in {City}. Is that right?'},
+    {label:'Sales Pitch',title:'Phase 3: Sales Pitch',content:'[Pitch generated automatically from bedrooms + bathrooms. Speak naturally around the numbers.]\n\nPart I: Anchor with national average, then drop the free cleaning hook. STOP after the hook and wait.\n\nPart II: Deliver only after they say yes or tell me more.'},
+    {label:'Negotiation',title:'Phase 4: Negotiation',content:'Step 1: I totally understand.\n\nStep 2: Is the membership not a good fit because of the cost, there is a commitment, or because you just don\'t feel you need regular cleanings right now?\n\n[Wait. Then adjust MF or term based on their answer.]'},
+    {label:'Booking',title:'Phase 5: Booking',content:'Perfect. Let\'s find a day that works.\n\nWould [Tuesday morning] or [Wednesday afternoon] work better?\n\nAnd just in case - do you have an alternate date if a cleaner isn\'t available?\n\nGreat. Taking payment now for {Today} to lock in your slot.'},
+    {label:'Verbatim',title:'Phase 6: Verbatim (Legal)',content:'[Verbatim generated automatically from hours and offer type selected. Read word-for-word. Do NOT paraphrase.]'}
+  ],
+  rates:{etf:35,mf:59,cpc:23,otc:63,trial:52.5},
+  voucher:[{h:2,p:19},{h:3,p:19},{h:4,p:38},{h:6,p:78}],
+  natavg:[{h:2,p:150},{h:3,p:225},{h:4,p:300},{h:6,p:450}],
+  mfOptions:[59,54,49],
+  freqOptions:[1,2,3,4],
+  footer:[
+    {icon:'?',label:'Off-script help',modal:'m-offscript'},
+    {icon:'💰',label:'Pricing tables',modal:'m-pricing'},
+    {icon:'🧮',label:'FCF calculator',modal:'m-fcfcalc'},
+    {icon:'📋',label:'OTC / Trial calc',modal:'m-otccalc'},
+    {icon:'📊',label:'Worst-case savings',modal:'m-worstcase'},
+    {icon:'📝',label:'Notes',modal:'m-notes'},
+    {icon:'📱',label:'SMS callback scripts',modal:'m-sms'}
+  ],
+  teams:[
+    {name:'Angi Sales',active:true},
+    {name:'Angi Training',active:true},
+    {name:'Team Lead / QA',active:true}
+  ],
+  announcement:{text:'',type:'info'}
+};
+
+let config = JSON.parse(JSON.stringify(DEFAULTS));
+
+// ============ LOAD ============
+async function loadAllData(){
+  const saved = await upGet(KEYS.config);
+  if(saved) config = {...DEFAULTS,...saved};
+  else config = JSON.parse(JSON.stringify(DEFAULTS));
+  renderScripts();
+  renderRates();
+  renderFooter();
+  renderTeams();
+  document.getElementById('ann-text').value = config.announcement?.text||'';
+  document.getElementById('ann-type').value = config.announcement?.type||'info';
+}
+
+// ============ SCRIPTS ============
+function renderScripts(){
+  const list = document.getElementById('scripts-list');
+  list.innerHTML = config.scripts.map((s,i)=>`
+    <div class="card">
+      <div class="card-title">Phase ${i+1}</div>
+      <div class="grid2">
+        <div><span class="lbl" style="margin-top:0">Nav label</span><input type="text" value="${s.label}" oninput="config.scripts[${i}].label=this.value"></div>
+        <div><span class="lbl" style="margin-top:0">Page title</span><input type="text" value="${s.title}" oninput="config.scripts[${i}].title=this.value"></div>
+      </div>
+      <span class="lbl">Script content</span>
+      <textarea rows="6" oninput="config.scripts[${i}].content=this.value">${s.content}</textarea>
+    </div>`).join('');
+}
+
+// ============ RATES ============
+function renderRates(){
+  document.getElementById('r-etf').value = config.rates?.etf||35;
+  document.getElementById('r-mf').value = config.rates?.mf||59;
+  document.getElementById('r-cpc').value = config.rates?.cpc||23;
+  document.getElementById('r-otc').value = config.rates?.otc||63;
+  document.getElementById('r-trial').value = config.rates?.trial||52.5;
+
+  document.getElementById('voucher-list').innerHTML = (config.voucher||[]).map((v,i)=>`
+    <div class="row-item">
+      <input type="number" value="${v.h}" placeholder="hrs" style="max-width:70px" oninput="config.voucher[${i}].h=+this.value">
+      <input type="number" value="${v.p}" placeholder="price" oninput="config.voucher[${i}].p=+this.value">
+      <button class="btn btn-danger btn-sm" onclick="config.voucher.splice(${i},1);renderRates()">Remove</button>
+    </div>`).join('');
+
+  document.getElementById('natavg-list').innerHTML = (config.natavg||[]).map((v,i)=>`
+    <div class="row-item">
+      <input type="number" value="${v.h}" placeholder="hrs" style="max-width:70px" oninput="config.natavg[${i}].h=+this.value">
+      <input type="number" value="${v.p}" placeholder="price" oninput="config.natavg[${i}].p=+this.value">
+      <button class="btn btn-danger btn-sm" onclick="config.natavg.splice(${i},1);renderRates()">Remove</button>
+    </div>`).join('');
+
+  document.getElementById('mf-list').innerHTML = (config.mfOptions||[]).map((v,i)=>`
+    <div class="row-item">
+      <input type="number" value="${v}" placeholder="$/mo" oninput="config.mfOptions[${i}]=+this.value">
+      <button class="btn btn-danger btn-sm" onclick="config.mfOptions.splice(${i},1);renderRates()">Remove</button>
+    </div>`).join('');
+
+  document.getElementById('freq-list').innerHTML = (config.freqOptions||[]).map((v,i)=>`
+    <div class="row-item">
+      <input type="number" value="${v}" placeholder="visits/mo" oninput="config.freqOptions[${i}]=+this.value">
+      <button class="btn btn-danger btn-sm" onclick="config.freqOptions.splice(${i},1);renderRates()">Remove</button>
+    </div>`).join('');
+}
+function addVoucherRow(){config.voucher.push({h:0,p:0});renderRates();}
+function addNatAvgRow(){config.natavg.push({h:0,p:0});renderRates();}
+function addMFRow(){config.mfOptions.push(0);renderRates();}
+function addFreqRow(){config.freqOptions.push(1);renderRates();}
+
+// ============ FOOTER BUTTONS ============
+function renderFooter(){
+  document.getElementById('footer-list').innerHTML = (config.footer||[]).map((b,i)=>`
+    <div class="row-item">
+      <input type="text" value="${b.icon}" style="max-width:44px;text-align:center" oninput="config.footer[${i}].icon=this.value">
+      <input type="text" value="${b.label}" placeholder="Button label" oninput="config.footer[${i}].label=this.value">
+      <input type="text" value="${b.modal}" placeholder="Modal ID" style="max-width:160px" oninput="config.footer[${i}].modal=this.value">
+      <button class="btn btn-danger btn-sm" onclick="config.footer.splice(${i},1);renderFooter()">Remove</button>
+    </div>`).join('');
+}
+function addFooterRow(){config.footer.push({icon:'⭐',label:'New button',modal:''});renderFooter();}
+
+// ============ TEAMS ============
+function renderTeams(){
+  document.getElementById('teams-list').innerHTML = (config.teams||[]).map((t,i)=>`
+    <div class="toggle-row">
+      <input type="text" value="${t.name}" style="flex:1;background:transparent;border:none;color:var(--text);font-size:13px;font-family:inherit" oninput="config.teams[${i}].name=this.value">
+      <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-secondary);cursor:pointer">
+        <input type="checkbox" ${t.active?'checked':''} onchange="config.teams[${i}].active=this.checked"> Active
+      </label>
+      <button class="btn btn-danger btn-sm" style="margin-left:8px" onclick="config.teams.splice(${i},1);renderTeams()">Remove</button>
+    </div>`).join('');
+}
+function addTeamRow(){config.teams.push({name:'New Team',active:true});renderTeams();}
+
+// ============ SAVE & PUBLISH ============
+async function saveAndPublish(){
+  const btn = document.getElementById('publish-btn');
+  btn.textContent='Saving...'; btn.disabled=true;
+  // Collect rates from inputs
+  config.rates = {
+    etf:+document.getElementById('r-etf').value,
+    mf:+document.getElementById('r-mf').value,
+    cpc:+document.getElementById('r-cpc').value,
+    otc:+document.getElementById('r-otc').value,
+    trial:+document.getElementById('r-trial').value
+  };
+  config.announcement = {
+    text:document.getElementById('ann-text').value,
+    type:document.getElementById('ann-type').value
+  };
+  await upSet(KEYS.config, config);
+  btn.textContent='Save & publish live'; btn.disabled=false;
+  showToast('Published! All agents see changes immediately.');
+}
+
+// ============ CREDENTIALS ============
+async function saveCredentials(){
+  const pw=document.getElementById('new-pw').value;
+  const code=document.getElementById('new-code').value;
+  const dashPw=document.getElementById('new-dash-pw').value;
+  if(pw&&code) await upSet(KEYS.creds,{pw,code});
+  if(dashPw) await upSet(KEYS.dashPw,dashPw);
+  showToast('Credentials updated successfully.');
+  document.getElementById('new-pw').value='';
+  document.getElementById('new-code').value='';
+  document.getElementById('new-dash-pw').value='';
+}
+
+async function clearSessions(){
+  if(!confirm('Delete ALL session logs permanently?'))return;
+  await upSet(KEYS.sessions,[]);
+  showToast('Session logs cleared.');
+}
+
+async function resetToDefaults(){
+  if(!confirm('Reset all scripts, rates, teams, and buttons to defaults? This cannot be undone.'))return;
+  await upSet(KEYS.config, DEFAULTS);
+  config = JSON.parse(JSON.stringify(DEFAULTS));
+  renderScripts(); renderRates(); renderFooter(); renderTeams();
+  showToast('Reset to defaults.');
+}
+</script>
 </body>
 </html>
