@@ -608,57 +608,165 @@ Great. Taking payment now for {Today} to lock in your slot.`,
 
 // ============ OBJECTIONS ============
 const PRIO_OBJ=[
-{id:1,name:"I don't want a membership",cust:"I don't want a membership / commitment / subscription.",hint:"Compare worst-case to OTC. It always wins.",
- reply:`I get it - "membership" can sound like a big deal. The {Today} isn't really an extra fee. It's just how you get the cleaning at the lowest price.
+{id:1,name:"Don't want a membership / commitment",
+ cust:"I don't want to be locked into a membership / I don't want a subscription / I don't want a commitment.",
+ hint:"Most common Angi objection. Lead with the math -- worst case they still beat OTC. Then negotiate.",
+ reply:`I completely get it -- nobody wants to feel locked in. Here's the honest truth though: the $19 today isn't a trap. It's just how you get the cleaning at the lowest price.
 
-Here's the thing: a one-time {X hours} cleaning costs {OTC}. With ForeverClean, you pay {Today} today, your first cleaning is free, and even if the membership ends up not being for you long-term, your total cost would still only be {WorstCase} - less than the {OTC} one-time.
+Here's the math: a one-time {X hours} cleaning runs {OTC}. With ForeverClean, you pay {Today} today, your first cleaning is free, and even if you cancel early, your total would only be {WorstCase} -- still less than the {OTC} one-time.
 
-The membership is a {Term}-month agreement with {MF} a month starting from your second month. The cancellation fee only applies if you end it early. But either way, signing up today saves you money, and you keep the option to stay on at $23/hour if you love us. Want me to set it up?`,
- rules:["Do NOT use the word 'try.'","Compare worst-case to OTC - it always wins.","If still resistant: go to negotiation."]},
-{id:2,name:"Let me see the cleaning first",cust:"I want to see how the cleaning goes first / I want to experience it before committing.",hint:"$19 gets the full cleaning. Show the math.",
- reply:`Totally fair - nobody wants to sign up for something they haven't experienced yet. Good news is, the {Today} today gets you the full cleaning AND your first month of membership.
+The membership is just {Term} months at {MF} a month starting from month two. If it's ever not the right fit, you cancel. No phone-tree, no runaround.
 
-Here's how the numbers work: a one-time {X hours} cleaning is {OTC}. With ForeverClean, you pay {Today} today, your first cleaning is free, and even if the membership ends up not being for you long-term, your total cost would still only be {WorstCase} - less than the {OTC} one-time.
+Would you like to give it a shot?`,
+ rules:["NEVER say 'locked in' back to them -- never validate that framing.",
+        "Lead with the worst-case math. It always wins against OTC.",
+        "If still resistant: go to Negotiation -- offer $54, then $49, then lower term."]},
+{id:2,name:"Need to consult spouse / partner",
+ cust:"I need to talk to my husband/wife/partner first / let me check with my spouse.",
+ hint:"Usually a stall, not a real objection. Find the REAL reason before ending the call.",
+ reply:`Totally understandable. Just so I know how to best help -- is it more about the cost, the commitment length, or just a timing thing?
 
-The membership is a {Term}-month commitment with {MF} a month from month 2, and a cancellation fee only applies if you end it early. But either way, you're getting your first cleaning at the lowest possible price. And if you love us, you stay on at $23/hour. Should I get you set up?`,
- rules:["Do NOT use the word 'try.'","Show the worst-case math."]},
-{id:3,name:"Why is it cheaper this way?",cust:"Why would the company do that? / Why is the membership cheaper?",hint:"Honest business logic.",
- reply:`Honestly, because we'd rather earn your business as a long-term member than make a one-time sale. Most of our members stay on once they see the savings at $23/hour. Either way, the math works out better for you than a one-time.`,
- rules:["Be honest and direct."]},
-{id:4,name:"What's the catch?",cust:"What's the catch? / This sounds too good to be true.",hint:"Name the only real commitment upfront.",
- reply:`Fair question. The only real commitment is the {Term} months, and the cancellation fee if you end early - and I already walked you through both. Everything else is exactly as I described: {Today} today, free cleaning, $23 per hour after. No hidden fees. That's it.`,
- rules:["Name ETF and term again clearly."]},
-{id:5,name:"Sticker shock / that's too much",cust:"That's too expensive / more than I expected.",hint:"Work backward from THEIR number. Go to Negotiation.",
+[Listen. That's the real objection -- handle THAT, not the spouse.]
+
+If they genuinely need to check: Perfect -- what I'll do is send you a quick summary by text right now so you have all the numbers in front of you. When's a good time tomorrow for a quick follow-up call?
+
+[Get a SPECIFIC time -- not "later" or "tomorrow."]`,
+ rules:["Never accept 'I'll call you back' as an ending. Get a specific callback time.",
+        "Find the real objection hidden behind the spouse -- cost, commitment, or timing.",
+        "Text them a summary immediately so the conversation stays warm."]},
+{id:3,name:"Not interested",
+ cust:"I'm not interested / I didn't sign up for this / Just take me off your list.",
+ hint:"Soft no on Angi = they forgot they signed up. Reconnect to the ORIGINAL need first.",
+ reply:`I hear you -- and I won't keep you long. I just want to make sure I have the right person. You did request a house cleaning through Angi recently -- I just want to make sure you got what you were looking for.
+
+If you found someone already, totally fine! But if not, I can have a cleaner in your area ready in a few minutes. What made you reach out in the first place?
+
+[If they engage: you're back in Discovery. If they still say no: respect it and close warmly.]`,
+ rules:["Don't argue. Reconnect them to their OWN reason for reaching out.",
+        "One soft redirect -- if they say no twice, let them go. Bad burn is worse than no sale.",
+        "Never say 'I understand you're not interested' -- that confirms the no."]},
+{id:4,name:"Thinks this is a scam",
+ cust:"This sounds like a scam / How do I know this is legit / I don't trust this.",
+ hint:"Trust objection -- never get defensive. Validate their skepticism, then give evidence.",
+ reply:`You know what? That's actually a smart reaction -- there's a lot of noise out there and I respect that you're being careful.
+
+Here's what I can tell you: Homeaglow has been operating for years, we're listed on Angi -- which does its own vetting -- and every cleaner is background-checked and rated by real customers in your area. You can see their reviews before anyone comes to your home.
+
+And honestly? We don't charge you anything significant today -- it's just {Today} to lock in your slot. If anything ever feels off, you have 30 days and you can cancel. No risk on your end.
+
+Would it help if I texted you our website link and some reviews from your area right now?`,
+ rules:["NEVER get defensive or say 'we're not a scam.'",
+        "Validate the skepticism -- it builds credibility.",
+        "Offer low-risk proof: text a link, mention Angi vetting, offer 30-day cancel window."]},
+{id:5,name:"Pricing concerns / too expensive",
+ cust:"That's too much / I was expecting it to be cheaper / The price is too high.",
+ hint:"Never defend your price. Work backward from THEIR number. Then use worst-case math.",
  reply:`I hear you. What were you thinking of spending?
 
-[Wait for their number. Work backward from it, not yours.]
+[Wait for their number. Do not fill the silence.]
 
-Let me see what lighter option I can get you. [Go to Negotiation phase]`,
- rules:["Anchor ONE total.","Don't defend your number.","Head to Negotiation after this."]}
+[Once they give a number:]
+Okay, let me see what I can do to get you closer to that. [Go to Negotiation -- adjust MF and/or term]
+
+And just so you have the full picture: even in the worst case -- if you did the membership and then cancelled right after the first cleaning -- your total would be {WorstCase}. A one-time cleaning in your area runs {OTC}. So you'd still come out ahead.`,
+ rules:["Never say 'that's our price' -- it ends the conversation.",
+        "Work backward from their number, not from yours.",
+        "Worst-case math is your most powerful tool -- use it every time."]},
 ];
+
 const OTHER_OBJ=[
-{cust:"I already have a cleaner.",reply:"Honestly? Keep them. What people use us for is a backup if yours ever cancels. It's a plan B, not a replacement."},
-{cust:"Will you charge my card automatically?",reply:"Only after cleanings you book and approve. Nothing in the background."},
-{cust:"I'd rather pay cash.",reply:"On our platform payment runs through the app. Want me to text you a secure link to enter payment yourself?"},
-{cust:"The ETF is too high.",reply:"That fee only applies if you cancel before {Term} months and have completed a cleaning. And the worst case is {WorstCase} - still less than a one-time cleaning."},
-{cust:"I need to talk to my spouse.",reply:"Absolutely. Is your spouse concerned about the cost, the length, or making the decision together? [Whichever they say is the real objection.]"},
-{cust:"I thought I was just getting a quote.",reply:"You are - here it is. For {X hours}, it's {Today} today with the first cleaning free. Two minutes and we can lock it in."},
-{cust:"I've been burned by subscriptions.",reply:"Completely fair. No charges without your approval, and you can cancel anytime for {ETF}. I'll text you the cancel link right after."}
+{cust:"Does not want to give card info",
+ reply:`Completely fair -- card security is important. Here's how it works: your payment goes through Angi's secure platform, not through me directly. I never see your card number. It's the same encryption Amazon uses.
+
+If you'd feel more comfortable, I can text you a secure link and you can enter it yourself on your own device. Would that work?`,
+ rules:["Never push for card info directly. Offer the secure link option.",
+        "Mention Angi's platform -- they trust Angi more than the agent."]},
+{cust:"Negative review / bad experience online",
+ reply:`I'm really glad you mentioned that -- I'd rather know than have you wonder. Can I ask what you saw specifically?
+
+[Listen. Then respond to the specific issue, not a generic defense.]
+
+Here's what I can tell you: every cleaner is rated by real customers and we stand behind every booking. If a cleaning ever doesn't meet your standard, we send someone back within 24 hours or we refund it. That's our guarantee.
+
+Would it be worth giving us one shot based on that?`,
+ rules:["Ask what specifically they saw -- then address THAT, not a generic bad review.",
+        "Mention the 24-hour rebook or refund guarantee."]},
+{cust:"Wants to pay cash / doesn't want to pay online",
+ reply:`Totally get it -- a lot of people prefer cash. On our platform though, payment always runs through the app for safety -- it protects both you and the cleaner. The cleaner never handles cash or payment directly.
+
+What I can do is text you a secure payment link right now so you can enter it on your own phone. You'll see exactly what's being charged before you confirm. Does that work?`,
+ rules:["Never say 'we don't accept cash' bluntly.",
+        "Pivot to the secure link -- gives them control."]},
+{cust:"Don't need it that often / won't use it regularly",
+ reply:`That's totally fine -- ForeverClean isn't just for people who clean every week. A lot of our customers use it once a month and they still save significantly over booking one-time each time.
+
+And even if you only use it a couple times, the math still works in your favor -- your first cleaning is free or heavily discounted, and your rate stays at $23/hour every time you do use it.
+
+How often were you thinking of having cleanings?`,
+ rules:["Reframe: once a month is still a win financially.",
+        "Ask their actual frequency preference -- then run the math for that frequency."]},
+{cust:"Thinks competitors are more affordable",
+ reply:`That's fair -- there are a lot of options out there. Can I ask which one you were looking at?
+
+[If they name one:]
+Most of those platforms are booking sites -- they connect you with a cleaner but if your cleaner cancels, that's it. With us, we send a backup automatically. And the rate of $23/hour with ForeverClean is typically lower than what independents charge for the same quality.
+
+Even if they're a few dollars cheaper upfront, what's the backup plan if they cancel last minute?`,
+ rules:["Ask which competitor specifically -- different counters for different competitors.",
+        "Lead with the backup cleaner differentiator -- that's something competitors can't match."]},
+{cust:"Not at this time / I'm not ready to book",
+ reply:`Completely understand -- timing matters. Can I ask what would need to happen for this to feel like the right time?
+
+[If it's a real timing issue:]
+No problem at all. What I'll do is hold your rate and send you everything by text. When's a good window this week for a quick follow-up -- even just five minutes?
+
+[Get a SPECIFIC day and time. Not 'later.']`,
+ rules:["Find out what 'not ready' means -- cost? timing? life situation?",
+        "Always get a specific callback time before ending.",
+        "Text them a summary immediately to keep the door open."]},
+{cust:"Already found a cleaner",
+ reply:`That's great -- I'm glad you found someone! Out of curiosity, are they someone you've used before, or someone new you found recently?
+
+[If new:]
+Totally makes sense. The one thing I'd mention is that with ForeverClean, if your cleaner ever cancels last minute, we automatically send a backup -- so you're never left without coverage. It might be worth keeping us as a backup option. Would that be something you'd consider?
+
+[If they say no: respect it and close warmly.]`,
+ rules:["Never argue with 'I already have a cleaner' -- that makes you look desperate.",
+        "Pivot to the backup angle -- not a replacement, a safety net.",
+        "If they say no twice, close warmly and wish them well."]},
 ];
+
 const OFFSCRIPT=[
-{cust:"How do I know the cleaner is trustworthy?",reply:"Every cleaner is background-checked and rated by customers near you. You'll see their name and reviews before they show up."},
-{cust:"What if the cleaning is bad?",reply:"Within 24 hours, let us know and we send someone back or refund it."},
-{cust:"Can I request the same cleaner?",reply:"For members, yes - favorite them and we'll book them by default when available."},
-{cust:"What if I need to reschedule?",reply:"Dashboard reschedule up to 24 hours before. Under 24, small fee."},
-{cust:"Do you offer insurance?",reply:"Damage and theft questions are handled through the platform's protection process - refer to the FAQs for full details."},
-{cust:"Spanish-speaking cleaners?",reply:"Yes, most areas. We note it on the booking."},
-{cust:"Add fridge, oven, windows?",reply:"Those are add-ons. They add time and cost. Want any on this one?"},
-{cust:"Do I need to be home?",reply:"Nope - leave a key or code. Whatever's easiest."},
-{cust:"Talk to a manager.",reply:"Absolutely - team lead calls you back within the hour."},
-{cust:"Need it TODAY.",reply:"Let me check same-day availability."},
-{cust:"What if the cleaner cancels?",reply:"We send a backup. That's part of what the membership covers."},
-{cust:"Can I cancel after the first cleaning?",reply:"Yes - for {ETF}. That's the only fee, and it only applies after the first cleaning is invoiced."}
+{cust:"How do I know the cleaner is trustworthy?",
+ reply:"Every cleaner is background-checked, ID-verified, and rated by real customers near you. You'll see their name, photo, and reviews before anyone comes to your home. If anything ever came up, it's handled through the platform."},
+{cust:"What if the cleaning isn't good?",
+ reply:"Within 24 hours, just let us know and we'll either send someone back to fix it or refund the cleaning. No hoops, no argument."},
+{cust:"Can I request the same cleaner each time?",
+ reply:"Yes -- for members you can favorite a cleaner and we'll book them by default whenever they're available."},
+{cust:"What if I need to reschedule?",
+ reply:"You can reschedule up to 24 hours before through your dashboard. Under 24 hours, there's a small fee."},
+{cust:"Do you offer insurance for damages?",
+ reply:"Damage and theft situations are handled through the platform's protection process -- the FAQs have the full details. I can't quote specifics on the call but it is covered."},
+{cust:"Do you have Spanish-speaking cleaners?",
+ reply:"Yes, in most areas. We'll note the preference on your booking."},
+{cust:"Can I add fridge, oven, or windows?",
+ reply:"Yes -- those are add-ons that add time and cost. Want to include any of them on this booking?"},
+{cust:"Do I need to be home?",
+ reply:"Nope. Leave a key, a lockbox code, or whatever's easiest. We note it on the booking."},
+{cust:"I want to speak to a manager.",
+ reply:"Absolutely -- our team lead will call you back within the hour. What's the best number to reach you? Same one I have?"},
+{cust:"I need it cleaned TODAY.",
+ reply:"Let me check same-day availability in your area right now."},
+{cust:"What if my cleaner cancels?",
+ reply:"That's exactly what the membership covers -- if your cleaner cancels, we automatically send a backup. You're never left without coverage."},
+{cust:"Can I cancel after the first cleaning?",
+ reply:"Yes -- the only fee is {ETF}, and that only applies after the first cleaning is invoiced. No fee if you cancel before the cleaning happens."},
+{cust:"I never signed up for anything / I didn't request this",
+ reply:"I completely understand the confusion -- you may have requested a quote through Angi, which automatically generated a request. I'm not here to push anything. I just want to make sure you have the information in case it's still something you're looking for. Are you still looking for a cleaner?"},
+{cust:"I'm already a customer",
+ reply:"Oh great! Let me look up your account. Can I get your email or the phone number on file so I can pull it up?"},
 ];
+
 
 // ============ STATE ============
 let pIdx=0,stage='script',selObj=null,selSrc='prio',showMore=false,negStep='qualify';
@@ -941,6 +1049,273 @@ function negAccept(mf,term){
 function trialAccept(){D.offerType='trial';skipToBooking()}
 function otcAccept(){D.offerType='otc';skipToBooking()}
 
+// ============ OBJECTION PANEL ============
+// Categories based on real tracker data
+const OBJ_CATS = [
+  {
+    id:'already_cleaner', icon:'🧹', label:"Already found a cleaner",
+    color:'var(--coral)', colorBg:'var(--coral-bg)', colorBorder:'var(--coral-border)',
+    name:"Already Found a Cleaner",
+    cust:"I already found someone / I already have a cleaner I use.",
+    hint:"#1 most common in the tracker. Don't argue. Pivot to backup angle.",
+    reply:`That's great -- glad you found someone! Can I ask, is it someone you've used before or someone new?
+
+[If new:]
+Totally makes sense. The one thing I'd mention is -- if your cleaner ever cancels last minute, we automatically send a backup at no extra charge. A lot of our members actually keep us as their safety net alongside their regular cleaner.
+
+It's only {Today} to have that backup in place. Would that be worth having?
+
+[If they say no twice: close warmly, wish them well. Don't push again.]`,
+    rules:["Never say 'we're better than them' -- that makes you look desperate.",
+           "Position as a BACKUP, not a replacement.",
+           "If they say no twice, let it go. A good close leaves the door open."]
+  },
+  {
+    id:'etf_cancel', icon:'💸', label:"Doesn't like the cancellation fee",
+    color:'var(--pink)', colorBg:'var(--pink-bg)', colorBorder:'var(--pink-border)',
+    name:"Doesn't Like the Cancellation / ETF",
+    cust:"I don't like the cancellation fee / that early termination fee is too much / I don't want a penalty.",
+    hint:"Real tracker data: 'Cust dont like the idea of the cancellation.' Lead with the math.",
+    reply:`I hear you -- and I want to be upfront about it. The cancellation fee only applies if you cancel AFTER your first cleaning. If you cancel before the cleaning ever happens, there's no fee at all.
+
+And here's the thing -- even in the worst case, even if you did the membership and then cancelled right after the first cleaning, your total would be {WorstCase}. A one-time cleaning in your area runs {OTC}. You'd still pay less.
+
+The fee isn't a trap -- it's just the trade for getting the cleaning at $23 an hour instead of market rate. Does that make more sense?`,
+    rules:["Lead with: fee only applies AFTER first cleaning -- not before.",
+           "Always run the worst-case math. {WorstCase} vs {OTC}. It always wins.",
+           "If they're still worried: offer to lower the term in Negotiation (4 months instead of 6)."]
+  },
+  {
+    id:'too_expensive', icon:'💰', label:"Too expensive / price too high",
+    color:'var(--gold)', colorBg:'var(--gold-bg)', colorBorder:'var(--gold-border)',
+    name:"Too Expensive / Pricing Concerns",
+    cust:"That's too much / too expensive / I only have $50 max / more than I expected.",
+    hint:"Tracker: 'Will think about it. Too expensive' / 'SMS - $50 max'. Never defend your price.",
+    reply:`I hear you. What were you thinking of spending?
+
+[Wait. Let them answer. Do not fill the silence.]
+
+[Once they give a number -- even $50:]
+Okay, let me see what I can do. [Go to Negotiation -- start at $54, then $49, then reduce term]
+
+And just so you have the full picture: even in the absolute worst case, if you signed up and then cancelled right after the first cleaning, you'd pay {WorstCase} total. A one-time cleaning in your area runs {OTC}. You'd still come out ahead.`,
+    rules:["Get their number FIRST before offering anything.",
+           "Never say 'that's our price' -- it ends the call.",
+           "Go to Negotiation: $54 first, $49 second, then reduce term if needed."]
+  },
+  {
+    id:'no_card', icon:'💳', label:"Won't give card info / wants cash",
+    color:'var(--magenta)', colorBg:'var(--magenta-bg)', colorBorder:'var(--magenta-border)',
+    name:"Won't Give Card Info / Wants to Pay Cash",
+    cust:"I don't want to give my card / I prefer cash / I'm not comfortable giving card info over the phone.",
+    hint:"Tracker: 'Not comfortable giving card details' / 'dont want to provide card and wanted to pay in cash'",
+    reply:`Completely understand -- and just so you know, you don't have to give it to me over the phone at all.
+
+What I'll do is text you a secure payment link right now. You enter it yourself, on your own device, at your own pace. It goes through Angi's secure platform -- same level of encryption as Amazon or your bank. I never see your card number.
+
+Does that feel more comfortable?
+
+[If yes: text the link, confirm they received it, stay on the line while they complete it]`,
+    rules:["NEVER push for card info verbally after they say no.",
+           "The secure link is the only correct pivot -- offer it immediately.",
+           "Stay on the line while they use the link -- don't hang up and hope."]
+  },
+  {
+    id:'not_ready', icon:'⏰', label:"Not ready / will think about it",
+    color:'var(--coral)', colorBg:'var(--coral-bg)', colorBorder:'var(--coral-border)',
+    name:"Not Ready / Will Think About It / Just Checking",
+    cust:"I'll think about it / I'm not ready right now / I was just checking around / call me back.",
+    hint:"Tracker: 'Was just checking around' / 'Not ready to commit' / 'Customer initially just making an inquiry'",
+    reply:`Totally get it. Before I let you go -- just so I know how to best help -- is it more about the price, the timing, or something else that's making you hesitant?
+
+[Listen. That answer is your real objection.]
+
+[If timing:]
+No problem at all. I'll text you the details right now so you have them. What day this week works for a quick 5-minute follow-up? I'll call you then, no pressure.
+
+[Get a SPECIFIC day and time -- never "later" or "sometime this week."]`,
+    rules:["'Will think about it' = stall. Find the REAL objection underneath.",
+           "Always lock in a specific callback time before ending.",
+           "Text the summary immediately -- warm leads go cold fast."]
+  },
+  {
+    id:'spouse', icon:'👫', label:"Needs to consult spouse / partner",
+    color:'var(--purple)', colorBg:'rgba(139,47,168,.15)', colorBorder:'rgba(139,47,168,.4)',
+    name:"Needs to Consult Spouse / Partner",
+    cust:"I need to talk to my husband/wife/partner first / let me check with my spouse.",
+    hint:"Tracker: 'Customer will talk to her husband first'. Usually a stall -- find the real reason.",
+    reply:`Of course -- absolutely makes sense for a household decision.
+
+Just so I can help you both have the right conversation -- is it more about the cost, the length of the commitment, or just the timing?
+
+[Listen. Handle THAT objection now, not later.]
+
+[If genuinely needs spouse:]
+Perfect. I'll text you everything right now -- all the numbers, how it works, the cancellation terms -- so you two have it in front of you. What's a good time tomorrow to do a quick check-in?`,
+    rules:["Find the real objection hidden behind the spouse.",
+           "Get a specific callback time -- never accept 'I'll call you.'",
+           "Text the summary immediately so the conversation stays warm."]
+  },
+  {
+    id:'wants_local', icon:'📍', label:"Wants a local / independent cleaner",
+    color:'var(--gold)', colorBg:'var(--gold-bg)', colorBorder:'var(--gold-border)',
+    name:"Wants a Local or Independent Cleaner",
+    cust:"I want someone local / I'd rather hire someone directly / I prefer an independent cleaner.",
+    hint:"Tracker: 'asking for Local cleaner' / 'Cust said she will hire local cleaner'. Never compete on price.",
+    reply:`That makes total sense -- and actually, the cleaners on our platform ARE local. They're professionals in your area, background-checked and rated by other customers near you.
+
+The difference is: if your local cleaner ever cancels -- which happens -- you're stuck. With us, we automatically send a backup. You still get a local cleaner, just with a safety net.
+
+Would it be worth a comparison? Your first cleaning is {Today} and if it's not the right fit, you can cancel.`,
+    rules:["Never say 'we're better than local cleaners.'",
+           "Key point: our cleaners ARE local -- just with platform accountability.",
+           "Backup cleaner is the differentiator. Independents can't offer that."]
+  },
+  {
+    id:'scam', icon:'🚨', label:"Thinks it's a scam",
+    color:'var(--pink)', colorBg:'var(--pink-bg)', colorBorder:'var(--pink-border)',
+    name:"Thinks This Is a Scam",
+    cust:"This sounds like a scam / How do I know this is real / I don't trust this.",
+    hint:"Never get defensive. Validate the skepticism -- it builds credibility.",
+    reply:`You know what? That's honestly a smart reaction -- there's a lot of noise out there and I respect that you're being careful.
+
+Here's what I can point you to: Homeaglow operates through Angi, which does its own vetting. Every cleaner is background-checked, rated by real customers, and you can see their reviews before anyone comes to your home.
+
+And today's charge is only {Today} -- that's it. If anything ever feels off, you have 30 days and you can cancel, no penalty. Want me to text you our website and some reviews from cleaners in your area right now?`,
+    rules:["NEVER say 'we're not a scam' -- it sounds defensive and unconvincing.",
+           "Validate their skepticism first -- it builds trust.",
+           "Offer low-risk proof: text the website + local reviews."]
+  },
+  {
+    id:'no_membership', icon:'🚫', label:"Doesn't want a membership",
+    color:'var(--magenta)', colorBg:'var(--magenta-bg)', colorBorder:'var(--magenta-border)',
+    name:"Doesn't Want a Membership / Commitment",
+    cust:"I don't want a subscription / I don't want to be locked in / just a one-time thing.",
+    hint:"Most common FCF objection. Lead with the math -- worst case still beats OTC.",
+    reply:`I completely get it -- nobody wants to feel locked in. Here's the honest truth though: the {Today} today isn't a trap. It's just how you unlock the lower rate.
+
+Here's the math: a one-time {X hours} cleaning in your area runs {OTC}. With ForeverClean, you pay {Today} today, your first cleaning is free, and even if you cancel early, your total would only be {WorstCase} -- still less than the {OTC} one-time.
+
+The commitment is {Term} months at {MF} a month from month two. If it's ever not the right fit, you cancel. Does that make more sense?`,
+    rules:["NEVER say 'locked in' -- never validate that framing.",
+           "Lead with worst-case math every single time. It always wins against OTC.",
+           "If still resistant: go to Negotiation. $54 first, $49 second, then lower term."]
+  },
+  {
+    id:'not_interested', icon:'📵', label:"Not interested / hung up",
+    color:'var(--text-muted)', colorBg:'rgba(144,120,160,.12)', colorBorder:'rgba(144,120,160,.3)',
+    name:"Not Interested / Immediately Disconnected",
+    cust:"I'm not interested / [immediately hung up] / I didn't sign up for this.",
+    hint:"Tracker: 'Immediately hung up' / 'No one is requesting this'. Reconnect to their original reason.",
+    reply:`I hear you -- and I won't keep you long. I just want to make sure I have the right person.
+
+You did request a house cleaning through Angi recently -- I just want to make sure you got what you were looking for. Did you end up finding a cleaner?
+
+[If they engage: you're back in Discovery.]
+[If they say no again: "No problem at all. Have a great day!" -- close warmly and move on. A forced call burns the lead forever.]`,
+    rules:["Never argue or re-pitch after 'not interested.'",
+           "ONE soft reconnect only -- reconnect to their original request.",
+           "If they say no twice: close warmly. Bad burn = permanent lost lead."]
+  },
+  {
+    id:'disco_hag', icon:'📞', label:"Hangs up on hearing Homeaglow",
+    color:'var(--pink)', colorBg:'var(--pink-bg)', colorBorder:'var(--pink-border)',
+    name:"Disconnects After Hearing Homeaglow",
+    cust:"[Hangs up immediately after agent says 'Homeaglow'] / 'Disco after HAG'",
+    hint:"Tracker: 'Disco after hearing HAG' / 'cust HU after hearing HAG'. They expected Angi directly.",
+    reply:`[If they stay on:]
+I know -- we work with Angi to fulfill the cleaning requests that come through. You submitted a request for a house cleaning and I'm here to help you book that.
+
+This takes about two minutes. I already have your details from your request, so you won't need to repeat anything. Can I just confirm the size of your home?
+
+[Pivot immediately to Discovery -- don't re-explain Homeaglow. Just move forward.]`,
+    rules:["Don't spend time explaining the Angi/Homeaglow relationship -- they don't care.",
+           "Pivot immediately to the request they made -- acknowledge it and move forward.",
+           "If they hang up: SMS them immediately with a friendly follow-up."]
+  },
+  {
+    id:'negative_review', icon:'⭐', label:"Saw negative reviews",
+    color:'var(--gold)', colorBg:'var(--gold-bg)', colorBorder:'var(--gold-border)',
+    name:"Negative Review / Bad Experience Online",
+    cust:"I saw bad reviews / I heard bad things / someone told me it was a bad experience.",
+    hint:"Ask what specifically they saw -- then address that directly, not a generic defense.",
+    reply:`I'm really glad you mentioned that -- I'd rather know so I can address it directly. What did you see specifically?
+
+[Listen. Then address the specific issue.]
+
+Here's what I can tell you: if a cleaning ever doesn't meet your standard, we send someone back within 24 hours or we refund it. That's our guarantee in writing.
+
+Would it be worth giving us one shot based on that? Your first cleaning is only {Today}.`,
+    rules:["Ask what they saw SPECIFICALLY -- generic defenses don't work.",
+           "Mention the 24-hour rebook or refund guarantee.",
+           "Never say 'those reviews aren't accurate' -- that just sounds defensive."]
+  }
+];
+
+function renderObjPanel(){
+  const filterVal = window._objFilter || '';
+  const filtered = filterVal
+    ? OBJ_CATS.filter(o=>
+        o.label.toLowerCase().includes(filterVal.toLowerCase()) ||
+        o.cust.toLowerCase().includes(filterVal.toLowerCase()) ||
+        o.name.toLowerCase().includes(filterVal.toLowerCase()))
+    : OBJ_CATS;
+
+  let html = `<div class="card">
+    <div class="label">What is the customer saying? -- tap the one that matches</div>
+    <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px">12 real objections from your call tracker. Tap to get word-for-word recovery + rules.</div>
+    <input
+      type="text"
+      placeholder="Type a keyword to filter... (e.g. 'card', 'expensive', 'cleaner', 'scam')"
+      value="${filterVal}"
+      oninput="window._objFilter=this.value;document.getElementById('obj-grid').innerHTML=renderObjGrid()"
+      style="width:100%;background:var(--panel2);border:1px solid var(--border);color:var(--text);padding:10px 12px;border-radius:8px;font-size:14px;font-family:inherit;margin-bottom:12px">
+    <div id="obj-grid">${renderObjGrid()}</div>
+    <button class="big-btn ghost" style="margin-top:10px" onclick="openModal('m-offscript')">? Not listed above -- search off-script help</button>
+  </div>`;
+  return html;
+}
+
+function renderObjGrid(){
+  const filterVal = window._objFilter || '';
+  const filtered = filterVal
+    ? OBJ_CATS.filter(o=>
+        o.label.toLowerCase().includes(filterVal.toLowerCase()) ||
+        o.cust.toLowerCase().includes(filterVal.toLowerCase()) ||
+        o.name.toLowerCase().includes(filterVal.toLowerCase()))
+    : OBJ_CATS;
+
+  if(!filtered.length) return `<div style="text-align:center;padding:20px;color:var(--text-muted)">No match. Try a different keyword or use Off-script help below.</div>`;
+
+  return `<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+    ${filtered.map(o=>`
+      <button onclick='pickObjCat("${o.id}")' style="
+        display:flex;flex-direction:column;align-items:flex-start;
+        background:var(--panel2);border:1px solid ${o.colorBorder};
+        border-radius:12px;padding:12px 14px;cursor:pointer;
+        text-align:left;font-family:inherit;transition:.15s;
+        color:var(--text)
+      " onmouseover="this.style.background='${o.colorBg}';this.style.borderColor='${o.color}';this.style.transform='translateY(-2px)'"
+         onmouseout="this.style.background='var(--panel2)';this.style.borderColor='${o.colorBorder}';this.style.transform=''">
+        <span style="font-size:22px;margin-bottom:6px">${o.icon}</span>
+        <span style="font-size:13px;font-weight:700;color:${o.color};line-height:1.3">${o.label}</span>
+        <span style="font-size:11px;color:var(--text-muted);margin-top:4px;line-height:1.4">${o.hint.split('.')[0]}.</span>
+      </button>
+    `).join('')}
+  </div>`;
+}
+
+function pickObjCat(id){
+  const o = OBJ_CATS.find(x=>x.id===id);
+  if(!o)return;
+  selObj = o;
+  selSrc = 'cat';
+  stage = 'obj-reply';
+  render();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+
 function render(){
   updateProgress();
   const stg=document.getElementById('stage');
@@ -1011,21 +1386,35 @@ function render(){
 
   // Objection reply
   if(stage==='obj-reply'&&selObj!==null){
-    const src=selSrc==='prio'?PRIO_OBJ:(selSrc==='other'?OTHER_OBJ:OFFSCRIPT);
-    const o=src[selObj];
-    html+=`<div class="card">${o.name?`<div class="label">Recovery: ${o.name}</div>`:''}<div class="customer-line">${o.cust}</div><div class="reply-line">${fill(o.reply)}</div>`;
-    if(o.rules){html+=`<div style="margin-top:8px">`;o.rules.forEach(r=>{html+=`<div class="rule-item">${r}</div>`});html+=`</div>`}
-    html+=`<div style="margin-top:10px;padding:9px 12px;background:var(--panel2);border-radius:8px;border:1px dashed var(--border);font-size:12.5px;color:var(--text-secondary)"><b style="color:var(--gold)">After:</b> Customer accepts, or raises another concern. Loop as needed.</div></div>`;
+    const o = selSrc==='cat' ? selObj : (selSrc==='prio'?PRIO_OBJ[selObj]:(selSrc==='other'?OTHER_OBJ[selObj]:OFFSCRIPT[selObj]));
+    if(o){
+      html+=`<div class="card" style="border-color:${o.color||'var(--coral)'};border-width:2px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+          ${o.icon?`<span style="font-size:28px">${o.icon}</span>`:''}
+          <div>
+            <div class="label" style="color:${o.color||'var(--coral)'};margin-bottom:2px">${o.name||'Recovery script'}</div>
+            <div style="font-size:12px;color:var(--text-muted);font-style:italic">${o.hint||''}</div>
+          </div>
+        </div>
+        <div class="customer-line">${o.cust}</div>
+        <div class="reply-line">${fill(o.reply)}</div>`;
+      if(o.rules&&o.rules.length){
+        html+=`<div style="margin-top:10px"><div class="label">Rules for this objection -- non-negotiable</div>`;
+        o.rules.forEach(r=>{html+=`<div class="rule-item">${r}</div>`});
+        html+=`</div>`;
+      }
+      html+=`<div style="margin-top:12px;display:flex;gap:10px">
+        <button class="big-btn secondary" style="flex:1" onclick="stage='obj-list';render()">Back to objection list</button>
+        <button class="big-btn" style="flex:1" onclick="stage='script';render()">Handled -- back to pitch</button>
+      </div>`;
+      html+=`</div>`;
+    }
   }
 
   // Objection list
   if(stage==='obj-list'){
-    html+=`<div class="card"><div class="label">Top 5 objections from Angi call analysis</div>`;
-    PRIO_OBJ.forEach((o,i)=>{html+=`<div class="prio-obj" onclick="pickObj(${i},'prio')"><div class="num">${o.id}</div><div style="flex:1"><div class="obj-cust">${o.cust}</div><div class="obj-hint">${o.hint}</div></div></div>`});
-    if(!showMore)html+=`<button class="more-toggle" onclick="toggleMore()">+ Show ${OTHER_OBJ.length} more</button>`;
-    else{html+=`<div style="margin-top:10px"><div class="label">More objections</div>`;OTHER_OBJ.forEach((o,i)=>{html+=`<div class="other-obj" onclick="pickObj(${i},'other')">${o.cust}</div>`});html+=`</div>`}
-    html+=`<button class="big-btn ghost" style="margin-top:10px" onclick="openModal('m-offscript')">? Something else -- Off-script help</button></div>
-    <button class="big-btn back" onclick="stage='script';render()">Back to script</button>`;
+    html+=renderObjPanel();
+    html+=`<button class="big-btn back" style="margin-top:10px" onclick="stage='script';render()">Back to script</button>`;
   } else {
     const disabled=p.isPitch&&!D.offerType;
     if(p.isPitch){
